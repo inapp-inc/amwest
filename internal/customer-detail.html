@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Detail — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html" class="active"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>Pacific Home Furnishings</h1><p style="margin-top:4px">PHF-2041 · <span class="badge badge-active">Active</span></p></div></div>
+<div class="tabs-wrap">
+<input type="radio" name="ct" id="c1" class="tab-radio" checked>
+<input type="radio" name="ct" id="c2" class="tab-radio">
+<input type="radio" name="ct" id="c3" class="tab-radio">
+<input type="radio" name="ct" id="c4" class="tab-radio">
+<div class="tabs" role="tablist">
+<label for="c1" class="tab-label" role="tab">Profile</label>
+<label for="c2" class="tab-label" role="tab">Assigned Tariffs</label>
+<label for="c3" class="tab-label" role="tab">Discount Structure</label>
+<label for="c4" class="tab-label" role="tab">Quote History</label>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" role="tabpanel"><div class="card">
+<div class="field"><label>Contact</label><input value="Sarah Chen, sarah@pacifichome.com"></div>
+<div class="field"><label>Assigned Rep</label><input value="Jordan Ellis"></div>
+<div class="field"><label>Billing Code</label><input class="tabular" value="PHF-2041"></div>
+</div></div>
+<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Tariff</th><th>Service</th><th>Status</th></tr></thead>
+<tbody><tr><td><a href="tariff-detail.html">TAR-HD-TH-002</a></td><td>Threshold</td><td><span class="badge badge-active">Active</span></td></tr>
+<tr><td><a href="tariff-detail.html">TAR-B2B-WG-001</a></td><td>White Glove (customer override)</td><td><span class="badge badge-active">Active</span></td></tr></tbody></table></div>
+<div class="tab-panel" role="tabpanel"><div class="card">
+<div class="field"><label>Overall Discount</label><input class="tabular" value="5%"></div>
+<table class="data-table" style="margin-top:var(--space-md)"><thead><tr><th>Lane</th><th>Discount</th></tr></thead>
+<tbody><tr><td>SEA-PDX-METRO</td><td class="tabular">0%</td></tr></tbody></table></div></div>
+<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Quote #</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+<tbody><tr><td><a href="quote-detail.html">Q-2026-0823</a></td><td class="tabular">$3,620</td><td><span class="badge badge-approved">Approved</span></td><td><a href="quote-detail.html">Open</a></td></tr></tbody></table></div>
+</div></div>
+<div class="sticky-footer"><a href="customers.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Changes</button></div>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

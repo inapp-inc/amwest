@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quote Builder — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html" class="active"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>New Quote</h1><p style="font-size:13px;color:var(--signal-green);margin-top:4px">Draft saved · 2 min ago</p></div></div>
+<div class="toggle-row" data-quote-type-toggle>
+<label><input type="radio" name="qt" value="standard" checked><span>Standard</span></label>
+<label><input type="radio" name="qt" value="spot"><span>Spot Quote</span></label>
+</div>
+<div class="governance-banner amber" data-standard-quote-note><strong>Approval required:</strong> Discount of 12% exceeds rep authority (max 10%). Quote will route to Sales Manager on submit.</div>
+<div class="card panel" data-spot-quote-panel hidden>
+<h3 class="panel-title">Manual Spot Rate</h3>
+<p class="page-lead">Enter rates not tied to an existing tariff hierarchy.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label>Spot base rate</label><input class="tabular" value="$62.00 / CWT"></div>
+<div class="field"><label>Spot fuel surcharge</label><input class="tabular" value="28.4%"></div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 380px;gap:var(--space-lg);align-items:start">
+<div>
+<div class="card panel"><h3 class="panel-title">Customer &amp; Lane</h3>
+<div class="field"><label>Customer</label><input value="Pacific Home Furnishings (PHF-2041)"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label>Origin</label><input value="Seattle Metro, WA"></div>
+<div class="field"><label>Destination</label><input value="Portland Metro, OR"></div>
+</div>
+<p class="portal-account" data-standard-quote-note>Resolved lane: <strong>SEA-PDX-METRO</strong> · Tariff <a href="tariff-detail.html">TAR-B2B-WG-001</a></p>
+</div>
+<div class="card panel"><h3 class="panel-title">Shipment Details</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label>Unit of Measure</label><select><option selected>CWT</option><option>Cube</option></select></div>
+<div class="field"><label>Density Factor (read-only)</label><input value="8.5 lbs/cu ft" readonly style="background:var(--surface-100)"></div>
+<div class="field"><label>Weight (lbs)</label><input class="tabular" value="4,200"></div>
+<div class="field"><label>Cube</label><input class="tabular" value="1,480"></div>
+<div class="field"><label>Commodity</label><select><option selected>FAK</option><option>Case Goods</option><option>Upholstery</option></select></div>
+<div class="field"><label>Declared Value</label><input class="tabular" value="$45,000"></div>
+</div>
+<div class="inline-notice"><strong>Approaching truckload threshold</strong> — LTL rate may exceed truckload cost. Manual approval will be required.</div>
+</div>
+<details class="card panel disclosure-panel"><summary>Competitor Match (optional)</summary>
+<div class="disclosure-body">
+<div class="field"><label>Competitor Name</label><input value="Regional Freight Co."></div>
+<div class="field"><label>Quoted Rate</label><input class="tabular" value="$3,650.00"></div>
+<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">+$197.50 (+5.4%)</span></p>
+</div></details>
+</div>
+<div class="card" style="position:sticky;top:var(--space-md)">
+<h3 class="panel-title">Pricing Breakdown</h3>
+<div class="pricing-lines">
+<div class="pricing-line"><span>Base rate (42 CWT × $58.00)</span><span class="tabular">$2,436.00</span></div>
+<div class="pricing-line"><span>Customer override (−5%)</span><span class="tabular">−$121.80</span></div>
+<div class="pricing-line"><span>Lane override (SEA-PDX)</span><span class="tabular">+$45.00</span></div>
+<div class="pricing-line"><span>Fuel surcharge (28.4%) <small style="color:var(--neutral-600)">as of Jun 16</small></span><span class="tabular">$657.42</span></div>
+<div class="pricing-line"><span>Lift gate</span><span class="tabular">$85.00</span></div>
+<div class="pricing-line"><span>Residential delivery</span><span class="tabular">$120.00</span></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular">18.2%</span></div>
+<div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
+<div class="pricing-line total"><span>Total</span><span class="tabular">$3,847.50</span></div>
+</div>
+<div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">
+<a href="quote-detail.html" class="btn btn-burgundy">Submit for Approval</a>
+<a href="quotes.html" class="btn btn-secondary">Save as Draft</a>
+<a href="quotes.html" class="btn btn-link" style="text-align:center">Cancel</a>
+</div></div></div>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

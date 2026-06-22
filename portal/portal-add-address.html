@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Address — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="customer-portal">
+<header class="portal-nav">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
+<a href="portal-quote-request.html">My Quotes</a>
+<a href="portal-shipment-tracker.html">Shipments</a>
+<a href="portal-self-service.html" class="active">Support</a>
+</nav>
+<div class="dropdown" data-dropdown>
+<button type="button" class="dropdown-trigger portal-account" aria-expanded="false" aria-haspopup="true">Pacific Home Furnishings ▾</button>
+<div class="dropdown-menu" role="menu">
+<div class="dropdown-label">Switch account</div>
+<button type="button" role="menuitem" class="dropdown-item active" data-dropdown-select="Pacific Home Furnishings">Pacific Home Furnishings</button>
+<button type="button" role="menuitem" class="dropdown-item" data-dropdown-select="Cascade Furniture Co.">Cascade Furniture Co.</button>
+<hr class="dropdown-divider">
+<a href="../internal/login.html" role="menuitem" class="dropdown-item">Sign out</a>
+</div>
+</div>
+</header>
+<main class="portal-main">
+
+<h1 class="portal-page-title">Add Address</h1>
+<div class="card" style="max-width:480px">
+<div class="field"><label>Label</label><input placeholder="e.g. Seattle Warehouse"></div>
+<div class="field"><label>Street address</label><input value="1200 Industrial Blvd"></div>
+<div class="field"><label>City, State ZIP</label><input value="Seattle, WA 98101"></div>
+<a href="portal-self-service.html" class="btn btn-primary">Save address</a>
+<a href="portal-self-service.html" class="btn btn-secondary" style="margin-left:var(--space-sm)">Cancel</a>
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tariff Comparison — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html" class="active"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>Tariff Comparison</h1></div><a href="tariffs.html" class="btn btn-secondary">Close</a></div>
+<div class="compare-grid">
+<div><div class="field"><label for="tc-left">Left tariff</label><select id="tc-left"><option>TAR-B2B-WG-001 v3 (current)</option><option>TAR-B2B-WG-001 v2</option><option>TAR-HD-TH-002 v1</option></select></div>
+<div class="card"><h3 class="panel-title">TAR-B2B-WG-001 v3</h3>
+<p class="diff-changed">Base rate: <span class="tabular">$58.00/CWT</span></p>
+<p>Margin floor: <span class="tabular">15%</span></p>
+<p>Density: <span class="tabular">8.5</span></p></div></div>
+<div><div class="field"><label for="tc-right">Right tariff</label><select id="tc-right"><option>TAR-B2B-WG-001 v2</option><option>TAR-B2B-WG-001 v3 (current)</option><option>TAR-HD-TH-002 v1</option></select></div>
+<div class="card"><h3 class="panel-title">TAR-B2B-WG-001 v2</h3>
+<p class="diff-changed">Base rate: <span class="tabular">$56.55/CWT</span></p>
+<p>Margin floor: <span class="tabular">15%</span></p>
+<p>Density: <span class="tabular">8.5</span></p></div></div>
+</div>
+<div class="card" style="margin-top:var(--space-lg)"><h3 class="panel-title">What changed?</h3>
+<ul style="margin-left:var(--space-md);font-size:14px">
+<li>Base rate increased from $56.55 to $58.00 (+2.5%)</li>
+<li>Lane override SEA-PDX added in v2 (unchanged in v3)</li>
+</ul></div>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

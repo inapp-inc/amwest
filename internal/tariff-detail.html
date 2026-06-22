@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tariff Detail — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html" class="active"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header">
+<div><h1>TAR-B2B-WG-001</h1><p style="margin-top:4px">White Glove Inspection — B2B · <span class="badge badge-active">Active</span></p>
+<p style="font-size:13px;color:var(--neutral-600);margin-top:4px">Effective Jan 1, 2026 — Dec 31, 2026</p></div>
+<div><a href="tariff-wizard.html" class="btn btn-secondary">Clone This Tariff</a> <a href="tariff-delete-confirm.html" class="btn btn-destructive">Delete</a></div>
+</div>
+<div class="tabs-wrap">
+<input type="radio" name="tabs" id="t1" class="tab-radio" checked>
+<input type="radio" name="tabs" id="t2" class="tab-radio">
+<input type="radio" name="tabs" id="t3" class="tab-radio">
+<input type="radio" name="tabs" id="t4" class="tab-radio">
+<div class="tabs" role="tablist">
+<label for="t1" class="tab-label" role="tab">Overview</label>
+<label for="t2" class="tab-label" role="tab">Override Hierarchy</label>
+<label for="t3" class="tab-label" role="tab">Version History</label>
+<label for="t4" class="tab-label" role="tab">Audit Log</label>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" role="tabpanel"><div class="card"><h3 class="panel-title">Service &amp; Pricing</h3>
+<div class="segmented" style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="st"><span>Business/B2B</span></label>
+<label><input type="radio" name="st"><span>Threshold</span></label>
+<label><input type="radio" name="st"><span>White Glove No Insp.</span></label>
+<label><input type="radio" name="st" checked><span>White Glove Inspection</span></label>
+</div>
+<div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="uom" value="cwt" checked><span>CWT</span></label>
+<label><input type="radio" name="uom" value="cube"><span>Cube</span></label>
+<label><input type="radio" name="uom" value="seat"><span>Seat</span></label>
+<label><input type="radio" name="uom" value="invoice"><span>% Invoice</span></label>
+<label><input type="radio" name="uom" value="flat"><span>Flat Rate</span></label>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field" data-density-field><label>Density Factor (lbs/cu ft)</label><input class="tabular" value="8.5"></div>
+<div class="field"><label>Base Rate</label><input class="tabular" value="$58.00 / CWT"></div>
+<div class="field"><label>Lane Reference</label><input value="National B2B Matrix"></div>
+<div class="field"><label>Margin Floor</label><input class="tabular" value="15%"></div>
+</div></div></div>
+<div class="tab-panel" role="tabpanel"><ul class="override-stack">
+<li><details open><summary>Base Rate</summary><p style="margin-top:8px;font-size:13px">$58.00 / CWT — national default</p></details></li>
+<li><details><summary>Customer Override</summary><p style="margin-top:8px;font-size:13px"><a href="customer-detail.html">PHF-2041</a>: −5%</p></details></li>
+<li><details><summary>Lane Override</summary><p style="margin-top:8px;font-size:13px">SEA-PDX-METRO: +$1.07/CWT</p></details></li>
+<li><details><summary>Commodity Override</summary><p style="margin-top:8px;font-size:13px">Upholstery: +8%</p></details></li>
+<li><details><summary>Promotion</summary><p style="margin-top:8px;font-size:13px;color:var(--neutral-600)">None active</p></details></li>
+</ul><a href="tariff-add-override.html" class="btn btn-secondary btn-sm">+ Add Override</a></div>
+<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
+<tbody><tr><td>v3 (current)</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2026</td><td>Annual rate adjustment +2.5%</td><td><a href="tariff-comparison.html">Compare</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+<tr><td>v2</td><td>Jordan Ellis</td><td class="tabular">Jul 1, 2025</td><td>Added lane overrides</td><td><a href="tariff-comparison.html">Compare</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr></tbody></table></div>
+<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Timestamp</th><th>User</th><th>Field</th><th>Old → New</th></tr></thead>
+<tbody><tr><td class="tabular">2026-01-01 09:12</td><td>Morgan Reyes</td><td>base_rate</td><td class="tabular">$56.55 → $58.00</td></tr></tbody></table></div>
+</div></div>
+<div class="sticky-footer"><a href="tariffs.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Changes</button></div>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

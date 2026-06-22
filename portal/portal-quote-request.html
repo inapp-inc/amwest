@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get a Quote — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="customer-portal">
+<header class="portal-nav">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
+<a href="portal-quote-request.html" class="active">My Quotes</a>
+<a href="portal-shipment-tracker.html">Shipments</a>
+<a href="portal-self-service.html">Support</a>
+</nav>
+<div class="dropdown" data-dropdown>
+<button type="button" class="dropdown-trigger portal-account" aria-expanded="false" aria-haspopup="true">Pacific Home Furnishings ▾</button>
+<div class="dropdown-menu" role="menu">
+<div class="dropdown-label">Switch account</div>
+<button type="button" role="menuitem" class="dropdown-item active" data-dropdown-select="Pacific Home Furnishings">Pacific Home Furnishings</button>
+<button type="button" role="menuitem" class="dropdown-item" data-dropdown-select="Cascade Furniture Co.">Cascade Furniture Co.</button>
+<hr class="dropdown-divider">
+<a href="../internal/login.html" role="menuitem" class="dropdown-item">Sign out</a>
+</div>
+</div>
+</header>
+<main class="portal-main">
+
+<h1 class="portal-page-title">Request a Quote</h1>
+<div class="portal-two-col">
+<div class="card">
+<div class="field"><label>Origin</label><input value="Seattle, WA 98101"></div>
+<div class="field"><label>Destination</label><input value="Portland, OR 97201"></div>
+<div class="field"><label>Weight (lbs)</label><input class="tabular" value="2,400"></div>
+<div class="field"><label>Cube</label><input class="tabular" value="520"></div>
+<div class="field"><label>Unit of Measure</label><select><option>CWT</option><option>Cube</option></select></div>
+</div>
+<div class="card" style="background:var(--neutral-900);color:#fff;border:none">
+<h3 class="portal-panel-title">Your Quote</h3>
+<p class="portal-quote-total tabular">$2,185.00</p>
+<p style="font-size:13px;opacity:.8;margin:var(--space-md) 0">White Glove · SEA-PDX · Fuel included</p>
+<a href="portal-quote-confirmation.html" class="btn btn-burgundy" style="width:100%;margin-bottom:var(--space-sm)">Accept &amp; Book</a>
+<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff">Save for Later</a>
+</div></div>
+
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

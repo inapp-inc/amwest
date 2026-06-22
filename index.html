@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tariff &amp; Pricing System — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="css/awest-tokens.css">
+<link rel="stylesheet" href="css/walkthrough.css">
+</head>
+<body class="wt-body">
+
+<nav class="wt-rail" id="wt-rail" aria-label="Page navigation">
+  <div class="wt-rail-stop active" data-target="wt-hero"><div class="wt-rail-dot"></div><span class="wt-rail-label">Overview</span></div>
+  <div class="wt-rail-line" data-between="wt-hero,wt-problem"></div>
+  <div class="wt-rail-stop" data-target="wt-problem"><div class="wt-rail-dot"></div><span class="wt-rail-label">Problem</span></div>
+  <div class="wt-rail-line" data-between="wt-problem,wt-delivery"></div>
+  <div class="wt-rail-stop" data-target="wt-delivery"><div class="wt-rail-dot"></div><span class="wt-rail-label">Delivery plan</span></div>
+  <div class="wt-rail-line" data-between="wt-delivery,wt-architecture"></div>
+  <div class="wt-rail-stop" data-target="wt-architecture"><div class="wt-rail-dot"></div><span class="wt-rail-label">Architecture</span></div>
+  <div class="wt-rail-line" data-between="wt-architecture,wt-modules"></div>
+  <div class="wt-rail-stop" data-target="wt-modules"><div class="wt-rail-dot"></div><span class="wt-rail-label">Modules</span></div>
+  <div class="wt-rail-line" data-between="wt-modules,wt-workflow"></div>
+  <div class="wt-rail-stop" data-target="wt-workflow"><div class="wt-rail-dot"></div><span class="wt-rail-label">Workflows</span></div>
+  <div class="wt-rail-line" data-between="wt-workflow,wt-integrations"></div>
+  <div class="wt-rail-stop" data-target="wt-integrations"><div class="wt-rail-dot"></div><span class="wt-rail-label">Integrations</span></div>
+  <div class="wt-rail-line" data-between="wt-integrations,wt-mockups"></div>
+  <div class="wt-rail-stop" data-target="wt-mockups"><div class="wt-rail-dot"></div><span class="wt-rail-label">Mockups</span></div>
+</nav>
+
+<div class="wt-wrap">
+
+<!-- ══ OVERVIEW / HERO ══ -->
+<section class="wt-section" id="wt-hero">
+  <div>
+    <a href="index.html" class="wt-hero-logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West"></a>
+    <div class="wt-hero-kicker"><span></span> InApp Inc. · Transportation Practice · Confidential</div>
+    <h1 class="wt-hero-title">One platform for<br>every tariff, <em>quote,</em><br>and price.</h1>
+    <p class="wt-hero-lead">A purpose-built Tariff &amp; Pricing System for American West — replacing spreadsheet-driven pricing with a governed, real-time platform that captures quote provenance, enforces margin rules, and scales from internal reps to customer self-service.</p>
+    <div class="wt-hero-meta">
+      <span class="wt-meta-pill accent"><em>Delivering On Your Promises</em></span>
+      <span class="wt-meta-pill">Hub-first integration</span>
+      <span class="wt-meta-pill">5-phase delivery</span>
+      <span class="wt-meta-pill">Cloud-agnostic</span>
+    </div>
+    <a href="internal/login.html" class="wt-hero-cta" target="_blank" rel="noopener noreferrer">
+      Preview the mock UI &nbsp;→
+      <span class="wt-hero-cta-sub">Interactive HTML screens</span>
+    </a>
+  </div>
+  <div class="wt-hero-stats">
+    <div class="wt-stat-row">
+      <div class="wt-stat-cell wide">
+        <div class="wt-stat-tags" aria-label="Application areas">
+          <span>Pricing</span>
+          <span>Tariffs</span>
+          <span>Quotes</span>
+          <span>Portal</span>
+          <span>Sales</span>
+        </div>
+      </div>
+    </div>
+    <div class="wt-stat-row">
+      <div class="wt-stat-cell">
+        <div class="wt-stat-num wt-stat-word red">Workbooks</div>
+        <div class="wt-stat-lbl">Pricing today lives in workbooks — no single source of truth, no approval governance, and no audit trail when rates change</div>
+      </div>
+      <div class="wt-stat-cell">
+        <div class="wt-stat-num wt-stat-word amber">Manual</div>
+        <div class="wt-stat-lbl">Reps re-key lane, fuel, and discount data for every quote — error-prone and impossible to compare version-to-version</div>
+      </div>
+    </div>
+    <div class="wt-stat-row">
+      <div class="wt-stat-cell">
+        <div class="wt-stat-num wt-stat-digit accent">17</div>
+        <div class="wt-stat-lbl">Features in Phase 1a MVP — one core workflow: log in, price a shipment, govern the quote, produce a PDF</div>
+      </div>
+      <div class="wt-stat-cell">
+        <div class="wt-stat-num wt-stat-word">5 Phases</div>
+        <ul class="wt-stat-phase-list">
+          <li><strong>Phase 0</strong> Discovery</li>
+          <li><strong>Phase 1a</strong> MVP</li>
+          <li><strong>Phase 1b</strong> Post-MVP</li>
+          <li><strong>Phase 2</strong> Customer portal</li>
+          <li><strong>Phase 3</strong> Sales Pipeline &amp; CRM</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROBLEM ══ -->
+<section class="wt-section" id="wt-problem">
+  <div class="wt-eyebrow">The problem we're solving</div>
+  <h2 class="wt-sec-title">Gaps in American West's pricing operations today</h2>
+  <p class="wt-sec-body">The current spreadsheet-and-manual-process approach has served the business, but it was never designed for governed, auditable pricing at scale. These are the critical gaps a modern tariff and pricing platform directly addresses.</p>
+  <div class="wt-problem-grid">
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag red">No governance</div>
+      <h3>Discount and margin rules live in people's heads</h3>
+      <p>Reps apply discounts without systematic approval routing. Margin floors and minimum charges are enforced inconsistently — revenue leakage is invisible until it's too late.</p>
+    </div>
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag amber">Spreadsheets</div>
+      <h3>Tariff changes are fragile and untraceable</h3>
+      <p>Rate updates happen in Excel workbooks with no version history, no side-by-side diff, and no record of who changed what or when a rate became effective.</p>
+    </div>
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag accent">No provenance</div>
+      <h3>Quotes lack a full audit trail</h3>
+      <p>When a customer disputes a rate, there is no single record showing which tariff version, fuel surcharge, and discount produced the quoted price.</p>
+    </div>
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag red">Slow</div>
+      <h3>Every quote is built from scratch</h3>
+      <p>Sales reps manually look up tariffs, fuel tables, lane groupings, and customer discounts — re-keying data that should resolve automatically from master records.</p>
+    </div>
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag amber">Disconnected</div>
+      <h3>No customer self-service channel</h3>
+      <p>Customers cannot request quotes, track shipments, or manage their address book online — every interaction routes through a sales rep or operations contact.</p>
+    </div>
+    <div class="wt-problem-cell">
+      <div class="wt-problem-tag accent">Blind spots</div>
+      <h3>Sales pipeline visibility is limited</h3>
+      <p>Quote aging, win/loss tracking, and rep performance live outside the pricing system — managers lack a unified view of opportunities tied to actual quoted rates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DELIVERY PLAN ══ -->
+<section class="wt-section" id="wt-delivery">
+  <div class="wt-eyebrow">Delivery plan</div>
+  <h2 class="wt-sec-title">Phased delivery from discovery to full platform</h2>
+  <p class="wt-sec-body">Each phase delivers a complete, usable increment on the same hub-first architecture. Click any phase below to view features, deliverables, screens, and integrations sourced from the project specification documents.</p>
+
+  <p class="wt-delivery-hint">Click a phase to view full details ↗</p>
+
+  <div class="wt-delivery-track" role="list">
+    <button type="button" class="wt-delivery-cell disc" data-phase="ph0" role="listitem" aria-label="Phase 0 Discovery — click for details">
+      <div class="wt-delivery-tag">Phase 0</div>
+      <h4>Discovery</h4>
+      <p>Workbook review · schema validation · integration inventory · SOW sign-off</p>
+    </button>
+    <button type="button" class="wt-delivery-cell ph1a" data-phase="ph1a" role="listitem" aria-label="Phase 1a MVP — click for details">
+      <div class="wt-delivery-tag">Phase 1a</div>
+      <h4>MVP</h4>
+      <p>17 features · governed quote workflow · 5 modules · EIA &amp; PDF hubs</p>
+    </button>
+    <button type="button" class="wt-delivery-cell ph1b" data-phase="ph1b" role="listitem" aria-label="Phase 1b Post-MVP — click for details">
+      <div class="wt-delivery-tag">Phase 1b</div>
+      <h4>Post-MVP</h4>
+      <p>Dashboard · reference data UI · analytics · DocuSign · TMS · MFA</p>
+    </button>
+    <button type="button" class="wt-delivery-cell ph2" data-phase="ph2" role="listitem" aria-label="Phase 2 Customer portal — click for details">
+      <div class="wt-delivery-tag">Phase 2</div>
+      <h4>Customer portal</h4>
+      <p>Self-service quotes · shipment tracker · address book · SSO</p>
+    </button>
+    <button type="button" class="wt-delivery-cell ph3" data-phase="ph3" role="listitem" aria-label="Phase 3 Sales and CRM — click for details">
+      <div class="wt-delivery-tag">Phase 3</div>
+      <h4>Sales &amp; CRM</h4>
+      <p>Pipeline kanban · sales dashboard · CRM sync · advanced analytics</p>
+    </button>
+  </div>
+
+  <div class="wt-delivery-legend">
+    <span><i class="wt-leg-dot disc"></i> Phase 0 — discovery &amp; SOW (no application delivery)</span>
+    <span><i class="wt-leg-dot ph1a"></i> Phase 1a — MVP (17 features, mandatory first release)</span>
+    <span><i class="wt-leg-dot ph1b"></i> Phase 1b — internal platform completion</span>
+    <span><i class="wt-leg-dot ph2"></i> Phase 2 — customer-facing portal</span>
+    <span><i class="wt-leg-dot ph3"></i> Phase 3 — sales enablement &amp; CRM</span>
+  </div>
+</section>
+
+<!-- ══ ARCHITECTURE ══ -->
+<section class="wt-section" id="wt-architecture">
+  <div class="wt-eyebrow">Proposed architecture</div>
+  <h2 class="wt-sec-title">Built to grow with you. Never to lock you in.</h2>
+  <p class="wt-sec-body">Every layer in the platform is designed as a pluggable component. Phase 1a (MVP) delivers the governed quote workflow. Phase 1b completes internal operations; Phases 2 and 3 add portal and sales capabilities — all on the same hub-first architecture.</p>
+  <div class="wt-arch-note">
+    <strong>Hub-first principle:</strong> Domain services never call external vendors directly. Phase 1a activates two hubs (Market Data, Document). Remaining hubs are scaffolded in Phase 1a and activated in Phase 1b–3 without re-architecture.
+  </div>
+  <div class="wt-arch-stack">
+    <div class="wt-arch-row">
+      <div class="wt-arch-phase ph1a">Layer 5</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Presentation Layer</div>
+        <div class="wt-arch-desc">Internal web UI (Phase 1a) · Customer portal (Phase 2) · CRM views (Phase 3)</div>
+      </div>
+      <span class="wt-arch-tag ph1a">Ph 1a–3</span>
+    </div>
+    <div class="wt-arch-row">
+      <div class="wt-arch-phase ph1a">Layer 4</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">API Gateway</div>
+        <div class="wt-arch-desc">Authentication, routing, schema validation — single entry point for all clients</div>
+      </div>
+      <span class="wt-arch-tag ph1a">Phase 1a</span>
+    </div>
+    <div class="wt-arch-row">
+      <div class="wt-arch-phase ph1a">Layer 3</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Domain Services — Pricing Engine · Tariff Admin · Customer Mgmt · Quote Mgmt · Workflow &amp; Governance</div>
+        <div class="wt-arch-desc">Hierarchical tariff resolution, quote lifecycle, approval rules, customer master records — modular monolith at MVP scale, splittable per module later</div>
+      </div>
+      <span class="wt-arch-tag ph1a">Phase 1a · 5 modules</span>
+    </div>
+    <div class="wt-arch-row optional">
+      <div class="wt-arch-phase ph1b">Layer 3+</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Extended domain services — Reference Data · Analytics · CRM &amp; Sales Enablement</div>
+        <div class="wt-arch-desc">Reference data promoted to standalone module (Phase 1b); analytics baseline (Phase 1b); CRM module (Phase 3)</div>
+      </div>
+      <span class="wt-arch-tag ph1b">Ph 1b &amp; 3</span>
+    </div>
+    <div class="wt-arch-row">
+      <div class="wt-arch-phase ph1a">Layer 2</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Integration Hub — Market Data (EIA fuel) · Document (PDF generation)</div>
+        <div class="wt-arch-desc">Two active hubs in Phase 1a; Rating &amp; Quote Hub and Ops Systems Hub scaffolded for Phase 1b+</div>
+      </div>
+      <span class="wt-arch-tag ph1a">Phase 1a · 2 hubs</span>
+    </div>
+    <div class="wt-arch-row optional">
+      <div class="wt-arch-phase ph1b">Layer 2+</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Integration Hub — DocuSign · TMS export · Freight tracking · SSO/MFA · CRM sync</div>
+        <div class="wt-arch-desc">DocuSign &amp; TMS in Phase 1b · freight tracking &amp; SSO in Phase 2 · CRM sync in Phase 3</div>
+      </div>
+      <span class="wt-arch-tag ph1b">Ph 1b–3</span>
+    </div>
+    <div class="wt-arch-row">
+      <div class="wt-arch-phase ph1a">Layer 1</div>
+      <div class="wt-arch-main">
+        <div class="wt-arch-name">Data Layer</div>
+        <div class="wt-arch-desc">Tariffs &amp; versions · Customers · Quotes &amp; provenance · Fuel tables · Users &amp; roles · Lightweight audit trail</div>
+      </div>
+      <span class="wt-arch-tag ph1a">Phase 1a</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODULES ══ -->
+<section class="wt-section" id="wt-modules">
+  <div class="wt-eyebrow">Module detail</div>
+  <h2 class="wt-sec-title">Explore what each module delivers</h2>
+  <div class="wt-modules-intro">
+    <p>Click any module to open its interactive mock screen in a new tab. Phase 1a (MVP) delivers the core quote workflow; Phase 1b completes internal ops; Phases 2 and 3 add the customer portal and sales pipeline.</p>
+    <p>The mock UI covers the full application scope across all delivery phases — use it to walk stakeholders through screens before build begins.</p>
+  </div>
+  <div class="wt-modules-grid">
+    <a href="internal/quote-builder.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1a">Phase 1a · MVP</span>
+      <div class="wt-mod-icon">💰</div>
+      <h3>Quote Builder &amp; Lifecycle</h3>
+      <p>Core pricing workflow — hierarchical tariff resolution, margin gauge, approval routing, provenance, and PDF output.</p>
+    </a>
+    <a href="internal/tariffs.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1a">Phase 1a · MVP</span>
+      <div class="wt-mod-icon">📋</div>
+      <h3>Tariff Administration</h3>
+      <p>CRUD, version history with effective dates, side-by-side comparison, and creation wizard.</p>
+    </a>
+    <a href="internal/customers.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1a">Phase 1a · MVP</span>
+      <div class="wt-mod-icon">👥</div>
+      <h3>Customer Management</h3>
+      <p>Customer master records — assigned tariffs, discount structures, assigned sales rep, and quote history.</p>
+    </a>
+    <a href="internal/admin-users.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1a">Phase 1a · MVP</span>
+      <div class="wt-mod-icon">⚙️</div>
+      <h3>Administration &amp; Governance</h3>
+      <p>User accounts, role-based permissions, approval rule configuration, and audit visibility.</p>
+    </a>
+    <a href="internal/dashboard.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1b">Phase 1b · Post-MVP</span>
+      <div class="wt-mod-icon">📊</div>
+      <h3>Operations Dashboard</h3>
+      <p>KPI cards, pending approvals, recent quotes, and quick actions for pricing managers and sales reps.</p>
+    </a>
+    <a href="internal/reference.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1b">Phase 1b · Post-MVP</span>
+      <div class="wt-mod-icon">🗂️</div>
+      <h3>Reference Data Hub</h3>
+      <p>Fuel surcharge tables (EIA-fed), accessorial charge rules, and lane/ZIP group definitions consumed by the pricing engine.</p>
+    </a>
+    <a href="internal/analytics.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph1b">Phase 1b · Post-MVP</span>
+      <div class="wt-mod-icon">📈</div>
+      <h3>Analytics &amp; Profitability</h3>
+      <p>Pricing and margin reporting — baseline in Phase 1b; Phase 2 chart expansions; Phase 3 sales metrics</p>
+    </a>
+    <a href="portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" class="wt-mod-tile">
+      <span class="wt-mod-phase ph2">Phase 2 · Portal</span>
+      <div class="wt-mod-icon">🌐</div>
+      <h3>Customer Self-Service Portal</h3>
+      <p>Branded external portal — quote requests, shipment tracking, address book, saved commodities, and proof of delivery.</p>
+    </a>
+    <a href="crm/crm-dashboard.html" class="wt-mod-tile" target="_blank" rel="noopener noreferrer">
+      <span class="wt-mod-phase ph3">Phase 3 · Sales</span>
+      <div class="wt-mod-icon">🎯</div>
+      <h3>Sales Pipeline &amp; CRM</h3>
+      <p>Team KPIs, rep leaderboard, opportunity kanban by lifecycle stage, and quote aging follow-ups.</p>
+    </a>
+  </div>
+</section>
+
+<!-- ══ WORKFLOWS ══ -->
+<section class="wt-section" id="wt-workflow">
+  <div class="wt-eyebrow">Proposed key workflows</div>
+  <h2 class="wt-sec-title">How the system works for each team</h2>
+  <p class="wt-sec-body">A swimlane view of primary workflows across user groups. Cells note the delivery phase when capabilities activate beyond Phase 1a MVP.</p>
+  <div class="wt-swim-outer">
+    <table class="wt-swim-table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Tariff management</th>
+          <th>Price a shipment</th>
+          <th>Approvals</th>
+          <th>Quote output</th>
+          <th>Customer channel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-accent)"></span>Sales rep</td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active">Quote builder · tariff auto-resolve · margin gauge · discount entry</td>
+          <td class="wt-swim-active">Submit when thresholds exceeded · track approval status</td>
+          <td class="wt-swim-active">Generate PDF <span class="wt-swim-phase">1a</span> · e-signature <span class="wt-swim-phase ph1b">1b</span> · TMS export <span class="wt-swim-phase ph1b">1b</span></td>
+          <td class="wt-swim-blank">—</td>
+        </tr>
+        <tr>
+          <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-green)"></span>Sales manager</td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active">Review rep quotes · override with audit trail</td>
+          <td class="wt-swim-active">Approve / reject · escalation routing · dashboard queue</td>
+          <td class="wt-swim-active">Release quote to customer · compare quote versions</td>
+          <td class="wt-swim-blank">—</td>
+        </tr>
+        <tr>
+          <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-amber)"></span>Pricing admin</td>
+          <td class="wt-swim-active">Tariff CRUD · version history · diff <span class="wt-swim-phase">1a</span> · competitor benchmark <span class="wt-swim-phase ph1b">1b</span></td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active">Configure approval rules · margin floors · network thresholds</td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-blank">—</td>
+        </tr>
+        <tr>
+          <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-ink-soft)"></span>Operations</td>
+          <td class="wt-swim-active">Fuel tables · accessorials · lanes <span class="wt-swim-phase ph1b">1b</span> · EIA feed review <span class="wt-swim-phase">1a</span></td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active">TMS export <span class="wt-swim-phase ph1b">1b</span> · quote PDF archive <span class="wt-swim-phase">1a</span></td>
+          <td class="wt-swim-blank">—</td>
+        </tr>
+        <tr>
+          <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-burgundy)"></span>Customer (portal)</td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active-amber">Self-service quote · saved addresses <span class="wt-swim-phase ph2">2</span></td>
+          <td class="wt-swim-blank">—</td>
+          <td class="wt-swim-active-amber">Accept &amp; book · quote confirmation <span class="wt-swim-phase ph2">2</span></td>
+          <td class="wt-swim-active-amber">Shipment tracker · POD · address book <span class="wt-swim-phase ph2">2</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ INTEGRATIONS ══ -->
+<section class="wt-section" id="wt-integrations">
+  <div class="wt-eyebrow">Proposed system integrations</div>
+  <h2 class="wt-sec-title">Connects to what American West already runs</h2>
+  <div class="wt-int-intro">
+    <p>Integrations route through hub adapters. Phase 1a activates EIA fuel and PDF generation; Phase 1b adds DocuSign and TMS; Phases 2–3 add portal tracking, identity, and CRM sync.</p>
+    <p>All integrations use REST APIs where available, with scheduled file exchange as a fallback. Domain logic never calls vendors directly — every external touchpoint routes through the integration hub layer.</p>
+  </div>
+  <div class="wt-int-grid">
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>EIA.gov Public API</strong><span>Market Data Hub</span></div>
+      <div class="wt-int-desc">Weekly diesel fuel price pull feeding the pricing engine's surcharge calculation. Historical rates retained with source reference on every quote.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph1a">Phase 1a</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>PDF Generation</strong><span>Document Hub</span></div>
+      <div class="wt-int-desc">Headless rendering adapter produces branded quote PDFs stored in object storage with retrievable URLs attached to quote records.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph1a">Phase 1a</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>DocuSign</strong><span>Document Hub · E-signature</span></div>
+      <div class="wt-int-desc">Quote documents sent for e-signature directly from the quote workflow. Executed documents returned and archived to the quote record.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph1b">Phase 1b</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>TMS Export</strong><span>Ops Systems Hub</span></div>
+      <div class="wt-int-desc">Accepted quotes pushed to the transportation management system — rate, lane, and customer reference included for operational handoff.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph1b">Phase 1b</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>Freight Tracking</strong><span>Ops Systems Hub</span></div>
+      <div class="wt-int-desc">Shipment status consumed for the customer portal tracker — active and completed shipments with milestone events and proof-of-delivery access.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph2">Phase 2</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>SSO / MFA</strong><span>API Gateway · Identity</span></div>
+      <div class="wt-int-desc">Enterprise single sign-on and multi-factor authentication for portal customers — internal MFA ships in Phase 1b.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph2">Phase 2</span></div>
+    </div>
+    <div class="wt-int-row">
+      <div class="wt-int-name"><strong>CRM Sync</strong><span>Ops Systems Hub</span></div>
+      <div class="wt-int-desc">Opportunity and quote status synchronized with the sales CRM — pipeline stage updates driven by quote lifecycle events in the pricing system.</div>
+      <div class="wt-int-phase"><span class="wt-int-badge ph3">Phase 3</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MOCKUP INDEX ══ -->
+<section class="wt-section" id="wt-mockups">
+  <div class="wt-eyebrow">Interactive mockups</div>
+  <h2 class="wt-sec-title">Browse every screen in the mock UI</h2>
+  <p class="wt-sec-body">All screens below are fully linked HTML mockups grouped by delivery phase — click any entry to open in a new tab.</p>
+
+  <div class="wt-mockup-group">
+    <h3><span class="wt-phase-badge ph1a">Phase 1a · MVP</span> Core pricing workflow</h3>
+    <div class="wt-mockup-grid">
+      <div class="wt-mockup-card"><a href="internal/login.html">Login</a><p>Authenticate and route by role</p></div>
+      <div class="wt-mockup-card"><a href="internal/forgot-password.html">Forgot Password</a><p>Password reset flow</p></div>
+      <div class="wt-mockup-card"><a href="internal/quotes.html">Quote List</a><p>Browse and manage quotes</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-builder.html">Quote Builder</a><p>Construct new quotes — core screen</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-detail.html">Quote Detail</a><p>Lifecycle, provenance, contextual actions</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-comparison.html">Quote Comparison</a><p>Side-by-side quote diff</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-pdf.html">Quote PDF Preview</a><p>Generate PDF action result</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariffs.html">Tariff List</a><p>Browse, search, manage tariffs</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-detail.html">Tariff Detail / Editor</a><p>Overview, overrides, version history, audit log</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-comparison.html">Tariff Comparison</a><p>Side-by-side tariff diff</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-wizard.html">Tariff Creation Wizard</a><p>4-step guided tariff creation</p></div>
+      <div class="wt-mockup-card"><a href="internal/customers.html">Customer List</a><p>Customer master records</p></div>
+      <div class="wt-mockup-card"><a href="internal/customer-detail.html">Customer Detail</a><p>Profile, tariffs, discounts, quote history</p></div>
+      <div class="wt-mockup-card"><a href="internal/admin-users.html">Users &amp; Roles</a><p>User accounts and permissions</p></div>
+      <div class="wt-mockup-card"><a href="internal/admin-invite.html">Invite User</a><p>Admin user invitation form</p></div>
+      <div class="wt-mockup-card"><a href="internal/admin-user-edit.html">Edit User</a><p>User account edit / disable</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-delete-confirm.html">Delete Tariff</a><p>Destructive confirmation</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-add-override.html">Add Tariff Override</a><p>Override configuration form</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariffs-page2.html">Tariffs (page 2)</a><p>Pagination example</p></div>
+    </div>
+  </div>
+
+  <div class="wt-mockup-group">
+    <h3><span class="wt-phase-badge ph1b">Phase 1b · Post-MVP</span> Extended internal operations</h3>
+    <div class="wt-mockup-grid">
+      <div class="wt-mockup-card"><a href="internal/dashboard.html">Dashboard</a><p>KPI cards, pending approvals, recent quotes</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference.html">Reference Data Hub</a><p>Fuel, accessorials, lanes</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-fuel.html">Fuel Tables</a><p>Fuel surcharge management</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-accessorials.html">Accessorials</a><p>Accessorial charge rules</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-lanes.html">Lanes</a><p>Lane definitions and CFQ zones</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-fuel-edit.html">Edit Fuel Rate</a><p>Fuel surcharge edit form</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-fuel-override.html">Fuel Manual Override</a><p>One-off surcharge entry</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-accessorial-edit.html">Edit Accessorial</a><p>Accessorial rule form</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference-lane-edit.html">Edit Lane</a><p>Lane group form</p></div>
+      <div class="wt-mockup-card"><a href="internal/analytics.html">Analytics</a><p>Pricing and profitability reporting</p></div>
+      <div class="wt-mockup-card"><a href="internal/tariff-competitor-comparison.html">Competitor Comparison</a><p>AW rate vs competitor quote</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-esign.html">E-Signature</a><p>DocuSign send flow</p></div>
+      <div class="wt-mockup-card"><a href="internal/quote-tms-export.html">TMS Export</a><p>Export confirmation</p></div>
+    </div>
+  </div>
+
+  <div class="wt-mockup-group">
+    <h3><span class="wt-phase-badge ph2">Phase 2 · Portal</span> Customer self-service</h3>
+    <div class="wt-mockup-grid">
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-dashboard.html">Customer Home</a><p>Welcome, get a quote, recent activity</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-quote-request.html">Quote Request</a><p>Self-service quote flow</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-quote-confirmation.html">Quote Confirmed</a><p>Accept &amp; book success</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-shipment-tracker.html">Shipment Tracker</a><p>Active and past shipments</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-self-service.html">Self-Service Tools</a><p>Address book, saved commodities</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-pod.html">Proof of Delivery</a><p>POD download view</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-add-address.html">Add Address</a><p>Portal address form</p></div>
+      <div class="wt-mockup-card"><a target="_blank" rel="noopener noreferrer" href="portal/portal-add-commodity.html">Add Commodity</a><p>Portal commodity form</p></div>
+    </div>
+  </div>
+
+  <div class="wt-mockup-group">
+    <h3><span class="wt-phase-badge ph3">Phase 3 · Sales</span> Sales Pipeline &amp; CRM</h3>
+    <div class="wt-mockup-grid">
+      <div class="wt-mockup-card"><a href="crm/crm-dashboard.html">Sales Dashboard</a><p>Team KPIs, leaderboard, follow-ups</p></div>
+      <div class="wt-mockup-card"><a href="crm/crm-opportunities.html">Opportunity / Quote Aging</a><p>Kanban by lifecycle stage</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="wt-footer">
+  American West Tariff &amp; Pricing System · Interactive HTML Mockup · InApp Inc. · Confidential
+</footer>
+
+</div>
+
+<!-- Phase detail drawer -->
+<div class="wt-drawer-veil" id="wt-drawer-veil" aria-hidden="true">
+  <div class="wt-drawer" role="dialog" aria-modal="true" aria-labelledby="wt-drawer-title">
+    <div class="wt-drawer-head">
+      <div class="wt-drawer-icon" id="wt-drawer-icon" aria-hidden="true"></div>
+      <div class="wt-drawer-head-text">
+        <h2 class="wt-drawer-title" id="wt-drawer-title"></h2>
+        <p class="wt-drawer-sub" id="wt-drawer-sub"></p>
+      </div>
+      <button type="button" class="wt-drawer-close" id="wt-drawer-close" aria-label="Close">✕</button>
+    </div>
+    <div class="wt-drawer-body" id="wt-drawer-body"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('a[href^="internal/"], a[href^="portal/"], a[href^="crm/"]').forEach(function (a) {
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  });
+
+  var stops = document.querySelectorAll('.wt-rail-stop');
+  var lines = document.querySelectorAll('.wt-rail-line');
+  var sections = ['wt-hero','wt-problem','wt-delivery','wt-architecture','wt-modules','wt-workflow','wt-integrations','wt-mockups'];
+
+  stops.forEach(function (stop) {
+    stop.addEventListener('click', function () {
+      var id = stop.getAttribute('data-target');
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function updateRail() {
+    var scrollY = window.scrollY + window.innerHeight * 0.35;
+    var active = sections[0];
+    sections.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) active = id;
+    });
+    stops.forEach(function (stop) {
+      stop.classList.toggle('active', stop.getAttribute('data-target') === active);
+    });
+    lines.forEach(function (line) {
+      var pair = line.getAttribute('data-between').split(',');
+      var idx = sections.indexOf(pair[1]);
+      var lit = sections.indexOf(active) >= idx;
+      line.classList.toggle('lit', lit);
+    });
+  }
+
+  window.addEventListener('scroll', updateRail, { passive: true });
+  updateRail();
+
+  /* ── Delivery plan drawer ── */
+  var phaseData = {
+    ph0: {
+      icon: '🔍',
+      title: 'Phase 0 · Discovery',
+      sub: 'Validate scope before build — no application delivery',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout disc"><strong>Prerequisite to SOW:</strong> Phase 0 findings from live American West tariff workbooks and business walkthroughs inform schema and reference-data refinements only — they do not expand the 17-feature MVP scope.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Deliverables</div><ul class="wt-drawer-list">' +
+        '<li>Phase 0 source material review — live tariff workbooks and pricing process walkthrough</li>' +
+        '<li>Data model validation — customers, tariffs, versions, quotes, fuel tables, users, lightweight audit trail</li>' +
+        '<li>Confirm service types: Business, Threshold, WGNI, WGI with density factor (lbs/cu ft) for CWT↔Cube</li>' +
+        '<li>Confirm commodity classes: FAK (default), Case Goods, Upholstery</li>' +
+        '<li>Confirm lane/ZIP grouping pattern — ZIP-to-base-ZIP groups at national scale</li>' +
+        '<li>Integration inventory — EIA fuel feed, TMS, DocuSign, identity/SSO readiness</li>' +
+        '<li>MVP feature scope sign-off (17 features per MVP BRD) and signed Statement of Work</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Out of scope</div><ul class="wt-drawer-list muted">' +
+        '<li>No application code, infrastructure, or mock production data migration</li>' +
+        '<li>Agent tariff logic deferred to post-MVP</li>' +
+        '</ul></div>'
+    },
+    ph1a: {
+      icon: '💰',
+      title: 'Phase 1a · MVP',
+      sub: '17 features — one core workflow: log in, price a shipment, govern the quote, produce a PDF',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Core workflow:</strong> A sales rep logs in, prices a shipment for a customer, and the quote is governed, recorded, and produced as a PDF — plus version/diff visibility and full quote provenance.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Domain modules (5 of 9)</div><ul class="wt-drawer-list">' +
+        '<li><strong>Pricing Engine</strong> (#1, #3, #6) — hierarchical tariff resolution (base→customer→lane→commodity); CWT, Cube, Seat, % Invoice, Flat Rate; margin floor &amp; minimum charge</li>' +
+        '<li><strong>Tariff Administration</strong> (#8, #10, #11) — web CRUD; version history with effective dates; side-by-side comparison &amp; diff</li>' +
+        '<li><strong>Customer Management</strong> (#13) — master records, assigned tariffs, discounts, assigned rep</li>' +
+        '<li><strong>Quote Management</strong> (#17–#20) — spot quote generation; lifecycle state machine; search, history, full provenance per quote</li>' +
+        '<li><strong>Workflow &amp; Governance</strong> (#23) — approval rules for discount, margin, cube, weight, network thresholds</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integration hubs (2 of 4 active)</div><ul class="wt-drawer-list">' +
+        '<li><strong>Market Data Hub</strong> — EIA.gov weekly diesel pull; fuel surcharge config consumed by Pricing Engine (#27 config data, not standalone UI)</li>' +
+        '<li><strong>Document Hub</strong> — headless PDF rendering; quote PDFs stored in object storage with retrievable URLs</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Technology deliverables</div><ul class="wt-drawer-list">' +
+        '<li>Modular monolith — single deployable unit hosting all 5 MVP modules</li>' +
+        '<li>SQL database + S3-compatible object store + container hosting</li>' +
+        '<li>Username/password auth with hashed credentials; roles: Admin, Sales Rep, Sales Manager, Operations</li>' +
+        '<li>Internal web UI only — no customer portal, no analytics module, no CRM</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">UI screens (MVP surface)</div><ul class="wt-drawer-list">' +
+        '<li>Login · Forgot Password · Users &amp; Roles (basic admin)</li>' +
+        '<li>Tariff List · Detail/Editor · Comparison · Creation Wizard</li>' +
+        '<li>Customer List · Customer Detail</li>' +
+        '<li>Quote List · Quote Builder · Quote Detail · Quote Comparison · Quote PDF Preview</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Explicitly deferred to Phase 1b+</div><ul class="wt-drawer-list muted">' +
+        '<li>Operations Dashboard · Reference Data Hub UI · Analytics · Competitor comparison</li>' +
+        '<li>DocuSign · TMS export · MFA · Rating &amp; Quote Hub · Ops Systems Hub</li>' +
+        '<li>Customer Portal (Phase 2) · CRM (Phase 3) · Agent tariffs · Full immutable audit framework</li>' +
+        '</ul></div>'
+    },
+    ph1b: {
+      icon: '📊',
+      title: 'Phase 1b · Post-MVP',
+      sub: 'Complete internal pricing operations — additive to Phase 1a, no re-architecture',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1b"><strong>Graduation path:</strong> Activates remaining internal capabilities on the same architecture — standalone Reference Data module, Analytics, extended hubs, and full operations UI per UI Screen Flow Specification §3.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Features &amp; modules</div><ul class="wt-drawer-list">' +
+        '<li><strong>Reference Data module</strong> (#27, #28, #29) — fuel tables, accessorial rules, lane/ZIP groups promoted to managed UI (was engine config in MVP)</li>' +
+        '<li><strong>Operations Dashboard</strong> (§3.2) — role-aware KPIs, pending approvals queue, recent quotes, + New Quote</li>' +
+        '<li><strong>Analytics baseline</strong> (§3.17) — Margin Analysis, Tariff Performance / Profitability, Lane Performance charts</li>' +
+        '<li><strong>Competitor Tariff Comparison</strong> — AW rate vs. competitor quote (§3, nav map)</li>' +
+        '<li><strong>Security hardening</strong> — MFA step on login (§3.1); full Admin permission matrix (§3.16)</li>' +
+        '<li><strong>Extended audit</strong> — immutable audit framework when compliance requirements formalize</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integration hubs activated</div><ul class="wt-drawer-list">' +
+        '<li><strong>Document Hub</strong> — DocuSign (or equivalent) e-signature adapter; executed docs archived to quote record</li>' +
+        '<li><strong>Ops Systems Hub</strong> — TMS export; operational notifications scaffold</li>' +
+        '<li><strong>Rating &amp; Quote Hub</strong> — external API consumer for TMS operational handoff</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">UI screens added</div><ul class="wt-drawer-list">' +
+        '<li>Dashboard · Reference Data Hub (Fuel, Accessorials, Lanes) and all edit forms</li>' +
+        '<li>Analytics · Competitor Comparison · E-Signature flow · TMS Export confirmation</li>' +
+        '<li>Admin invite/edit · Fuel history · Tariff rollback confirm</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Infrastructure additions (as usage justifies)</div><ul class="wt-drawer-list muted">' +
+        '<li>Message queue / job scheduler for async jobs beyond weekly EIA pull</li>' +
+        '<li>Optional service split when team scale or module scaling requires it</li>' +
+        '</ul></div>'
+    },
+    ph2: {
+      icon: '🌐',
+      title: 'Phase 2 · Customer Portal',
+      sub: 'Separate portal shell — top-nav, card layout, fully responsive (§4, §8)',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph2"><strong>Distinct shell:</strong> Visually related to the internal app (same AW brand) but structurally separate — top navigation, card-based layout, mobile-first down to phone width.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Portal screens (§4)</div><ul class="wt-drawer-list">' +
+        '<li><strong>Portal Login / Dashboard</strong> — welcome banner, Get a Quote CTA, recent activity feed</li>' +
+        '<li><strong>Quote Request</strong> — simplified Quote Builder; same Rating Hub API as internal reps; Accept &amp; Book or Save for Later</li>' +
+        '<li><strong>Shipment Tracker</strong> — Quote→Accepted→BOL→Pickup→Tracking→Delivery→Invoice timeline; Download POD on delivered shipments</li>' +
+        '<li><strong>Self-Service Tools</strong> — address book, saved commodity profiles, Requote, Duplicate Shipment from past cards</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Lifecycle distinction (§6, §7)</div><ul class="wt-drawer-list">' +
+        '<li>Quote status lifecycle (Draft→…→Archived) stays in internal Quote Detail</li>' +
+        '<li>Quote-to-Shipment lifecycle tracked in portal Shipment Tracker — connected at Converted to Shipment handoff</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integrations</div><ul class="wt-drawer-list">' +
+        '<li><strong>Freight tracking</strong> — shipment status for portal tracker (Ops Systems Hub)</li>' +
+        '<li><strong>SSO / MFA</strong> — enterprise identity for portal customers (API Gateway)</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Analytics expansion (§3.17 Phase 2 additions)</div><ul class="wt-drawer-list">' +
+        '<li>Most Quoted Lanes · Margin Leakage · Win/Loss Rate · Geographic Heat Map · Conversion Rate by Rep/Customer — added to internal Analytics screen</li>' +
+        '</ul></div>'
+    },
+    ph3: {
+      icon: '🎯',
+      title: 'Phase 3 · Sales Pipeline &amp; CRM',
+      sub: 'CRM &amp; Sales Enablement module — internal left-rail shell (§5)',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph3"><strong>Sales enablement:</strong> Ties quoted rates to pipeline visibility — entered from global navigation as a separate top-level area alongside internal pricing ops.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">CRM screens (§5)</div><ul class="wt-drawer-list">' +
+        '<li><strong>Sales Dashboard</strong> — Pipeline Value, Win Rate, Avg. Quote Aging KPIs; rep leaderboard; Follow-ups Due Today</li>' +
+        '<li><strong>Opportunity / Quote Aging</strong> — kanban by quote lifecycle stage; customer, amount, days in stage; drag-and-drop where rules allow</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integrations</div><ul class="wt-drawer-list">' +
+        '<li><strong>CRM Sync</strong> (Ops Systems Hub) — opportunity and quote status synchronized; pipeline stage updates driven by quote lifecycle events</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Deliverables</div><ul class="wt-drawer-list">' +
+        '<li>CRM &amp; Sales Enablement domain module deployed</li>' +
+        '<li>Unified view of opportunities tied to actual quoted rates and margins</li>' +
+        '<li>Manager workflows for quote aging, win/loss, and rep performance follow-through</li>' +
+        '</ul></div>'
+    }
+  };
+
+  var drawerVeil = document.getElementById('wt-drawer-veil');
+  var drawerTitle = document.getElementById('wt-drawer-title');
+  var drawerSub = document.getElementById('wt-drawer-sub');
+  var drawerIcon = document.getElementById('wt-drawer-icon');
+  var drawerBody = document.getElementById('wt-drawer-body');
+  var drawerClose = document.getElementById('wt-drawer-close');
+  var deliveryCells = document.querySelectorAll('.wt-delivery-cell[data-phase]');
+
+  function openPhaseDrawer(phaseId) {
+    var data = phaseData[phaseId];
+    if (!data) return;
+    drawerIcon.textContent = data.icon;
+    drawerTitle.textContent = data.title;
+    drawerSub.textContent = data.sub;
+    drawerBody.innerHTML = data.body;
+    drawerVeil.classList.add('open');
+    drawerVeil.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    deliveryCells.forEach(function (cell) {
+      cell.classList.toggle('is-open', cell.getAttribute('data-phase') === phaseId);
+    });
+    drawerClose.focus();
+  }
+
+  function closePhaseDrawer() {
+    drawerVeil.classList.remove('open');
+    drawerVeil.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    deliveryCells.forEach(function (cell) { cell.classList.remove('is-open'); });
+  }
+
+  deliveryCells.forEach(function (cell) {
+    cell.addEventListener('click', function () {
+      openPhaseDrawer(cell.getAttribute('data-phase'));
+    });
+  });
+
+  drawerClose.addEventListener('click', closePhaseDrawer);
+  drawerVeil.addEventListener('click', function (e) {
+    if (e.target === drawerVeil) closePhaseDrawer();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && drawerVeil.classList.contains('open')) closePhaseDrawer();
+  });
+})();
+</script>
+</body>
+</html>

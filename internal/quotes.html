@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotes — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html" class="active"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>Quotes</h1></div><a href="quote-builder.html" class="btn btn-primary">+ New Quote</a></div>
+<div class="drill-banner" data-drill-banner hidden></div>
+<div class="filter-bar" data-filter-target="#quotes-table">
+<div class="field"><label for="q-status">Status</label><select id="q-status" name="status"><option value="All">All</option><option value="draft">Draft</option><option value="pending">Pending Approval</option><option value="approved">Approved</option><option value="sent">Sent</option><option value="accepted">Accepted</option><option value="lost">Lost</option></select></div>
+<div class="field"><label for="q-customer">Customer</label><select id="q-customer" name="customer"><option value="All">All</option><option value="Pacific Home Furnishings">Pacific Home Furnishings</option><option value="Cascade Furniture Co.">Cascade Furniture Co.</option><option value="Northwest Retail Group">Northwest Retail Group</option></select></div>
+<div class="field"><label for="q-rep">Created By</label><select id="q-rep" name="rep"><option value="All">All</option><option value="Jordan Ellis">Jordan Ellis</option><option value="Alex Kim">Alex Kim</option></select></div>
+<div class="field"><label for="q-search">Search</label><input type="search" id="q-search" name="search" placeholder="Quote #, customer..."></div>
+<div class="filter-actions"><button type="button" class="btn btn-primary btn-sm" data-filter-apply>Apply</button><button type="button" class="btn btn-secondary btn-sm" data-filter-reset>Reset</button></div>
+</div>
+<p class="filter-count" data-filter-count>Showing all 8 records</p>
+<div class="filter-empty" data-filter-empty hidden>No quotes match your filters.</div>
+<table id="quotes-table" class="data-table">
+<thead><tr><th>Quote #</th><th>Customer</th><th>Lane</th><th>Amount</th><th>Margin</th><th>Status</th><th>Created By</th><th>Updated</th><th>Actions</th></tr></thead>
+<tbody>
+<tr data-status="pending" data-customer="Pacific Home Furnishings" data-rep="Jordan Ellis" data-search="Q-2026-0847 Pacific Home Furnishings Seattle Portland"><td class="tabular"><a href="quote-detail.html">Q-2026-0847</a></td><td>Pacific Home Furnishings</td><td>Seattle → Portland</td><td class="tabular">$3,847.50</td><td class="tabular">18.2%</td><td><span class="badge badge-pending">Pending Approval</span></td><td>Jordan Ellis</td><td class="tabular">Jun 20</td><td class="actions"><a href="quote-detail.html">Open</a><a href="quote-comparison.html">Compare</a><a href="quote-builder.html">Duplicate</a></td></tr>
+<tr data-status="pending" data-customer="Northwest Retail Group" data-rep="Jordan Ellis" data-search="Q-2026-0842 Northwest Retail Portland Seattle"><td class="tabular"><a href="quote-detail.html">Q-2026-0842</a></td><td>Northwest Retail Group</td><td>Portland → Seattle</td><td class="tabular">$4,120.00</td><td class="tabular">14.1%</td><td><span class="badge badge-pending">Pending Approval</span></td><td>Jordan Ellis</td><td class="tabular">Jun 19</td><td class="actions"><a href="quote-detail.html">Open</a><a href="quote-comparison.html">Compare</a></td></tr>
+<tr data-status="pending" data-customer="Northwest Retail Group" data-rep="Alex Kim" data-search="Q-2026-0831 Northwest Retail Boise"><td class="tabular"><a href="quote-detail.html">Q-2026-0831</a></td><td>Northwest Retail Group</td><td>Boise → Portland</td><td class="tabular">$2,890.00</td><td class="tabular">19.5%</td><td><span class="badge badge-pending">Pending Approval</span></td><td>Alex Kim</td><td class="tabular">Jun 17</td><td class="actions"><a href="quote-detail.html">Open</a></td></tr>
+<tr data-status="approved" data-customer="Pacific Home Furnishings" data-rep="Jordan Ellis" data-search="Q-2026-0823 Pacific Home Furnishings Seattle Portland"><td class="tabular"><a href="quote-detail.html">Q-2026-0823</a></td><td>Pacific Home Furnishings</td><td>Seattle → Portland</td><td class="tabular">$3,620.00</td><td class="tabular">22.4%</td><td><span class="badge badge-approved">Approved</span></td><td>Jordan Ellis</td><td class="tabular">Jun 18</td><td class="actions"><a href="quote-detail.html">Open</a><a href="quote-comparison.html">Compare</a><a href="quote-builder.html">Duplicate</a></td></tr>
+<tr data-status="sent" data-period="week" data-customer="Cascade Furniture Co." data-rep="Jordan Ellis" data-search="Q-2026-0819 Cascade Furniture Portland"><td class="tabular"><a href="quote-detail.html">Q-2026-0819</a></td><td>Cascade Furniture Co.</td><td>Portland → Eugene</td><td class="tabular">$2,340.00</td><td class="tabular">20.8%</td><td><span class="badge badge-sent">Sent</span></td><td>Jordan Ellis</td><td class="tabular">Jun 15</td><td class="actions"><a href="quote-detail.html">Open</a></td></tr>
+<tr data-status="accepted" data-customer="Pacific Home Furnishings" data-rep="Jordan Ellis" data-search="Q-2026-0770 Pacific Home Furnishings Seattle Portland"><td class="tabular"><a href="quote-detail.html">Q-2026-0770</a></td><td>Pacific Home Furnishings</td><td>Seattle → Portland</td><td class="tabular">$1,890.00</td><td class="tabular">24.1%</td><td><span class="badge badge-accepted">Accepted</span></td><td>Jordan Ellis</td><td class="tabular">Jun 22</td><td class="actions"><a href="quote-detail.html">Open</a></td></tr>
+<tr data-status="draft" data-customer="Pacific Home Furnishings" data-rep="Jordan Ellis" data-search="Q-2026-0801 Pacific Home Furnishings Seattle"><td class="tabular"><a href="quote-builder.html">Q-2026-0801</a></td><td>Pacific Home Furnishings</td><td>Seattle → Tacoma</td><td class="tabular">$1,980.00</td><td class="tabular">—</td><td><span class="badge badge-draft">Draft</span></td><td>Jordan Ellis</td><td class="tabular">Jun 12</td><td class="actions"><a href="quote-builder.html">Open</a></td></tr>
+<tr data-status="lost" data-customer="Cascade Furniture Co." data-rep="Jordan Ellis" data-search="Q-2026-0798 Cascade Furniture Portland Boise"><td class="tabular"><a href="quote-detail.html">Q-2026-0798</a></td><td>Cascade Furniture Co.</td><td>Portland → Boise</td><td class="tabular">$2,150.00</td><td class="tabular">25.1%</td><td><span class="badge badge-lost">Lost Opportunity</span></td><td>Jordan Ellis</td><td class="tabular">Jun 10</td><td class="actions"><a href="quote-detail.html">Open</a><a href="quote-comparison.html">Compare</a></td></tr>
+</tbody></table>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

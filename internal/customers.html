@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customers — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html" class="active"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>Customers</h1></div><a href="customer-detail.html" class="btn btn-primary">+ New Customer</a></div>
+<div class="filter-bar" data-filter-target="#customers-table">
+<div class="field"><label for="c-rep">Assigned Rep</label><select id="c-rep" name="rep"><option value="All">All</option><option value="Jordan Ellis">Jordan Ellis</option></select></div>
+<div class="field"><label for="c-status">Status</label><select id="c-status" name="status"><option value="All">All</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+<div class="field"><label for="c-search">Search</label><input type="search" id="c-search" name="search" placeholder="Name, code..."></div>
+<div class="filter-actions"><button type="button" class="btn btn-primary btn-sm" data-filter-apply>Apply</button><button type="button" class="btn btn-secondary btn-sm" data-filter-reset>Reset</button></div>
+</div>
+<p class="filter-count" data-filter-count>Showing all 2 records</p>
+<div class="filter-empty" data-filter-empty hidden>No customers match your filters.</div>
+<table id="customers-table" class="data-table">
+<thead><tr><th>Code</th><th>Name</th><th>Tariffs</th><th>Discount</th><th>Rep</th><th>Actions</th></tr></thead>
+<tbody>
+<tr data-rep="Jordan Ellis" data-status="active" data-search="PHF-2041 Pacific Home Furnishings"><td class="tabular">PHF-2041</td><td><a href="customer-detail.html">Pacific Home Furnishings</a></td><td class="tabular"><a href="customer-detail.html">3</a></td><td class="tabular">5% overall</td><td>Jordan Ellis</td><td class="actions"><a href="customer-detail.html">Edit</a><a href="quotes.html">View Quotes</a></td></tr>
+<tr data-rep="Jordan Ellis" data-status="active" data-search="CFG-1102 Cascade Furniture Co."><td class="tabular">CFG-1102</td><td><a href="customer-detail.html">Cascade Furniture Co.</a></td><td class="tabular">2</td><td class="tabular">3%</td><td>Jordan Ellis</td><td class="actions"><a href="customer-detail.html">Edit</a><a href="quotes.html">View Quotes</a></td></tr>
+</tbody></table>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

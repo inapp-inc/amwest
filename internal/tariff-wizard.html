@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Tariff — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html" class="active"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>New Tariff</h1></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
+
+<div data-wizard>
+<div class="wizard-steps">
+<button type="button" class="wizard-step active" data-wizard-step>1. Basics</button>
+<button type="button" class="wizard-step" data-wizard-step>2. Pricing Model</button>
+<button type="button" class="wizard-step" data-wizard-step>3. Overrides</button>
+<button type="button" class="wizard-step" data-wizard-step>4. Review</button>
+</div>
+
+<div class="wizard-panel" data-wizard-panel>
+<div class="card">
+<h3 class="panel-title">Step 1: Basics</h3>
+<div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="White Glove Inspection — B2B"></div>
+<div class="field"><label for="tw-id">Tariff ID</label><input id="tw-id" class="tabular" value="TAR-NEW-001"></div>
+<div class="segmented" style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="tw-service" checked><span>Business/B2B</span></label>
+<label><input type="radio" name="tw-service"><span>Threshold</span></label>
+<label><input type="radio" name="tw-service"><span>White Glove No Insp.</span></label>
+<label><input type="radio" name="tw-service"><span>White Glove Inspection</span></label>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label for="tw-start">Effective start</label><input id="tw-start" type="date" value="2026-01-01"></div>
+<div class="field"><label for="tw-end">Effective end</label><input id="tw-end" type="date" value="2026-12-31"></div>
+</div>
+</div>
+<div class="wizard-nav"><span></span><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
+</div>
+
+<div class="wizard-panel" data-wizard-panel hidden>
+<div class="card">
+<h3 class="panel-title">Step 2: Pricing Model</h3>
+<div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="tw-uom" value="cwt" checked><span>CWT</span></label>
+<label><input type="radio" name="tw-uom" value="cube"><span>Cube</span></label>
+<label><input type="radio" name="tw-uom" value="seat"><span>Seat</span></label>
+<label><input type="radio" name="tw-uom" value="invoice"><span>% Invoice</span></label>
+<label><input type="radio" name="tw-uom" value="flat"><span>Flat Rate</span></label>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field" data-density-field><label for="tw-density">Density factor (lbs/cu ft)</label><input id="tw-density" class="tabular" value="8.5"></div>
+<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value="$58.00"></div>
+<div class="field"><label for="tw-floor">Margin floor</label><input id="tw-floor" class="tabular" value="15%"></div>
+<div class="field"><label for="tw-lane">Lane reference</label><input id="tw-lane" value="National B2B Matrix"></div>
+</div>
+</div>
+<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
+</div>
+
+<div class="wizard-panel" data-wizard-panel hidden>
+<div class="card">
+<h3 class="panel-title">Step 3: Optional Overrides</h3>
+<p class="page-lead" style="margin-bottom:var(--space-md)">Configure customer, lane, or commodity overrides — or skip and add later.</p>
+<div class="field"><label for="tw-cust">Customer override (optional)</label><select id="tw-cust"><option>None</option><option>PHF-2041 — Pacific Home Furnishings</option></select></div>
+<div class="field"><label for="tw-lane-ov">Lane override (optional)</label><select id="tw-lane-ov"><option>None</option><option>SEA-PDX-METRO</option></select></div>
+</div>
+<div class="wizard-nav">
+<button type="button" class="btn btn-secondary" data-wizard-back>Back</button>
+<div class="wizard-nav-end">
+<button type="button" class="btn btn-secondary" data-wizard-next>Skip</button>
+<button type="button" class="btn btn-primary" data-wizard-next>Next</button>
+</div>
+</div>
+</div>
+
+<div class="wizard-panel" data-wizard-panel hidden>
+<div class="card">
+<h3 class="panel-title">Step 4: Review</h3>
+<table class="data-table">
+<tbody>
+<tr><th scope="row">Tariff ID</th><td class="tabular">TAR-NEW-001</td></tr>
+<tr><th scope="row">Service</th><td>White Glove Inspection · B2B</td></tr>
+<tr><th scope="row">Unit of measure</th><td>CWT · $58.00 base</td></tr>
+<tr><th scope="row">Margin floor</th><td class="tabular">15%</td></tr>
+<tr><th scope="row">Effective</th><td class="tabular">Jan 1 – Dec 31, 2026</td></tr>
+<tr><th scope="row">Overrides</th><td>None configured</td></tr>
+</tbody>
+</table>
+<a href="tariff-detail.html" class="btn btn-primary" style="margin-top:var(--space-md)">Create Tariff</a>
+</div>
+<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><span></span></div>
+</div>
+
+</div>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

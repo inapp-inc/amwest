@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Service — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="customer-portal">
+<header class="portal-nav">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
+<a href="portal-quote-request.html">My Quotes</a>
+<a href="portal-shipment-tracker.html">Shipments</a>
+<a href="portal-self-service.html" class="active">Support</a>
+</nav>
+<div class="dropdown" data-dropdown>
+<button type="button" class="dropdown-trigger portal-account" aria-expanded="false" aria-haspopup="true">Pacific Home Furnishings ▾</button>
+<div class="dropdown-menu" role="menu">
+<div class="dropdown-label">Switch account</div>
+<button type="button" role="menuitem" class="dropdown-item active" data-dropdown-select="Pacific Home Furnishings">Pacific Home Furnishings</button>
+<button type="button" role="menuitem" class="dropdown-item" data-dropdown-select="Cascade Furniture Co.">Cascade Furniture Co.</button>
+<hr class="dropdown-divider">
+<a href="../internal/login.html" role="menuitem" class="dropdown-item">Sign out</a>
+</div>
+</div>
+</header>
+<main class="portal-main">
+
+<h1 class="portal-page-title">Self-Service Tools</h1>
+<div class="portal-cards">
+<div class="card"><h3 class="panel-title">Address Book</h3>
+<ul style="list-style:none;font-size:14px;margin-bottom:var(--space-md)">
+<li style="padding:var(--space-sm) 0;border-bottom:1px solid var(--surface-200)">98101 — Seattle Warehouse</li>
+<li style="padding:var(--space-sm) 0;border-bottom:1px solid var(--surface-200)">97201 — Portland Store #4</li>
+</ul>
+<a href="portal-add-address.html" class="btn btn-secondary btn-sm">+ Add Address</a></div>
+<div class="card"><h3 class="panel-title">Saved Commodities</h3>
+<ul style="list-style:none;font-size:14px;margin-bottom:var(--space-md)">
+<li style="padding:var(--space-sm) 0;border-bottom:1px solid var(--surface-200)">FAK — General furniture</li>
+<li style="padding:var(--space-sm) 0;border-bottom:1px solid var(--surface-200)">Upholstery — Sectionals</li>
+</ul>
+<a href="portal-add-commodity.html" class="btn btn-secondary btn-sm">+ Add Commodity</a></div>
+</div>
+<p style="margin-top:var(--space-lg);font-size:14px">From any past shipment: <a href="portal-quote-request.html">Requote</a> · <a href="portal-quote-request.html">Duplicate Shipment</a></p>
+
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

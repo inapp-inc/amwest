@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tariffs — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+</head><body>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html" class="active"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+
+<div class="page-header"><div><h1>Tariffs</h1></div><a href="tariff-wizard.html" class="btn btn-primary">+ New Tariff</a></div>
+<div class="filter-bar" data-filter-target="#tariffs-table">
+<div class="field"><label for="t-service">Service Type</label><select id="t-service" name="service"><option value="All">All</option><option value="B2B">B2B</option><option value="Home Delivery">Home Delivery</option></select></div>
+<div class="field"><label for="t-customer">Customer</label><select id="t-customer" name="customer"><option value="All">All</option><option value="PHF-2041">PHF-2041</option></select></div>
+<div class="field"><label for="t-status">Status</label><select id="t-status" name="status"><option value="All">All</option><option value="active">Active</option><option value="draft">Draft</option><option value="expired">Expired</option></select></div>
+<div class="field"><label for="t-search">Search</label><input type="search" id="t-search" name="search" placeholder="Tariff name, ID..."></div>
+<div class="filter-actions"><button type="button" class="btn btn-primary btn-sm" data-filter-apply>Apply</button><button type="button" class="btn btn-secondary btn-sm" data-filter-reset>Reset</button></div>
+</div>
+<p class="filter-count" data-filter-count>Showing all 3 records</p>
+<div class="filter-empty" data-filter-empty hidden>No tariffs match your filters.</div>
+<table id="tariffs-table" class="data-table">
+<thead><tr><th>Tariff ID</th><th>Name</th><th>Service Type</th><th>UOM</th><th>Customer</th><th>Effective</th><th>Status</th><th>Actions</th></tr></thead>
+<tbody>
+<tr data-service="B2B" data-customer="" data-status="active" data-search="TAR-B2B-WG-001 White Glove Inspection B2B"><td class="tabular"><a href="tariff-detail.html">TAR-B2B-WG-001</a></td><td>White Glove Inspection — B2B</td><td>White Glove Inspection</td><td>CWT</td><td>—</td><td class="tabular">2026-01-01</td><td><span class="badge badge-active">Active</span></td>
+<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-wizard.html">Clone</a><a href="tariff-comparison.html">Compare</a><a href="tariff-competitor-comparison.html">vs. Competitor</a><a href="tariff-detail.html">History</a></td></tr>
+<tr data-service="Home Delivery" data-customer="PHF-2041" data-status="active" data-search="TAR-HD-TH-002 Threshold Home Delivery"><td class="tabular"><a href="tariff-detail.html">TAR-HD-TH-002</a></td><td>Threshold Home Delivery</td><td>Threshold</td><td>Cube</td><td>PHF-2041</td><td class="tabular">2025-06-01</td><td><span class="badge badge-active">Active</span></td>
+<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-wizard.html">Clone</a><a href="tariff-comparison.html">Compare</a><a href="tariff-competitor-comparison.html">vs. Competitor</a></td></tr>
+<tr data-service="B2B" data-customer="" data-status="draft" data-search="TAR-SPOT-001 Spot Rate Template"><td class="tabular"><a href="tariff-detail.html">TAR-SPOT-001</a></td><td>Spot Rate Template</td><td>Business/B2B</td><td>Flat Rate</td><td>—</td><td class="tabular">2025-01-01</td><td><span class="badge badge-draft">Draft</span></td>
+<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-wizard.html">Clone</a></td></tr>
+</tbody></table>
+<p style="margin-top:var(--space-md);font-size:13px;color:var(--neutral-600)">Showing 1–3 of 24 · <a href="tariffs-page2.html">Next page</a></p>
+
+</div>
+<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>
