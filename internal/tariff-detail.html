@@ -50,23 +50,25 @@
 <div><a href="tariff-wizard.html" class="btn btn-secondary">Clone This Tariff</a> <a href="tariff-delete-confirm.html" class="btn btn-destructive">Delete</a></div>
 </div>
 <div class="tabs-wrap">
-<input type="radio" name="tabs" id="t1" class="tab-radio" checked>
-<input type="radio" name="tabs" id="t2" class="tab-radio">
-<input type="radio" name="tabs" id="t3" class="tab-radio">
-<input type="radio" name="tabs" id="t4" class="tab-radio">
+<input type="radio" name="td-tab" id="t1" class="tab-radio" data-tab-hash="overview" checked>
+<input type="radio" name="td-tab" id="t2" class="tab-radio" data-tab-hash="overrides">
+<input type="radio" name="td-tab" id="t3" class="tab-radio" data-tab-hash="versions">
+<input type="radio" name="td-tab" id="t4" class="tab-radio" data-tab-hash="audit">
 <div class="tabs" role="tablist">
-<label for="t1" class="tab-label" role="tab">Overview</label>
-<label for="t2" class="tab-label" role="tab">Override Hierarchy</label>
-<label for="t3" class="tab-label" role="tab">Version History</label>
-<label for="t4" class="tab-label" role="tab">Audit Log</label>
+<label for="t1" class="tab-label" role="tab" aria-controls="panel-overview">Overview</label>
+<label for="t2" class="tab-label" role="tab" aria-controls="panel-overrides">Override Hierarchy</label>
+<label for="t3" class="tab-label" role="tab" aria-controls="panel-versions">Version History</label>
+<label for="t4" class="tab-label" role="tab" aria-controls="panel-audit">Audit Log</label>
 </div>
 <div class="tab-panels">
-<div class="tab-panel" role="tabpanel"><div class="card"><h3 class="panel-title">Service &amp; Pricing</h3>
-<div class="segmented" style="margin-bottom:var(--space-md)">
-<label><input type="radio" name="st"><span>Business/B2B</span></label>
-<label><input type="radio" name="st"><span>Threshold</span></label>
-<label><input type="radio" name="st"><span>White Glove No Insp.</span></label>
-<label><input type="radio" name="st" checked><span>White Glove Inspection</span></label>
+<div class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="t1">
+<div class="card" data-tariff-overview>
+<h3 class="panel-title">Service &amp; Pricing</h3>
+<div class="segmented" data-service-group style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="st" value="b2b"><span>Business/B2B</span></label>
+<label><input type="radio" name="st" value="threshold"><span>Threshold</span></label>
+<label><input type="radio" name="st" value="wg-no-insp"><span>White Glove No Insp.</span></label>
+<label><input type="radio" name="st" value="wg-insp" checked><span>White Glove Inspection</span></label>
 </div>
 <div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
 <label><input type="radio" name="uom" value="cwt" checked><span>CWT</span></label>
@@ -76,10 +78,10 @@
 <label><input type="radio" name="uom" value="flat"><span>Flat Rate</span></label>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field" data-density-field><label>Density Factor (lbs/cu ft)</label><input class="tabular" value="8.5"></div>
-<div class="field"><label>Base Rate</label><input class="tabular" value="$58.00 / CWT"></div>
-<div class="field"><label>Lane Reference</label><input value="National B2B Matrix"></div>
-<div class="field"><label>Margin Floor</label><input class="tabular" value="15%"></div>
+<div class="field" data-density-field><label>Density Factor (lbs/cu ft)</label><input class="tabular" data-density-input value="8.5"></div>
+<div class="field"><label>Base Rate</label><input class="tabular" data-base-rate-field value="$58.00 / CWT"></div>
+<div class="field"><label>Lane Reference</label><input data-lane-field value="National B2B Matrix"></div>
+<div class="field"><label>Margin Floor</label><input class="tabular" data-margin-field value="15%"></div>
 </div>
 <h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Origin station configuration</h4>
 <p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Shared component with Tariff Configurator — per-station density and adjustment %.</p>
@@ -90,21 +92,50 @@
 <tr><td class="tabular">DFW</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.0</td><td class="tabular">0%</td><td class="tabular">0%</td></tr>
 <tr><td class="tabular">EWR</td><td><span class="badge badge-draft">No</span></td><td>—</td><td>—</td><td>—</td></tr>
 </tbody></table>
-<a href="tariff-wizard.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">Edit in Configurator</a></div></div>
-<div class="tab-panel" role="tabpanel"><ul class="override-stack">
+<a href="tariff-wizard.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">Edit in Configurator</a>
+</div>
+</div>
+<div class="tab-panel" id="panel-overrides" role="tabpanel" aria-labelledby="t2">
+<div class="card">
+<h3 class="panel-title">Override Hierarchy</h3>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Stacked resolution order — Base → Customer → Lane → Commodity → Minimum/Base Rate → Promotion.</p>
+<ul class="override-stack">
 <li><details open><summary>Base Rate</summary><p style="margin-top:8px;font-size:13px">$58.00 / CWT — national default</p></details></li>
 <li><details><summary>Customer Override</summary><p style="margin-top:8px;font-size:13px"><a href="customer-detail.html">PHF-2041</a>: −5%</p></details></li>
 <li><details><summary>Lane Override</summary><p style="margin-top:8px;font-size:13px">SEA-PDX-METRO: +$1.07/CWT</p></details></li>
 <li><details><summary>Commodity Override</summary><p style="margin-top:8px;font-size:13px">Upholstery: +8%</p></details></li>
 <li><details><summary>Minimum / Base Rate Override</summary><p style="margin-top:8px;font-size:13px">National floor: $285.00 minimum charge</p></details></li>
 <li><details><summary>Promotion</summary><p style="margin-top:8px;font-size:13px;color:var(--neutral-600)">None active</p></details></li>
-</ul><a href="tariff-add-override.html" class="btn btn-secondary btn-sm">+ Add Override</a></div>
-<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
-<tbody><tr><td>v3 (current)</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2026</td><td>Annual rate adjustment +2.5%</td><td><a href="tariff-comparison.html">Compare</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
-<tr><td>v2</td><td>Jordan Ellis</td><td class="tabular">Jul 1, 2025</td><td>Added lane overrides</td><td><a href="tariff-comparison.html">Compare</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr></tbody></table></div>
-<div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Timestamp</th><th>User</th><th>Field</th><th>Old → New</th></tr></thead>
-<tbody><tr><td class="tabular">2026-01-01 09:12</td><td>Morgan Reyes</td><td>base_rate</td><td class="tabular">$56.55 → $58.00</td></tr></tbody></table></div>
-</div></div>
+</ul>
+<a href="tariff-add-override.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">+ Add Override</a>
+</div>
+</div>
+<div class="tab-panel" id="panel-versions" role="tabpanel" aria-labelledby="t3">
+<div class="card">
+<h3 class="panel-title">Version History</h3>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Chronological tariff versions — compare side-by-side or roll back with confirmation.</p>
+<table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
+<tbody>
+<tr><td>v3 (current)</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2026</td><td>Annual rate adjustment +2.5%</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+<tr><td>v2</td><td>Jordan Ellis</td><td class="tabular">Jul 1, 2025</td><td>Added lane overrides</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+<tr><td>v1</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2025</td><td>Initial publish</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="tab-panel" id="panel-audit" role="tabpanel" aria-labelledby="t4">
+<div class="card">
+<h3 class="panel-title">Audit Log</h3>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Read-only field-level change history for this tariff.</p>
+<table class="data-table"><thead><tr><th>Timestamp</th><th>User</th><th>Field</th><th>Old → New</th></tr></thead>
+<tbody>
+<tr><td class="tabular">2026-01-01 09:12</td><td>Morgan Reyes</td><td>base_rate</td><td class="tabular">$56.55 → $58.00</td></tr>
+<tr><td class="tabular">2025-12-15 14:30</td><td>Morgan Reyes</td><td>margin_floor</td><td class="tabular">12% → 15%</td></tr>
+<tr><td class="tabular">2025-07-01 11:05</td><td>Jordan Ellis</td><td>lane_override</td><td>— → SEA-PDX-METRO +$1.07/CWT</td></tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>
 <div class="sticky-footer"><a href="tariffs.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Changes</button></div>
 
 </div>

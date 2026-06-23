@@ -360,9 +360,88 @@
     sync();
   }
 
+  /* ── Tariff Detail — Overview segmented controls (service type + UOM) ── */
+  function initTariffOverview() {
+    document.querySelectorAll('[data-tariff-overview]').forEach(function (root) {
+      var serviceGroup = root.querySelector('[data-service-group]');
+      var uomGroup = root.querySelector('[data-uom-group]');
+      var densityField = root.querySelector('[data-density-field]');
+      var baseRateField = root.querySelector('[data-base-rate-field]');
+      var laneField = root.querySelector('[data-lane-field]');
+      var marginField = root.querySelector('[data-margin-field]');
+      if (!serviceGroup || !uomGroup) return;
+
+      var servicePresets = {
+        b2b: { amount: 52, lane: 'National B2B Matrix', margin: '15%', density: '8.5' },
+        threshold: { amount: 44, lane: 'Home Delivery Threshold Matrix', margin: '12%', density: '7.0' },
+        'wg-no-insp': { amount: 54, lane: 'White Glove — No Inspection', margin: '15%', density: '8.5' },
+        'wg-insp': { amount: 58, lane: 'National B2B Matrix', margin: '15%', density: '8.5' }
+      };
+
+      function syncSegmentedVisual(group) {
+        group.querySelectorAll('label').forEach(function (label) {
+          var input = label.querySelector('input[type="radio"]');
+          label.classList.toggle('is-selected', !!(input && input.checked));
+        });
+      }
+
+      function selectedValue(group) {
+        var checked = group.querySelector('input[type="radio"]:checked');
+        return checked ? checked.value : '';
+      }
+
+      function formatBaseRate(amount, uom) {
+        if (uom === 'invoice') return amount.toFixed(1) + '% of invoice';
+        if (uom === 'flat') return '$' + amount.toFixed(2) + ' flat';
+        if (uom === 'cube') return '$' + amount.toFixed(2) + ' / cu ft';
+        if (uom === 'seat') return '$' + amount.toFixed(2) + ' / seat';
+        return '$' + amount.toFixed(2) + ' / CWT';
+      }
+
+      function syncOverview() {
+        var service = selectedValue(serviceGroup);
+        var uom = selectedValue(uomGroup);
+        var preset = servicePresets[service] || servicePresets['wg-insp'];
+        var showDensity = uom === 'cwt' || uom === 'cube';
+
+        syncSegmentedVisual(serviceGroup);
+        syncSegmentedVisual(uomGroup);
+
+        if (densityField) densityField.hidden = !showDensity;
+        if (baseRateField) baseRateField.value = formatBaseRate(preset.amount, uom);
+        if (laneField) laneField.value = preset.lane;
+        if (marginField) marginField.value = preset.margin;
+
+        var densityInput = root.querySelector('[data-density-input]');
+        if (densityInput && showDensity) densityInput.value = preset.density;
+      }
+
+      serviceGroup.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', syncOverview);
+      });
+      uomGroup.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', syncOverview);
+      });
+
+      serviceGroup.querySelectorAll('label').forEach(function (label) {
+        label.addEventListener('click', function () {
+          window.requestAnimationFrame(syncOverview);
+        });
+      });
+      uomGroup.querySelectorAll('label').forEach(function (label) {
+        label.addEventListener('click', function () {
+          window.requestAnimationFrame(syncOverview);
+        });
+      });
+
+      syncOverview();
+    });
+  }
+
   /* ── UOM → density field visibility ── */
   function initUomDensity() {
     document.querySelectorAll('[data-uom-group]').forEach(function (group) {
+      if (group.closest('[data-tariff-overview]')) return;
       var densityField = group.parentElement.querySelector('[data-density-field]')
         || document.querySelector(group.getAttribute('data-density-target'));
       if (!densityField) return;
@@ -688,6 +767,66 @@
     });
   }
 
+  /* ── CSS tabs: hash deep-linking (e.g. tariff-detail.html#versions) ── */
+  function initTabs() {
+    document.querySelectorAll('.tabs-wrap').forEach(function (wrap) {
+      var radios = Array.prototype.slice.call(wrap.querySelectorAll('input.tab-radio'));
+      if (!radios.length) return;
+
+      function hashFor(radio) {
+        return radio.getAttribute('data-tab-hash') || radio.id;
+      }
+
+      function radioForHash(rawHash) {
+        var hash = (rawHash || '').replace(/^#/, '').toLowerCase();
+        if (!hash) return null;
+        for (var i = 0; i < radios.length; i++) {
+          var radio = radios[i];
+          if (hashFor(radio).toLowerCase() === hash || radio.id.toLowerCase() === hash) {
+            return radio;
+          }
+        }
+        return null;
+      }
+
+      function activate(radio, updateHash) {
+        if (!radio) return;
+        radio.checked = true;
+        if (updateHash === false) return;
+        var nextHash = hashFor(radio);
+        if (nextHash && window.location.hash.replace(/^#/, '') !== nextHash) {
+          history.replaceState(null, '', '#' + nextHash);
+        }
+      }
+
+      var fromHash = radioForHash(window.location.hash);
+      if (fromHash) activate(fromHash, false);
+
+      radios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          if (radio.checked) activate(radio, true);
+        });
+      });
+    });
+
+    window.addEventListener('hashchange', function () {
+      document.querySelectorAll('.tabs-wrap').forEach(function (wrap) {
+        var radios = Array.prototype.slice.call(wrap.querySelectorAll('input.tab-radio'));
+        if (!radios.length) return;
+        var hash = window.location.hash.replace(/^#/, '').toLowerCase();
+        if (!hash) return;
+        for (var i = 0; i < radios.length; i++) {
+          var radio = radios[i];
+          var tabHash = (radio.getAttribute('data-tab-hash') || radio.id).toLowerCase();
+          if (tabHash === hash || radio.id.toLowerCase() === hash) {
+            radio.checked = true;
+            break;
+          }
+        }
+      });
+    });
+  }
+
   /* ── Help center search filter ── */
   function initHelpSearch() {
     var input = document.getElementById('help-search');
@@ -707,12 +846,14 @@
   }
 
   ready(function () {
+    initTabs();
     initDropdowns();
     initFilterBars();
     initDrillBanner();
     initDrilldownRows();
     initWizards();
     initQuoteTypeToggle();
+    initTariffOverview();
     initUomDensity();
     initShipmentConfigurator();
     initCallForQuoteMode();

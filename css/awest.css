@@ -1267,7 +1267,8 @@ a.kanban-card:hover {
 }
 
 .segmented input:checked + span,
-.segmented label:has(input:checked) {
+.segmented label:has(input:checked),
+.segmented label.is-selected {
   background: var(--white);
   color: var(--neutral-900);
   font-weight: 600;
