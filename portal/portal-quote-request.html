@@ -10,14 +10,26 @@
 <link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
 <link rel="stylesheet" href="../css/awest-tokens.css">
 <link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
 </head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+
 <div class="customer-portal">
 <header class="portal-nav">
-<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
 <nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
 <a href="portal-quote-request.html" class="active">My Quotes</a>
 <a href="portal-shipment-tracker.html">Shipments</a>
 <a href="portal-self-service.html">Support</a>
+<a href="portal-pricing-help.html">Pricing Guide</a>
 </nav>
 <div class="dropdown" data-dropdown>
 <button type="button" class="dropdown-trigger portal-account" aria-expanded="false" aria-haspopup="true">Pacific Home Furnishings ▾</button>
@@ -34,22 +46,83 @@
 
 <h1 class="portal-page-title">Request a Quote</h1>
 <div class="portal-two-col">
+<div>
 <div class="card">
 <div class="field"><label>Origin</label><input value="Seattle, WA 98101"></div>
 <div class="field"><label>Destination</label><input value="Portland, OR 97201"></div>
-<div class="field"><label>Weight (lbs)</label><input class="tabular" value="2,400"></div>
-<div class="field"><label>Cube</label><input class="tabular" value="520"></div>
-<div class="field"><label>Unit of Measure</label><select><option>CWT</option><option>Cube</option></select></div>
+<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="2,400"></div>
+<div class="field">
+<div class="field-label-row"><label for="portal-cube">Cube</label>
+<a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#portal-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="modal">Not sure of your total cube? Build it from item dimensions</a></div>
+<input id="portal-cube" class="tabular" data-shipment-cube value="520">
 </div>
-<div class="card" style="background:var(--neutral-900);color:#fff;border:none">
-<h3 class="portal-panel-title">Your Quote</h3>
-<p class="portal-quote-total tabular">$2,185.00</p>
-<p style="font-size:13px;opacity:.8;margin:var(--space-md) 0">White Glove · SEA-PDX · Fuel included</p>
-<a href="portal-quote-confirmation.html" class="btn btn-burgundy" style="width:100%;margin-bottom:var(--space-sm)">Accept &amp; Book</a>
-<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff">Save for Later</a>
-</div></div>
+<div class="field"><label>Unit of Measure</label><select><option>CWT</option><option>Cube</option></select></div>
+<div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$18,000"></div>
+<div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance coverage. <a href="portal-pricing-help.html#insurance">Learn about declared value &amp; insurance</a></div>
+</div>
 
-<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+<h2 style="font-size:16px;font-weight:700;margin:var(--space-lg) 0 var(--space-md)">Compare service tiers</h2>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Your shipment qualifies for multiple home-delivery tiers. Prices include fuel surcharge.</p>
+<div class="service-tier-grid">
+<div class="service-tier-card">
+<h4>Threshold</h4>
+<p class="service-tier-price tabular">$1,840.00</p>
+<ul class="service-tier-features">
+<li>✕ No unpacking</li>
+<li>✕ No pre-delivery inspection</li>
+<li>✓ Delivered to garage/porch</li>
+</ul>
+</div>
+<div class="service-tier-card is-recommended">
+<h4>White Glove No Inspection</h4>
+<p class="service-tier-price tabular">$2,045.00</p>
+<ul class="service-tier-features">
+<li>✓ Full in-home placement</li>
+<li>✓ Unpacking &amp; debris removal</li>
+<li>✕ No pre-delivery inspection</li>
+</ul>
+</div>
+<div class="service-tier-card">
+<h4>White Glove Inspection</h4>
+<p class="service-tier-price tabular">$2,185.00</p>
+<ul class="service-tier-features">
+<li>✓ Full in-home placement</li>
+<li>✓ Unpacking &amp; debris removal</li>
+<li>✓ Pre-delivery inspection</li>
+<li>✓ Up to 30 min. light assembly</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="card" style="background:var(--neutral-900);color:#fff;border:none;align-self:start">
+<h3 class="portal-panel-title">Your Quote — White Glove Inspection</h3>
+<p class="portal-quote-total tabular">$2,185.00</p>
+<p style="font-size:13px;opacity:.85;margin-bottom:var(--space-sm)">SEA → PDX · Estimated transit 3–5 days</p>
+
+<div class="portal-breakdown">
+<div class="portal-breakdown-line"><span>Base rate (lane)</span><span class="tabular">$1,420.00</span></div>
+<div class="portal-breakdown-line"><span>Fuel surcharge (28.4%)<a href="portal-pricing-help.html#terms-fuel" class="portal-help-link">What does this mean?</a></span><span class="tabular">$403.28</span></div>
+<div class="portal-breakdown-line"><span>Residential delivery<a href="portal-pricing-help.html#terms-accessorial" class="portal-help-link">?</a></span><span class="tabular">$120.00</span></div>
+<div class="portal-breakdown-line"><span>Declared value coverage</span><span class="tabular">$41.72</span></div>
+<div class="portal-breakdown-line total"><span>Total</span><span class="tabular">$2,185.00</span></div>
+<p style="font-size:11px;opacity:.7;margin-top:var(--space-sm)">Fuel surcharge updated weekly from current diesel prices.</p>
+</div>
+
+<a href="portal-quote-confirmation.html" class="btn btn-burgundy" style="width:100%;margin-top:var(--space-lg);margin-bottom:var(--space-sm)">Accept &amp; Book</a>
+<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff">Save for Later</a>
+</div>
+</div>
+
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
 </main>
 </div>
 <script src="../js/awest-mockup.js"></script>

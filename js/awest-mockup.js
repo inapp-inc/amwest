@@ -381,6 +381,331 @@
     });
   }
 
+  /* ── Shipment Configurator (shared drawer / modal) ── */
+  function initShipmentConfigurator() {
+    var openBtns = document.querySelectorAll('[data-shipment-configurator-open]');
+    if (!openBtns.length) return;
+
+    var veil = document.createElement('div');
+    veil.className = 'shipment-config-veil';
+    veil.setAttribute('aria-hidden', 'true');
+
+    var panel = document.createElement('div');
+    panel.className = 'shipment-config-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-labelledby', 'shipment-config-title');
+
+    panel.innerHTML =
+      '<div class="shipment-config-head">' +
+        '<div><h2 id="shipment-config-title">Configure Your Shipment</h2>' +
+        '<p class="shipment-config-totals" id="shipment-config-totals">0 items · <strong>0.0</strong> cu ft · <strong>—</strong> lbs</p></div>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="shipment-config-close" aria-label="Close">✕</button>' +
+      '</div>' +
+      '<div class="shipment-config-body">' +
+        '<p class="shipment-config-constant">Cubic feet = Length × Width × Height ÷ 1,728 (fixed conversion)</p>' +
+        '<div style="overflow-x:auto"><table class="shipment-item-table"><thead><tr>' +
+          '<th class="col-num">#</th><th class="col-dim">L (in)</th><th class="col-dim">W (in)</th><th class="col-dim">H (in)</th>' +
+          '<th class="col-cuft">Cu ft</th><th class="col-qty">Qty</th><th class="col-wt">Wt</th><th class="col-desc">Description</th><th class="col-remove"></th>' +
+        '</tr></thead><tbody id="shipment-config-rows"></tbody></table></div>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="shipment-config-add" style="margin-top:var(--space-sm)">+ Add Item</button>' +
+      '</div>' +
+      '<div class="shipment-config-foot">' +
+        '<div class="shipment-config-summary" id="shipment-config-summary">Total: <strong>0</strong> items · <strong>0.0</strong> cu ft · <strong>—</strong> lbs</div>' +
+        '<div class="shipment-config-actions">' +
+          '<button type="button" class="btn btn-secondary" id="shipment-config-cancel">Cancel</button>' +
+          '<button type="button" class="btn btn-primary" id="shipment-config-apply">Apply to Quote</button>' +
+        '</div>' +
+      '</div>';
+
+    veil.appendChild(panel);
+    document.body.appendChild(veil);
+
+    var rowsEl = panel.querySelector('#shipment-config-rows');
+    var totalsEl = panel.querySelector('#shipment-config-totals');
+    var summaryEl = panel.querySelector('#shipment-config-summary');
+    var cubeTarget = null;
+    var weightTarget = null;
+    var rowId = 0;
+
+    function defaultShell() {
+      return document.querySelector('.customer-portal') ? 'modal' : 'drawer';
+    }
+
+    function calcCuFt(l, w, h) {
+      var li = parseFloat(l) || 0;
+      var wi = parseFloat(w) || 0;
+      var hi = parseFloat(h) || 0;
+      return (li * wi * hi) / 1728;
+    }
+
+    function updateTotals() {
+      var totalItems = 0;
+      var totalCuFt = 0;
+      var totalWeight = 0;
+      var hasLineWeight = false;
+
+      rowsEl.querySelectorAll('tr').forEach(function (row) {
+        var qty = parseInt(row.querySelector('[data-field="qty"]').value, 10) || 1;
+        var cuFt = parseFloat(row.querySelector('[data-field="cuft"]').textContent) || 0;
+        var wt = parseFloat(row.querySelector('[data-field="weight"]').value);
+        totalItems += qty;
+        totalCuFt += cuFt * qty;
+        if (!isNaN(wt) && row.querySelector('[data-field="weight"]').value !== '') {
+          hasLineWeight = true;
+          totalWeight += wt * qty;
+        }
+      });
+
+      var cuFtStr = totalCuFt.toFixed(1);
+      var wtStr = hasLineWeight ? Math.round(totalWeight).toLocaleString() : '—';
+      totalsEl.innerHTML = totalItems + ' items · <strong>' + cuFtStr + '</strong> cu ft · <strong>' + wtStr + '</strong> lbs';
+      summaryEl.innerHTML = 'Total: <strong>' + totalItems + '</strong> items · <strong>' + cuFtStr + '</strong> cu ft · <strong>' + wtStr + '</strong> lbs';
+    }
+
+    function bindRow(row) {
+      ['length', 'width', 'height', 'qty', 'weight'].forEach(function (field) {
+        var input = row.querySelector('[data-field="' + field + '"]');
+        if (!input) return;
+        input.addEventListener('input', function () {
+          if (field === 'length' || field === 'width' || field === 'height') {
+            var l = row.querySelector('[data-field="length"]').value;
+            var w = row.querySelector('[data-field="width"]').value;
+            var h = row.querySelector('[data-field="height"]').value;
+            row.querySelector('[data-field="cuft"]').textContent = calcCuFt(l, w, h).toFixed(2);
+          }
+          updateTotals();
+        });
+      });
+
+      row.querySelector('[data-remove-row]').addEventListener('click', function () {
+        if (rowsEl.querySelectorAll('tr').length > 1) {
+          row.remove();
+          renumberRows();
+          updateTotals();
+        }
+      });
+    }
+
+    function renumberRows() {
+      rowsEl.querySelectorAll('tr').forEach(function (row, i) {
+        row.querySelector('.col-num').textContent = String(i + 1);
+      });
+    }
+
+    function addRow(data) {
+      data = data || {};
+      rowId++;
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="col-num"></td>' +
+        '<td><input type="number" data-field="length" min="0" step="0.1" value="' + (data.length || '') + '"></td>' +
+        '<td><input type="number" data-field="width" min="0" step="0.1" value="' + (data.width || '') + '"></td>' +
+        '<td><input type="number" data-field="height" min="0" step="0.1" value="' + (data.height || '') + '"></td>' +
+        '<td><span class="cuft-readonly" data-field="cuft">' + (data.cuft || '0.00') + '</span></td>' +
+        '<td><input type="number" data-field="qty" min="1" step="1" value="' + (data.qty || '1') + '"></td>' +
+        '<td><input type="number" data-field="weight" min="0" step="1" value="' + (data.weight || '') + '" placeholder="—"></td>' +
+        '<td><input type="text" data-field="desc" value="' + (data.desc || '') + '" placeholder="e.g. Sofa"></td>' +
+        '<td class="col-remove"><button type="button" class="btn-icon-remove" data-remove-row aria-label="Remove row">🗑</button></td>';
+      rowsEl.appendChild(tr);
+      bindRow(tr);
+      renumberRows();
+      updateTotals();
+    }
+
+    function openConfigurator(btn) {
+      var shell = btn.getAttribute('data-shipment-shell') || defaultShell();
+      panel.setAttribute('data-shell', shell);
+      cubeTarget = document.querySelector(btn.getAttribute('data-shipment-cube') || '[data-shipment-cube]');
+      weightTarget = document.querySelector(btn.getAttribute('data-shipment-weight') || '[data-shipment-weight]');
+
+      rowsEl.innerHTML = '';
+      if (cubeTarget && cubeTarget.value) {
+        addRow({ desc: 'Existing shipment estimate' });
+      } else {
+        addRow({ length: '84', width: '36', height: '38', desc: 'Sofa' });
+        addRow({ length: '60', width: '42', height: '30', desc: 'Dining Table' });
+      }
+
+      veil.classList.add('is-open');
+      veil.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      panel.querySelector('#shipment-config-apply').focus();
+    }
+
+    function closeConfigurator() {
+      veil.classList.remove('is-open');
+      veil.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function applyConfigurator() {
+      var totalCuFt = 0;
+      var totalWeight = 0;
+      var hasLineWeight = false;
+      rowsEl.querySelectorAll('tr').forEach(function (row) {
+        var qty = parseInt(row.querySelector('[data-field="qty"]').value, 10) || 1;
+        var cuFt = parseFloat(row.querySelector('[data-field="cuft"]').textContent) || 0;
+        var wt = parseFloat(row.querySelector('[data-field="weight"]').value);
+        totalCuFt += cuFt * qty;
+        if (!isNaN(wt) && row.querySelector('[data-field="weight"]').value !== '') {
+          hasLineWeight = true;
+          totalWeight += wt * qty;
+        }
+      });
+
+      if (cubeTarget) {
+        cubeTarget.value = Math.round(totalCuFt).toLocaleString();
+        cubeTarget.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      if (weightTarget && hasLineWeight) {
+        weightTarget.value = Math.round(totalWeight).toLocaleString();
+        weightTarget.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      closeConfigurator();
+    }
+
+    openBtns.forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openConfigurator(btn);
+      });
+    });
+
+    panel.querySelector('#shipment-config-close').addEventListener('click', closeConfigurator);
+    panel.querySelector('#shipment-config-cancel').addEventListener('click', closeConfigurator);
+    panel.querySelector('#shipment-config-apply').addEventListener('click', applyConfigurator);
+    panel.querySelector('#shipment-config-add').addEventListener('click', function () { addRow(); });
+    veil.addEventListener('click', function (e) { if (e.target === veil) closeConfigurator(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && veil.classList.contains('is-open')) closeConfigurator();
+    });
+  }
+
+  /* ── Call-for-Quote lane demo (?cfq=1) ── */
+  function initCallForQuoteMode() {
+    var panel = document.querySelector('[data-cfq-panel]');
+    if (!panel) return;
+
+    var params = getUrlParams();
+    var isCfq = params.get('cfq') === '1';
+    var laneNote = document.querySelector('[data-standard-lane-note]');
+    var autoPricing = document.querySelectorAll('[data-auto-pricing]');
+    var cfqManual = document.querySelectorAll('[data-cfq-manual]');
+
+    function sync() {
+      panel.hidden = !isCfq;
+      if (laneNote) laneNote.hidden = isCfq;
+      autoPricing.forEach(function (el) { el.hidden = isCfq; });
+      cfqManual.forEach(function (el) { el.hidden = !isCfq; });
+    }
+
+    sync();
+  }
+
+  /* ── Cube threshold inline notice ── */
+  function initCubeThresholdNotice() {
+    var cubeInput = document.querySelector('[data-shipment-cube]');
+    var notice = document.querySelector('[data-cube-threshold-notice]');
+    if (!cubeInput || !notice) return;
+
+    function sync() {
+      var val = parseInt(String(cubeInput.value).replace(/,/g, ''), 10) || 0;
+      notice.hidden = val < 1400;
+    }
+
+    cubeInput.addEventListener('input', sync);
+    sync();
+  }
+
+  /* ── High-value declared value notice ── */
+  function initHighValueNotice() {
+    var valueInput = document.querySelector('[data-declared-value]');
+    var notice = document.querySelector('[data-high-value-notice]');
+    if (!valueInput || !notice) return;
+
+    function sync() {
+      var val = parseInt(String(valueInput.value).replace(/[$,]/g, ''), 10) || 0;
+      notice.hidden = val < 25000;
+    }
+
+    valueInput.addEventListener('input', sync);
+    sync();
+  }
+
+  /* ── Tariff template toggle ── */
+  function initTariffTemplateToggle() {
+    var toggle = document.querySelector('[data-template-toggle]');
+    var picker = document.querySelector('[data-template-picker]');
+    if (!toggle || !picker) return;
+
+    toggle.addEventListener('change', function () {
+      picker.hidden = !toggle.checked;
+    });
+
+    picker.querySelectorAll('.template-option').forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        picker.querySelectorAll('.template-option').forEach(function (o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+      });
+    });
+  }
+
+  /* ── Origin station include toggles ── */
+  function initOriginStationToggles() {
+    document.querySelectorAll('[data-station-include]').forEach(function (toggle) {
+      var row = toggle.closest('.origin-station-row');
+      var detail = row ? row.querySelector('.origin-station-detail') : null;
+      if (!detail) return;
+
+      function sync() {
+        var on = toggle.value === 'yes' && toggle.checked;
+        if (toggle.type === 'radio') {
+          on = row.querySelector('[data-station-include][value="yes"]:checked') !== null;
+        }
+        detail.hidden = !on;
+      }
+
+      if (toggle.type === 'radio') {
+        row.querySelectorAll('[data-station-include]').forEach(function (r) {
+          r.addEventListener('change', sync);
+        });
+      } else {
+        toggle.addEventListener('change', sync);
+      }
+      sync();
+    });
+  }
+
+  /* ── Stepped selector "Other" unlock ── */
+  function initSteppedSelectors() {
+    document.querySelectorAll('[data-stepped-select]').forEach(function (sel) {
+      var custom = sel.parentElement.querySelector('[data-stepped-custom]');
+      if (!custom) return;
+      sel.addEventListener('change', function () {
+        custom.hidden = sel.value !== 'other';
+      });
+    });
+  }
+
+  /* ── Help center search filter ── */
+  function initHelpSearch() {
+    var input = document.getElementById('help-search');
+    var section = document.getElementById('common-terms');
+    if (!input || !section) return;
+
+    input.addEventListener('input', function () {
+      var q = input.value.toLowerCase().trim();
+      section.querySelectorAll('dt').forEach(function (dt) {
+        var dd = dt.nextElementSibling;
+        var text = (dt.textContent + ' ' + (dd ? dd.textContent : '')).toLowerCase();
+        var show = !q || text.indexOf(q) !== -1;
+        dt.hidden = !show;
+        if (dd) dd.hidden = !show;
+      });
+    });
+  }
+
   ready(function () {
     initDropdowns();
     initFilterBars();
@@ -389,5 +714,13 @@
     initWizards();
     initQuoteTypeToggle();
     initUomDensity();
+    initShipmentConfigurator();
+    initCallForQuoteMode();
+    initCubeThresholdNotice();
+    initHighValueNotice();
+    initTariffTemplateToggle();
+    initOriginStationToggles();
+    initSteppedSelectors();
+    initHelpSearch();
   });
 })();

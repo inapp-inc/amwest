@@ -10,10 +10,21 @@
 <link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
 <link rel="stylesheet" href="../css/awest-tokens.css">
 <link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
 </head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+
 <div class="ops-layout">
 <aside class="rail">
-<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
 <nav class="rail-nav">
 <a href="dashboard.html"><span>Dashboard</span></a>
 <a href="tariffs.html"><span>Tariffs</span></a>
@@ -57,7 +68,15 @@
 </div></div>
 
 </div>
-<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
 </main>
 </div>
 <script src="../js/awest-mockup.js"></script>

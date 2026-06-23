@@ -1,0 +1,260 @@
+/**
+ * Demo mockup chrome — co-branding (American West × InApp) and demo callouts
+ * Included on every page in the mockup set.
+ */
+
+.demo-banner {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 16px;
+  flex-wrap: wrap;
+  padding: 8px 20px;
+  background: linear-gradient(90deg, #1c1f24 0%, #243056 55%, #2c419a 100%);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.demo-banner-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--signal-amber, #c98a1b);
+  color: #1c1f24;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.demo-banner-text {
+  text-align: center;
+}
+
+.demo-banner-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.demo-banner-link:hover {
+  text-decoration: underline;
+}
+
+.demo-banner-link[aria-current="page"] {
+  opacity: 0.65;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+/* Co-brand lockups — single link wraps both logos */
+.cobrand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cobrand-lockup:hover {
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+.cobrand-sep {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.logo-img-aw {
+  height: 40px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.logo-img-inapp {
+  height: 38px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  background: #fff;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.cobrand-lockup--stacked {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.cobrand-lockup--stacked .cobrand-sep {
+  display: none;
+}
+
+/* Login */
+.login-cobrand {
+  width: 100%;
+  margin-bottom: var(--space-lg, 16px);
+  text-align: center;
+}
+
+.login-cobrand .cobrand-lockup--stacked .logo-img-aw {
+  height: 48px;
+}
+
+.login-cobrand .cobrand-lockup--stacked .logo-img-inapp {
+  height: 44px;
+  padding: 4px 12px;
+}
+
+.login-cobrand .demo-callout {
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--neutral-600, #6b7280);
+}
+
+/* Rail sidebar — stacked in one link */
+.rail .logo.cobrand-lockup {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 24px);
+  margin: 0 12px 16px;
+  padding: 14px 10px;
+  background: var(--white);
+  border-radius: var(--radius, 8px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.rail .cobrand-sep {
+  display: none;
+}
+
+.rail .logo-img-aw {
+  height: 44px;
+  max-width: 100%;
+}
+
+.rail .logo-img-inapp {
+  height: 40px;
+  max-width: 100%;
+  padding: 4px 10px;
+}
+
+/* Portal top nav — horizontal in one link */
+.portal-nav .logo.cobrand-lockup {
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.portal-nav .logo-img-aw {
+  height: 38px;
+}
+
+.portal-nav .logo-img-inapp {
+  height: 36px;
+  padding: 3px 10px;
+}
+
+/* Footer co-brand — single link */
+.mock-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+a.mock-footer-cobrand,
+a.wt-footer-cobrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+a.mock-footer-cobrand:hover,
+a.wt-footer-cobrand:hover {
+  text-decoration: none;
+  opacity: 0.88;
+}
+
+a.mock-footer-cobrand .logo-img-aw,
+a.wt-footer-cobrand .logo-img-aw {
+  height: 36px;
+}
+
+a.mock-footer-cobrand .logo-img-inapp,
+a.wt-footer-cobrand .logo-img-inapp {
+  height: 34px;
+  padding: 3px 10px;
+}
+
+.mock-footer-demo,
+.wt-footer-demo {
+  max-width: 520px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--neutral-600, #6b7280);
+}
+
+.mock-footer-nav {
+  font-size: 12px;
+}
+
+/* Landing hero — single link */
+.wt-hero-cobrand {
+  margin-bottom: 20px;
+}
+
+.wt-hero-cobrand .cobrand-lockup {
+  gap: 16px;
+}
+
+.wt-hero-cobrand .logo-img-aw {
+  height: 52px;
+}
+
+.wt-hero-cobrand .logo-img-inapp {
+  height: 48px;
+  padding: 5px 14px;
+}
+
+@media (max-width: 600px) {
+  .demo-banner {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .demo-banner-text {
+    flex-basis: 100%;
+  }
+
+  .portal-nav .logo-img-aw {
+    height: 32px;
+  }
+
+  .portal-nav .logo-img-inapp {
+    height: 30px;
+  }
+}

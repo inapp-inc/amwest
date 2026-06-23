@@ -10,10 +10,21 @@
 <link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
 <link rel="stylesheet" href="../css/awest-tokens.css">
 <link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
 </head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+
 <div class="ops-layout">
 <aside class="rail">
-<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
 <nav class="rail-nav">
 <a href="dashboard.html"><span>Dashboard</span></a>
 <a href="tariffs.html"><span>Tariffs</span></a>
@@ -22,7 +33,6 @@
 <a href="reference.html"><span>Reference</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-users.html"><span>Admin</span></a>
-
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
 <a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
@@ -33,7 +43,8 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>New Quote</h1><p style="font-size:13px;color:var(--signal-green);margin-top:4px">Draft saved · 2 min ago</p></div></div>
+<div class="page-header"><div><h1>New Quote</h1><p style="font-size:13px;color:var(--signal-green);margin-top:4px">Draft saved · 2 min ago</p></div>
+<p style="font-size:12px;color:var(--neutral-600)">Demo: <a href="quote-builder.html">Standard lane</a> · <a href="quote-builder.html?cfq=1">Call-for-Quote lane</a></p></div>
 <div class="toggle-row" data-quote-type-toggle>
 <label><input type="radio" name="qt" value="standard" checked><span>Standard</span></label>
 <label><input type="radio" name="qt" value="spot"><span>Spot Quote</span></label>
@@ -55,29 +66,50 @@
 <div class="field"><label>Origin</label><input value="Seattle Metro, WA"></div>
 <div class="field"><label>Destination</label><input value="Portland Metro, OR"></div>
 </div>
-<p class="portal-account" data-standard-quote-note>Resolved lane: <strong>SEA-PDX-METRO</strong> · Tariff <a href="tariff-detail.html">TAR-B2B-WG-001</a></p>
+<p class="portal-account" data-standard-lane-note data-standard-quote-note>Resolved lane: <strong>SEA-PDX-METRO</strong> · Tariff <a href="tariff-detail.html">TAR-B2B-WG-001</a></p>
+<div class="cfq-panel" data-cfq-panel hidden>
+<p class="inline-notice cfq" style="margin-top:0"><strong>Call-for-Quote lane</strong> — pricing requires manual entry. Automatic tariff resolution is disabled for this destination.</p>
+<p style="font-size:13px;margin-top:var(--space-sm)">Zone: <strong>RURAL-MT-CFQ</strong> · <a href="reference-lanes.html">Review lane definition</a> (Admin/Manager)</p>
 </div>
-<div class="card panel"><h3 class="panel-title">Shipment Details</h3>
+</div>
+<div class="card panel" data-auto-pricing data-standard-quote-note><h3 class="panel-title">Shipment Details</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
 <div class="field"><label>Unit of Measure</label><select><option selected>CWT</option><option>Cube</option></select></div>
 <div class="field"><label>Density Factor (read-only)</label><input value="8.5 lbs/cu ft" readonly style="background:var(--surface-100)"></div>
-<div class="field"><label>Weight (lbs)</label><input class="tabular" value="4,200"></div>
-<div class="field"><label>Cube</label><input class="tabular" value="1,480"></div>
-<div class="field"><label>Commodity</label><select><option selected>FAK</option><option>Case Goods</option><option>Upholstery</option></select></div>
-<div class="field"><label>Declared Value</label><input class="tabular" value="$45,000"></div>
+<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="4,200"></div>
+<div class="field">
+<div class="field-label-row"><label for="quote-cube">Cube</label>
+<a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
+<input id="quote-cube" class="tabular" data-shipment-cube value="1,480">
 </div>
-<div class="inline-notice"><strong>Approaching truckload threshold</strong> — LTL rate may exceed truckload cost. Manual approval will be required.</div>
+<div class="field"><label>Commodity</label><select><option selected>FAK</option><option>Case Goods</option><option>Upholstery</option></select></div>
+<div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$45,000"></div>
+</div>
+<div class="inline-notice" data-cube-threshold-notice hidden><strong>Approaching truckload threshold</strong> — LTL rate may exceed truckload cost. Manual approval will be required.</div>
+<div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance ($500/article or $1/lb). Confirm exclusions (statuary, art, rare antiques, one-of-a-kind items) with the customer.</div>
+</div>
+<div class="card panel" data-cfq-manual hidden><h3 class="panel-title">Manual Rate Entry (Call-for-Quote)</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label>Manual base rate</label><input class="tabular" placeholder="Enter rate"></div>
+<div class="field"><label>Manual fuel surcharge %</label><input class="tabular" placeholder="Enter %"></div>
+<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="4,200"></div>
+<div class="field">
+<div class="field-label-row"><label for="quote-cube-cfq">Cube</label>
+<a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube-cfq" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
+<input id="quote-cube-cfq" class="tabular" data-shipment-cube value="">
+</div>
+</div>
 </div>
 <details class="card panel disclosure-panel"><summary>Competitor Match (optional)</summary>
 <div class="disclosure-body">
 <div class="field"><label>Competitor Name</label><input value="Regional Freight Co."></div>
 <div class="field"><label>Quoted Rate</label><input class="tabular" value="$3,650.00"></div>
-<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">+$197.50 (+5.4%)</span></p>
+<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">+$197.50 (+5.4%)</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
 </div></details>
 </div>
 <div class="card" style="position:sticky;top:var(--space-md)">
 <h3 class="panel-title">Pricing Breakdown</h3>
-<div class="pricing-lines">
+<div class="pricing-lines" data-auto-pricing data-standard-quote-note>
 <div class="pricing-line"><span>Base rate (42 CWT × $58.00)</span><span class="tabular">$2,436.00</span></div>
 <div class="pricing-line"><span>Customer override (−5%)</span><span class="tabular">−$121.80</span></div>
 <div class="pricing-line"><span>Lane override (SEA-PDX)</span><span class="tabular">+$45.00</span></div>
@@ -88,6 +120,7 @@
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
 <div class="pricing-line total"><span>Total</span><span class="tabular">$3,847.50</span></div>
 </div>
+<p data-cfq-manual hidden style="font-size:13px;color:var(--neutral-600);padding:var(--space-md) 0">Enter manual rates above to see pricing breakdown.</p>
 <div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">
 <a href="quote-detail.html" class="btn btn-burgundy">Submit for Approval</a>
 <a href="quotes.html" class="btn btn-secondary">Save as Draft</a>
@@ -95,7 +128,15 @@
 </div></div></div>
 
 </div>
-<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
 </main>
 </div>
 <script src="../js/awest-mockup.js"></script>

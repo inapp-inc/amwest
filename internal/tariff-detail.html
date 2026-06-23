@@ -10,10 +10,21 @@
 <link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
 <link rel="stylesheet" href="../css/awest-tokens.css">
 <link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
 </head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+
 <div class="ops-layout">
 <aside class="rail">
-<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
 <nav class="rail-nav">
 <a href="dashboard.html"><span>Dashboard</span></a>
 <a href="tariffs.html" class="active"><span>Tariffs</span></a>
@@ -69,12 +80,23 @@
 <div class="field"><label>Base Rate</label><input class="tabular" value="$58.00 / CWT"></div>
 <div class="field"><label>Lane Reference</label><input value="National B2B Matrix"></div>
 <div class="field"><label>Margin Floor</label><input class="tabular" value="15%"></div>
-</div></div></div>
+</div>
+<h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Origin station configuration</h4>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Shared component with Tariff Configurator — per-station density and adjustment %.</p>
+<table class="data-table"><thead><tr><th>Station</th><th>Included</th><th>Density</th><th>Min charge adj.</th><th>Linehaul adj.</th></tr></thead>
+<tbody>
+<tr><td class="tabular">LAX</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.5</td><td class="tabular">0%</td><td class="tabular">+5%</td></tr>
+<tr><td class="tabular">SFO</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.5</td><td class="tabular">0%</td><td class="tabular">0%</td></tr>
+<tr><td class="tabular">DFW</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.0</td><td class="tabular">0%</td><td class="tabular">0%</td></tr>
+<tr><td class="tabular">EWR</td><td><span class="badge badge-draft">No</span></td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table>
+<a href="tariff-wizard.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">Edit in Configurator</a></div></div>
 <div class="tab-panel" role="tabpanel"><ul class="override-stack">
 <li><details open><summary>Base Rate</summary><p style="margin-top:8px;font-size:13px">$58.00 / CWT — national default</p></details></li>
 <li><details><summary>Customer Override</summary><p style="margin-top:8px;font-size:13px"><a href="customer-detail.html">PHF-2041</a>: −5%</p></details></li>
 <li><details><summary>Lane Override</summary><p style="margin-top:8px;font-size:13px">SEA-PDX-METRO: +$1.07/CWT</p></details></li>
 <li><details><summary>Commodity Override</summary><p style="margin-top:8px;font-size:13px">Upholstery: +8%</p></details></li>
+<li><details><summary>Minimum / Base Rate Override</summary><p style="margin-top:8px;font-size:13px">National floor: $285.00 minimum charge</p></details></li>
 <li><details><summary>Promotion</summary><p style="margin-top:8px;font-size:13px;color:var(--neutral-600)">None active</p></details></li>
 </ul><a href="tariff-add-override.html" class="btn btn-secondary btn-sm">+ Add Override</a></div>
 <div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
@@ -86,7 +108,15 @@
 <div class="sticky-footer"><a href="tariffs.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Changes</button></div>
 
 </div>
-<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
 </main>
 </div>
 <script src="../js/awest-mockup.js"></script>

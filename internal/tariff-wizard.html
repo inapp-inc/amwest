@@ -3,17 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Tariff — American West</title>
+<title>Tariff Configurator — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
 <link rel="stylesheet" href="../css/awest-tokens.css">
 <link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
 </head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+
 <div class="ops-layout">
 <aside class="rail">
-<a href="../index.html" class="logo"><img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img"></a>
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
 <nav class="rail-nav">
 <a href="dashboard.html"><span>Dashboard</span></a>
 <a href="tariffs.html" class="active"><span>Tariffs</span></a>
@@ -22,7 +33,6 @@
 <a href="reference.html"><span>Reference</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-users.html"><span>Admin</span></a>
-
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
 <a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
@@ -33,14 +43,15 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>New Tariff</h1></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
+<div class="page-header"><div><h1>Tariff Configurator</h1><p class="page-lead">Guided setup based on origin-station and standard-template patterns from AW source workbooks.</p></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
 
 <div data-wizard>
 <div class="wizard-steps">
 <button type="button" class="wizard-step active" data-wizard-step>1. Basics</button>
-<button type="button" class="wizard-step" data-wizard-step>2. Pricing Model</button>
-<button type="button" class="wizard-step" data-wizard-step>3. Overrides</button>
-<button type="button" class="wizard-step" data-wizard-step>4. Review</button>
+<button type="button" class="wizard-step" data-wizard-step>2. Origin Stations</button>
+<button type="button" class="wizard-step" data-wizard-step>3. Pricing Model</button>
+<button type="button" class="wizard-step" data-wizard-step>4. Overrides</button>
+<button type="button" class="wizard-step" data-wizard-step>5. Review</button>
 </div>
 
 <div class="wizard-panel" data-wizard-panel>
@@ -48,13 +59,21 @@
 <h3 class="panel-title">Step 1: Basics</h3>
 <div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="White Glove Inspection — B2B"></div>
 <div class="field"><label for="tw-id">Tariff ID</label><input id="tw-id" class="tabular" value="TAR-NEW-001"></div>
-<div class="segmented" style="margin-bottom:var(--space-md)">
-<label><input type="radio" name="tw-service" checked><span>Business/B2B</span></label>
-<label><input type="radio" name="tw-service"><span>Threshold</span></label>
-<label><input type="radio" name="tw-service"><span>White Glove No Insp.</span></label>
-<label><input type="radio" name="tw-service"><span>White Glove Inspection</span></label>
+<label class="field" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+<input type="checkbox" data-template-toggle> Start from standard template
+</label>
+<div class="template-picker" data-template-picker hidden>
+<label for="tw-template-search">Search templates</label>
+<input id="tw-template-search" placeholder="Filter by origin, service type, UOM…" style="width:100%;margin:8px 0">
+<div class="template-list">
+<button type="button" class="template-option selected">LAX + SFO · White Glove Inspection · CWT · FAK</button>
+<button type="button" class="template-option">DFW + ATL · Threshold · Cube · Carton</button>
+<button type="button" class="template-option">EWR · Business/B2B · CWT · Case Goods</button>
+<button type="button" class="template-option">PHX · White Glove No Insp. · % Invoice · Upholstery</button>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<p style="font-size:12px;color:var(--neutral-600);margin-top:8px">Selecting a template pre-fills Steps 2–4. You can still edit every field.</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-top:var(--space-md)">
 <div class="field"><label for="tw-start">Effective start</label><input id="tw-start" type="date" value="2026-01-01"></div>
 <div class="field"><label for="tw-end">Effective end</label><input id="tw-end" type="date" value="2026-12-31"></div>
 </div>
@@ -64,19 +83,70 @@
 
 <div class="wizard-panel" data-wizard-panel hidden>
 <div class="card">
-<h3 class="panel-title">Step 2: Pricing Model</h3>
-<div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
-<label><input type="radio" name="tw-uom" value="cwt" checked><span>CWT</span></label>
-<label><input type="radio" name="tw-uom" value="cube"><span>Cube</span></label>
-<label><input type="radio" name="tw-uom" value="seat"><span>Seat</span></label>
-<label><input type="radio" name="tw-uom" value="invoice"><span>% Invoice</span></label>
-<label><input type="radio" name="tw-uom" value="flat"><span>Flat Rate</span></label>
+<h3 class="panel-title">Step 2: Origin Stations</h3>
+<p class="page-lead" style="margin-bottom:var(--space-md)">Toggle <strong>Include Station?</strong> for each origin. Only enabled stations appear in pricing and review.</p>
+<div class="origin-station-grid">
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">LAX</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-lax" value="yes" data-station-include checked> Yes</label>
+<label><input type="radio" name="st-lax" value="no" data-station-include> No</label></div></div>
+<div class="origin-station-detail">
+<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
+<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option><option value="other">Other</option></select><input data-stepped-custom hidden placeholder="Custom %" style="margin-top:4px"></div>
+<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option selected>+5</option><option>0</option><option>-5</option><option>-10</option><option>-15</option><option value="other">Other</option></select></div>
+</div></div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">DFW</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-dfw" value="yes" data-station-include checked> Yes</label>
+<label><input type="radio" name="st-dfw" value="no" data-station-include> No</label></div></div>
+<div class="origin-station-detail">
+<div class="field"><label>Density factor</label><input class="tabular" value="8.0"></div>
+<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option></select></div>
+<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option></select></div>
+</div></div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">EWR</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-ewr" value="yes" data-station-include> Yes</label>
+<label><input type="radio" name="st-ewr" value="no" data-station-include checked> No</label></div></div>
+<div class="origin-station-detail" hidden>
+<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
+<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option selected>0</option></select></div>
+<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option selected>0</option></select></div>
+</div></div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">TMV</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-tmv" value="yes" data-station-include> Yes</label>
+<label><input type="radio" name="st-tmv" value="no" data-station-include checked> No</label></div></div>
+<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div></div>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field" data-density-field><label for="tw-density">Density factor (lbs/cu ft)</label><input id="tw-density" class="tabular" value="8.5"></div>
-<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value="$58.00"></div>
-<div class="field"><label for="tw-floor">Margin floor</label><input id="tw-floor" class="tabular" value="15%"></div>
-<div class="field"><label for="tw-lane">Lane reference</label><input id="tw-lane" value="National B2B Matrix"></div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">SFO</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-sfo" value="yes" data-station-include checked> Yes</label>
+<label><input type="radio" name="st-sfo" value="no" data-station-include> No</label></div></div>
+<div class="origin-station-detail">
+<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
+<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option selected>0</option><option>-5</option></select></div>
+<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+5</option><option selected>0</option></select></div>
+</div></div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">PHX</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-phx" value="yes" data-station-include> Yes</label>
+<label><input type="radio" name="st-phx" value="no" data-station-include checked> No</label></div></div>
+<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="7.5"></div></div>
+</div>
+<div class="origin-station-row">
+<div class="origin-station-head"><span class="origin-station-code">ATL</span>
+<div class="origin-station-toggle"><span>Include Station?</span>
+<label><input type="radio" name="st-atl" value="yes" data-station-include> Yes</label>
+<label><input type="radio" name="st-atl" value="no" data-station-include checked> No</label></div></div>
+<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="8.0"></div></div>
+</div>
 </div>
 </div>
 <div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
@@ -84,10 +154,40 @@
 
 <div class="wizard-panel" data-wizard-panel hidden>
 <div class="card">
-<h3 class="panel-title">Step 3: Optional Overrides</h3>
-<p class="page-lead" style="margin-bottom:var(--space-md)">Configure customer, lane, or commodity overrides — or skip and add later.</p>
+<h3 class="panel-title">Step 3: Pricing Model</h3>
+<div class="segmented" style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="tw-service" checked><span>Business/B2B</span></label>
+<label><input type="radio" name="tw-service"><span>Threshold</span></label>
+<label><input type="radio" name="tw-service"><span>White Glove No Insp.</span></label>
+<label><input type="radio" name="tw-service"><span>White Glove Inspection</span></label>
+</div>
+<div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
+<label><input type="radio" name="tw-uom" value="cwt" checked><span>CWT</span></label>
+<label><input type="radio" name="tw-uom" value="cube"><span>Cube</span></label>
+<label><input type="radio" name="tw-uom" value="seat"><span>Seat</span></label>
+<label><input type="radio" name="tw-uom" value="invoice"><span>% Invoice</span></label>
+<label><input type="radio" name="tw-uom" value="flat"><span>Flat Rate</span></label>
+<label><input type="radio" name="tw-uom" value="spot"><span>Spot Quote</span></label>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field" data-density-field><label for="tw-density">Density factor (lbs/cu ft)</label><input id="tw-density" class="tabular" value="8.5"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Pre-filled per enabled station; editable as global override.</p></div>
+<div class="field"><label for="tw-min-density">Minimum density</label><input id="tw-min-density" class="tabular" value="6.0"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is CWT.</p></div>
+<div class="field"><label for="tw-min-cube">Minimum $/cube</label><input id="tw-min-cube" class="tabular" placeholder="—" disabled style="background:var(--surface-100)"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is % Invoice.</p></div>
+<div class="field"><label for="tw-commodity">Commodity</label><select id="tw-commodity"><option selected>FAK</option><option>Carton</option><option>Blanketwrap</option><option>Furniture</option><option>Case Goods</option><option>Upholstery</option><option>Custom</option></select></div>
+<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value="$58.00"></div>
+<div class="field"><label for="tw-floor">Margin floor</label><input id="tw-floor" class="tabular" value="15%"></div>
+</div>
+</div>
+<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
+</div>
+
+<div class="wizard-panel" data-wizard-panel hidden>
+<div class="card">
+<h3 class="panel-title">Step 4: Optional Overrides</h3>
+<p class="page-lead" style="margin-bottom:var(--space-md)">Configure customer, lane, or commodity overrides — or skip and add later from Tariff Detail.</p>
 <div class="field"><label for="tw-cust">Customer override (optional)</label><select id="tw-cust"><option>None</option><option>PHF-2041 — Pacific Home Furnishings</option></select></div>
 <div class="field"><label for="tw-lane-ov">Lane override (optional)</label><select id="tw-lane-ov"><option>None</option><option>SEA-PDX-METRO</option></select></div>
+<div class="field"><label for="tw-comm-ov">Commodity override (optional)</label><select id="tw-comm-ov"><option>None</option><option>Upholstery (+8%)</option></select></div>
 </div>
 <div class="wizard-nav">
 <button type="button" class="btn btn-secondary" data-wizard-back>Back</button>
@@ -100,17 +200,31 @@
 
 <div class="wizard-panel" data-wizard-panel hidden>
 <div class="card">
-<h3 class="panel-title">Step 4: Review</h3>
-<table class="data-table">
-<tbody>
+<h3 class="panel-title">Step 5: Review</h3>
+<p class="page-lead" style="margin-bottom:var(--space-md)">Summary grouped by enabled origin stations.</p>
+<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">LAX · enabled</h4>
+<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
+<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul +5%</td></tr>
+<tr><th scope="row">Density</th><td class="tabular">8.5 lbs/cu ft</td></tr>
+</tbody></table>
+<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">DFW · enabled</h4>
+<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
+<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul 0%</td></tr>
+<tr><th scope="row">Density</th><td class="tabular">8.0 lbs/cu ft</td></tr>
+</tbody></table>
+<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">SFO · enabled</h4>
+<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
+<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul 0%</td></tr>
+<tr><th scope="row">Density</th><td class="tabular">8.5 lbs/cu ft</td></tr>
+</tbody></table>
+<table class="data-table"><tbody>
 <tr><th scope="row">Tariff ID</th><td class="tabular">TAR-NEW-001</td></tr>
 <tr><th scope="row">Service</th><td>White Glove Inspection · B2B</td></tr>
-<tr><th scope="row">Unit of measure</th><td>CWT · $58.00 base</td></tr>
-<tr><th scope="row">Margin floor</th><td class="tabular">15%</td></tr>
+<tr><th scope="row">Unit of measure</th><td>CWT · $58.00 base · min density 6.0</td></tr>
+<tr><th scope="row">Commodity</th><td>FAK</td></tr>
+<tr><th scope="row">Stations enabled</th><td>LAX, DFW, SFO (3 of 7)</td></tr>
 <tr><th scope="row">Effective</th><td class="tabular">Jan 1 – Dec 31, 2026</td></tr>
-<tr><th scope="row">Overrides</th><td>None configured</td></tr>
-</tbody>
-</table>
+</tbody></table>
 <a href="tariff-detail.html" class="btn btn-primary" style="margin-top:var(--space-md)">Create Tariff</a>
 </div>
 <div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><span></span></div>
@@ -119,7 +233,15 @@
 </div>
 
 </div>
-<footer class="mock-footer"><a href="../index.html">← Mockup index</a></footer>
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
 </main>
 </div>
 <script src="../js/awest-mockup.js"></script>
