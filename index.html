@@ -184,62 +184,100 @@
   <div class="wt-arch-note">
     <strong>Hub-first principle:</strong> Domain services never call external vendors directly. Phase 1a activates two hubs (Market Data, Document). Remaining hubs are scaffolded in Phase 1a and activated in Phase 1b–3 without re-architecture.
   </div>
-  <div class="wt-arch-stack">
-    <div class="wt-arch-row">
-      <div class="wt-arch-phase ph1a">Layer 5</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Presentation Layer</div>
-        <div class="wt-arch-desc">Internal web UI (Phase 1a) · Customer portal (Phase 2) · CRM views (Phase 3)</div>
+  <p class="wt-arch-hint">Click any component to inspect · Filter by phase to see what ships when</p>
+
+  <div class="wt-arch-diagram" id="wt-arch-diagram">
+    <div class="wt-arch-toolbar" role="toolbar" aria-label="Architecture phase filter">
+      <span class="wt-arch-toolbar-label">Highlight phase</span>
+      <div class="wt-arch-phase-tabs">
+        <button type="button" class="wt-arch-tab active" data-arch-filter="all">All layers</button>
+        <button type="button" class="wt-arch-tab" data-arch-filter="ph1a">Phase 1a · MVP</button>
+        <button type="button" class="wt-arch-tab" data-arch-filter="ph1b">Phase 1b</button>
+        <button type="button" class="wt-arch-tab" data-arch-filter="ph2">Phase 2</button>
+        <button type="button" class="wt-arch-tab" data-arch-filter="ph3">Phase 3</button>
       </div>
-      <span class="wt-arch-tag ph1a">Ph 1a–3</span>
     </div>
-    <div class="wt-arch-row">
-      <div class="wt-arch-phase ph1a">Layer 4</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">API Gateway</div>
-        <div class="wt-arch-desc">Authentication, routing, schema validation — single entry point for all clients</div>
+
+    <div class="wt-arch-layout">
+      <div class="wt-arch-canvas" aria-label="Interactive architecture diagram">
+        <div class="wt-arch-layer" data-layer="5">
+          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">5</span> Presentation</div>
+          <div class="wt-arch-nodes">
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="ui-internal" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a+</span>Internal Web UI</button>
+            <button type="button" class="wt-arch-node ph2" data-arch-id="ui-portal" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Customer Portal</button>
+            <button type="button" class="wt-arch-node ph3" data-arch-id="ui-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>Sales Pipeline</button>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
+        <div class="wt-arch-layer" data-layer="4">
+          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">4</span> API Gateway</div>
+          <div class="wt-arch-nodes">
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="api-gateway" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>Auth · Routing · Validation</button>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
+        <div class="wt-arch-layer" data-layer="3">
+          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">3</span> Domain Services <span class="wt-arch-layer-sub">modular monolith</span></div>
+          <div class="wt-arch-nodes">
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-pricing" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Pricing Engine</button>
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-tariff" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Tariff Admin</button>
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-customer" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Customer Mgmt</button>
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-quote" data-phases="ph1a ph2 ph3"><span class="wt-arch-node-phase">1a</span>Quote Mgmt</button>
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-workflow" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Workflow &amp; Governance</button>
+            <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-reference" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>Reference Data</button>
+            <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-analytics" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b</span>Analytics</button>
+            <button type="button" class="wt-arch-node ph3" data-arch-id="mod-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM &amp; Sales</button>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓ hub boundary</span></div>
+        <div class="wt-arch-layer wt-arch-layer-hub" data-layer="2">
+          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">2</span> Integration Hub <span class="wt-arch-layer-sub">no direct vendor calls from domain</span></div>
+          <div class="wt-arch-nodes">
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-market" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Market Data</button>
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-document" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Document</button>
+            <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-rating" data-phases="ph1b ph2"><span class="wt-arch-node-phase">1b</span>Rating &amp; Quote</button>
+            <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-ops" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b+</span>Ops Systems</button>
+          </div>
+          <div class="wt-arch-external">
+            <span class="wt-arch-external-label">External systems</span>
+            <div class="wt-arch-nodes wt-arch-nodes-ext">
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-eia" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>EIA.gov</button>
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-storage" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Object Storage</button>
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-docusign" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>DocuSign</button>
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-tms" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>TMS</button>
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph2" data-arch-id="ext-freight" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Freight tracking</button>
+              <button type="button" class="wt-arch-node wt-arch-node-ext ph3" data-arch-id="ext-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM platform</button>
+            </div>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
+        <div class="wt-arch-layer" data-layer="1">
+          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">1</span> Data Layer</div>
+          <div class="wt-arch-nodes">
+            <button type="button" class="wt-arch-node ph1a" data-arch-id="data-layer" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>PostgreSQL · S3 · Audit trail</button>
+          </div>
+        </div>
       </div>
-      <span class="wt-arch-tag ph1a">Phase 1a</span>
-    </div>
-    <div class="wt-arch-row">
-      <div class="wt-arch-phase ph1a">Layer 3</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Domain Services — Pricing Engine · Tariff Admin · Customer Mgmt · Quote Mgmt · Workflow &amp; Governance</div>
-        <div class="wt-arch-desc">Hierarchical tariff resolution, quote lifecycle, approval rules, customer master records — modular monolith at MVP scale, splittable per module later</div>
-      </div>
-      <span class="wt-arch-tag ph1a">Phase 1a · 5 modules</span>
-    </div>
-    <div class="wt-arch-row optional">
-      <div class="wt-arch-phase ph1b">Layer 3+</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Extended domain services — Reference Data · Analytics · CRM &amp; Sales Enablement</div>
-        <div class="wt-arch-desc">Reference data promoted to standalone module (Phase 1b); analytics baseline (Phase 1b); CRM module (Phase 3)</div>
-      </div>
-      <span class="wt-arch-tag ph1b">Ph 1b &amp; 3</span>
-    </div>
-    <div class="wt-arch-row">
-      <div class="wt-arch-phase ph1a">Layer 2</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Integration Hub — Market Data (EIA fuel) · Document (PDF generation)</div>
-        <div class="wt-arch-desc">Two active hubs in Phase 1a; Rating &amp; Quote Hub and Ops Systems Hub scaffolded for Phase 1b+</div>
-      </div>
-      <span class="wt-arch-tag ph1a">Phase 1a · 2 hubs</span>
-    </div>
-    <div class="wt-arch-row optional">
-      <div class="wt-arch-phase ph1b">Layer 2+</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Integration Hub — DocuSign · TMS export · Freight tracking · SSO/MFA · CRM sync</div>
-        <div class="wt-arch-desc">DocuSign &amp; TMS in Phase 1b · freight tracking &amp; SSO in Phase 2 · CRM sync in Phase 3</div>
-      </div>
-      <span class="wt-arch-tag ph1b">Ph 1b–3</span>
-    </div>
-    <div class="wt-arch-row">
-      <div class="wt-arch-phase ph1a">Layer 1</div>
-      <div class="wt-arch-main">
-        <div class="wt-arch-name">Data Layer</div>
-        <div class="wt-arch-desc">Tariffs &amp; versions · Customers · Quotes &amp; provenance · Fuel tables · Users &amp; roles · Lightweight audit trail</div>
-      </div>
-      <span class="wt-arch-tag ph1a">Phase 1a</span>
+
+      <aside class="wt-arch-inspector" id="wt-arch-inspector" aria-live="polite">
+        <div class="wt-arch-inspector-default" id="wt-arch-inspector-default">
+          <div class="wt-arch-inspector-icon" aria-hidden="true">◎</div>
+          <h3 class="wt-arch-inspector-title">Explore the stack</h3>
+          <p class="wt-arch-inspector-lead">Select any layer, module, hub, or external system to see its role, delivery phase, and connections.</p>
+          <ul class="wt-arch-inspector-tips">
+            <li>Domain modules never call vendors directly — all external traffic routes through Layer 2.</li>
+            <li>Phase 1a ships as a modular monolith; modules can split into services later without UI changes.</li>
+            <li>Use the phase filter to preview MVP vs. full-scope architecture.</li>
+          </ul>
+        </div>
+        <div class="wt-arch-inspector-detail hidden" id="wt-arch-inspector-detail">
+          <div class="wt-arch-inspector-badge" id="wt-arch-inspector-badge"></div>
+          <h3 class="wt-arch-inspector-title" id="wt-arch-inspector-title"></h3>
+          <p class="wt-arch-inspector-lead" id="wt-arch-inspector-sub"></p>
+          <div class="wt-arch-inspector-body" id="wt-arch-inspector-body"></div>
+          <div class="wt-arch-inspector-links" id="wt-arch-inspector-links"></div>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
@@ -724,6 +762,267 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && drawerVeil.classList.contains('open')) closePhaseDrawer();
   });
+
+  /* Interactive architecture diagram */
+  var archData = {
+    'ui-internal': {
+      badge: 'Layer 5 · Phase 1a onward', badgeClass: 'ph1a',
+      title: 'Internal Web UI',
+      sub: 'Primary operations surface for pricing reps, tariff admins, and managers.',
+      body: '<p>Left-rail navigation shell with dashboard, quote builder, tariff management, customer records, and admin tools. All requests route through the API Gateway — no direct database or vendor access from the browser.</p>' +
+        '<dl><dt>Connects to</dt><dd>API Gateway → Domain Services</dd><dt>Key screens</dt><dd>Dashboard, Quotes, Tariffs, Customers, Reference Data, Analytics</dd></dl>',
+      links: [
+        { label: 'Operations dashboard', href: 'internal/dashboard.html' },
+        { label: 'Quote builder', href: 'internal/quote-builder.html' }
+      ]
+    },
+    'ui-portal': {
+      badge: 'Layer 5 · Phase 2', badgeClass: 'ph2',
+      title: 'Customer Portal',
+      sub: 'Self-service experience for shippers — separate top-nav shell, mobile-first.',
+      body: '<p>Customers view active quotes, accept or decline, download PDFs, and track shipment status. Distinct visual shell from internal ops but shares the same API Gateway and quote domain module.</p>' +
+        '<dl><dt>Connects to</dt><dd>API Gateway → Quote Mgmt · Document Hub</dd><dt>Lifecycle</dt><dd>Portal quotes are customer-facing; internal quotes remain ops-only until published</dd></dl>',
+      links: [
+        { label: 'Portal home', href: 'portal/portal-dashboard.html' },
+        { label: 'Quote request', href: 'portal/portal-quote-request.html' }
+      ]
+    },
+    'ui-crm': {
+      badge: 'Layer 5 · Phase 3', badgeClass: 'ph3',
+      title: 'Sales Pipeline UI',
+      sub: 'CRM-style pipeline views for reps and sales leadership.',
+      body: '<p>Kanban pipeline, opportunity detail, and rep leaderboard. Reads quote and customer data from domain services; syncs closed-won outcomes to external CRM via Ops Systems Hub.</p>' +
+        '<dl><dt>Connects to</dt><dd>API Gateway → CRM &amp; Sales module → Quote Mgmt</dd></dl>',
+      links: [
+        { label: 'CRM dashboard', href: 'crm/crm-dashboard.html' },
+        { label: 'Opportunities', href: 'crm/crm-opportunities.html' }
+      ]
+    },
+    'api-gateway': {
+      badge: 'Layer 4 · Phase 1a', badgeClass: 'ph1a',
+      title: 'API Gateway',
+      sub: 'Single entry point — authentication, routing, and schema validation.',
+      body: '<p>All clients (internal UI, portal, CRM) authenticate here. Routes validated requests to domain modules. Enforces role-based access before any business logic runs.</p>' +
+        '<dl><dt>Upstream</dt><dd>Presentation layer (all shells)</dd><dt>Downstream</dt><dd>Domain Services (modular monolith)</dd></dl>'
+    },
+    'mod-pricing': {
+      badge: 'Layer 3 · Phase 1a', badgeClass: 'ph1a',
+      title: 'Pricing Engine',
+      sub: 'Hierarchical tariff resolution and margin calculation.',
+      body: '<p>Resolves lane + accessorial + fuel surcharges from tariff hierarchy. Computes linehaul, margins, and spot overrides. Calls Market Data Hub for live fuel indices — never EIA directly.</p>' +
+        '<dl><dt>Hub dependency</dt><dd>Market Data Hub (EIA fuel)</dd></dl>',
+      links: [{ label: 'Quote builder', href: 'internal/quote-builder.html' }]
+    },
+    'mod-tariff': {
+      badge: 'Layer 3 · Phase 1a', badgeClass: 'ph1a',
+      title: 'Tariff Admin',
+      sub: 'Versioned tariff tables, lanes, and accessorial rules.',
+      body: '<p>CRUD for tariff versions with effective dates, lane matrices, fuel tables, and competitor benchmarks. Supports wizard-based creation and side-by-side version diff.</p>',
+      links: [
+        { label: 'Tariff list', href: 'internal/tariffs.html' },
+        { label: 'Tariff wizard', href: 'internal/tariff-wizard.html' }
+      ]
+    },
+    'mod-customer': {
+      badge: 'Layer 3 · Phase 1a', badgeClass: 'ph1a',
+      title: 'Customer Management',
+      sub: 'Customer master records and account hierarchy.',
+      body: '<p>Stores shipper profiles, billing contacts, default lanes, and tariff assignments. Quote and portal modules reference customer IDs — no duplicate customer stores.</p>',
+      links: [{ label: 'Customer list', href: 'internal/customers.html' }]
+    },
+    'mod-quote': {
+      badge: 'Layer 3 · Phase 1a–3', badgeClass: 'ph1a',
+      title: 'Quote Management',
+      sub: 'Full quote lifecycle — draft through accepted/lost with provenance.',
+      body: '<p>Creates, versions, and governs quotes. Approval workflows, PDF generation via Document Hub, portal publish in Phase 2, CRM linkage in Phase 3. Every price line stores tariff version provenance.</p>' +
+        '<dl><dt>Hub dependencies</dt><dd>Document Hub (PDF) · Rating Hub (Phase 1b+) · Ops Hub (TMS export)</dd></dl>',
+      links: [
+        { label: 'Quotes list', href: 'internal/quotes.html' },
+        { label: 'Quote detail', href: 'internal/quote-detail.html' }
+      ]
+    },
+    'mod-workflow': {
+      badge: 'Layer 3 · Phase 1a', badgeClass: 'ph1a',
+      title: 'Workflow & Governance',
+      sub: 'Approval rules, audit trail, and role enforcement.',
+      body: '<p>Defines margin thresholds, spot-quote approvals, and manager sign-off chains. Writes lightweight audit events to the data layer for every state transition.</p>',
+      links: [{ label: 'Admin users', href: 'internal/admin-users.html' }]
+    },
+    'mod-reference': {
+      badge: 'Layer 3 · Phase 1b', badgeClass: 'ph1b',
+      title: 'Reference Data',
+      sub: 'Promoted to standalone module — fuel tables, accessorials, lane templates.',
+      body: '<p>Phase 1a embeds reference data inside Tariff Admin. Phase 1b graduates it to a dedicated module with its own UI hub, shared across pricing and analytics.</p>',
+      links: [{ label: 'Reference hub', href: 'internal/reference.html' }]
+    },
+    'mod-analytics': {
+      badge: 'Layer 3 · Phase 1b–3', badgeClass: 'ph1b',
+      title: 'Analytics',
+      sub: 'Win rates, margin trends, and rep performance dashboards.',
+      body: '<p>Baseline internal analytics in Phase 1b. Phase 2 adds portal engagement metrics; Phase 3 adds pipeline forecasting from CRM data.</p>',
+      links: [{ label: 'Analytics dashboard', href: 'internal/analytics.html' }]
+    },
+    'mod-crm': {
+      badge: 'Layer 3 · Phase 3', badgeClass: 'ph3',
+      title: 'CRM & Sales Enablement',
+      sub: 'Pipeline module linking quotes to sales opportunities.',
+      body: '<p>Opportunity stages, rep assignments, and win/loss tracking. Closed-won quotes push to external CRM platform through Ops Systems Hub — domain never calls Salesforce/HubSpot directly.</p>',
+      links: [{ label: 'CRM dashboard', href: 'crm/crm-dashboard.html' }]
+    },
+    'hub-market': {
+      badge: 'Layer 2 · Phase 1a active', badgeClass: 'ph1a',
+      title: 'Market Data Hub',
+      sub: 'Abstraction layer for fuel indices and market feeds.',
+      body: '<p><strong>Active in Phase 1a.</strong> Caches EIA diesel indices on a schedule, normalizes responses, and exposes a stable internal API to the Pricing Engine. Vendor swap (EIA → alternate feed) requires hub changes only.</p>' +
+        '<dl><dt>External</dt><dd>EIA.gov</dd><dt>Consumers</dt><dd>Pricing Engine · Tariff Admin (fuel tables)</dd></dl>'
+    },
+    'hub-document': {
+      badge: 'Layer 2 · Phase 1a active', badgeClass: 'ph1a',
+      title: 'Document Hub',
+      sub: 'PDF generation and object storage for quote artifacts.',
+      body: '<p><strong>Active in Phase 1a.</strong> Renders branded quote PDFs, stores artifacts in object storage, and returns signed URLs to Quote Mgmt and the Customer Portal.</p>' +
+        '<dl><dt>External</dt><dd>Object Storage (S3-compatible)</dd></dl>',
+      links: [{ label: 'Quote detail (PDF)', href: 'internal/quote-detail.html' }]
+    },
+    'hub-rating': {
+      badge: 'Layer 2 · Phase 1b scaffold', badgeClass: 'ph1b',
+      title: 'Rating & Quote Hub',
+      sub: 'Future home for external rating engines and spot-market APIs.',
+      body: '<p>Scaffolded in Phase 1a with stub endpoints. Activated in Phase 1b when third-party rating or spot-market integrations are onboarded. Quote Mgmt calls this hub instead of vendor APIs directly.</p>'
+    },
+    'hub-ops': {
+      badge: 'Layer 2 · Phase 1b–3', badgeClass: 'ph1b',
+      title: 'Ops Systems Hub',
+      sub: 'TMS export, e-signature, freight tracking, and CRM sync.',
+      body: '<p>Single integration point for operational systems. Phase 1b: DocuSign + TMS export. Phase 2: freight tracking + SSO/MFA providers. Phase 3: CRM platform sync on closed-won.</p>' +
+        '<ul><li>DocuSign — e-signature on accepted quotes</li><li>TMS — load tender on quote acceptance</li><li>Freight APIs — shipment status for portal</li><li>CRM platform — opportunity sync</li></ul>'
+    },
+    'data-layer': {
+      badge: 'Layer 1 · Phase 1a', badgeClass: 'ph1a',
+      title: 'Data Layer',
+      sub: 'PostgreSQL primary store, object storage, and audit trail.',
+      body: '<p>Persistent storage for tariffs &amp; versions, customers, quotes &amp; provenance, fuel tables, users &amp; roles. Lightweight audit trail captures who changed what and when. Only domain services write here — never presentation or hubs directly.</p>' +
+        '<dl><dt>Entities</dt><dd>Tariffs · Customers · Quotes · Users · Audit events · PDF metadata</dd></dl>'
+    },
+    'ext-eia': {
+      badge: 'External · Phase 1a', badgeClass: 'ph1a',
+      title: 'EIA.gov',
+      sub: 'US Energy Information Administration — diesel price indices.',
+      body: '<p>Scheduled pull of weekly/monthly fuel indices. Accessed exclusively through Market Data Hub — Pricing Engine never holds EIA credentials or URLs.</p>'
+    },
+    'ext-storage': {
+      badge: 'External · Phase 1a', badgeClass: 'ph1a',
+      title: 'Object Storage',
+      sub: 'S3-compatible store for generated PDFs and attachments.',
+      body: '<p>Document Hub writes quote PDFs and signed artifacts here. Portal and internal UI receive time-limited signed URLs — no direct bucket access from clients.</p>'
+    },
+    'ext-docusign': {
+      badge: 'External · Phase 1b', badgeClass: 'ph1b',
+      title: 'DocuSign',
+      sub: 'Electronic signature on customer-accepted quotes.',
+      body: '<p>Ops Systems Hub initiates signature envelopes when a portal quote is accepted. Status webhooks update Quote Mgmt workflow state.</p>'
+    },
+    'ext-tms': {
+      badge: 'External · Phase 1b', badgeClass: 'ph1b',
+      title: 'TMS',
+      sub: 'Transportation management system — load tender on acceptance.',
+      body: '<p>When a quote converts to an accepted load, Ops Systems Hub exports lane, rate, and customer data to the TMS. Failures queue for retry without blocking quote state.</p>'
+    },
+    'ext-freight': {
+      badge: 'External · Phase 2', badgeClass: 'ph2',
+      title: 'Freight Tracking APIs',
+      sub: 'Shipment status feeds for customer portal tracking views.',
+      body: '<p>Portal shipment tracker reads normalized status events from Ops Systems Hub. Supports multiple carrier tracking providers behind one internal contract.</p>',
+      links: [{ label: 'Shipment tracker', href: 'portal/portal-shipment-tracker.html' }]
+    },
+    'ext-crm': {
+      badge: 'External · Phase 3', badgeClass: 'ph3',
+      title: 'CRM Platform',
+      sub: 'Salesforce, HubSpot, or equivalent — bidirectional opportunity sync.',
+      body: '<p>CRM &amp; Sales module pushes closed-won quotes and pulls account updates through Ops Systems Hub. Keeps sales pipeline in the external CRM aligned with quoted rates.</p>',
+      links: [{ label: 'CRM opportunities', href: 'crm/crm-opportunities.html' }]
+    }
+  };
+
+  var archDiagram = document.getElementById('wt-arch-diagram');
+  if (archDiagram) {
+    var archNodes = archDiagram.querySelectorAll('.wt-arch-node[data-arch-id]');
+    var archTabs = archDiagram.querySelectorAll('.wt-arch-tab[data-arch-filter]');
+    var inspectorDefault = document.getElementById('wt-arch-inspector-default');
+    var inspectorDetail = document.getElementById('wt-arch-inspector-detail');
+    var inspectorBadge = document.getElementById('wt-arch-inspector-badge');
+    var inspectorTitle = document.getElementById('wt-arch-inspector-title');
+    var inspectorSub = document.getElementById('wt-arch-inspector-sub');
+    var inspectorBody = document.getElementById('wt-arch-inspector-body');
+    var inspectorLinks = document.getElementById('wt-arch-inspector-links');
+    var currentFilter = 'all';
+    var selectedNode = null;
+
+    function applyArchFilter(filter) {
+      currentFilter = filter;
+      archTabs.forEach(function (tab) {
+        tab.classList.toggle('active', tab.getAttribute('data-arch-filter') === filter);
+      });
+      archNodes.forEach(function (node) {
+        var phases = (node.getAttribute('data-phases') || '').split(/\s+/);
+        var inPhase = filter === 'all' || phases.indexOf(filter) !== -1;
+        node.classList.toggle('dim-phase', !inPhase);
+        node.classList.toggle('in-phase', inPhase);
+      });
+      archDiagram.querySelectorAll('.wt-arch-layer').forEach(function (layer) {
+        var layerNodes = layer.querySelectorAll('.wt-arch-node[data-arch-id]');
+        var anyInPhase = filter === 'all' || Array.prototype.some.call(layerNodes, function (n) {
+          return (n.getAttribute('data-phases') || '').split(/\s+/).indexOf(filter) !== -1;
+        });
+        layer.classList.toggle('is-highlight', anyInPhase && filter !== 'all');
+      });
+    }
+
+    function selectArchNode(node) {
+      var id = node.getAttribute('data-arch-id');
+      var data = archData[id];
+      if (!data) return;
+      if (selectedNode) selectedNode.classList.remove('selected');
+      selectedNode = node;
+      node.classList.add('selected');
+      inspectorDefault.classList.add('hidden');
+      inspectorDetail.classList.remove('hidden');
+      inspectorBadge.textContent = data.badge;
+      inspectorBadge.className = 'wt-arch-inspector-badge ' + (data.badgeClass || 'ph1a');
+      inspectorTitle.textContent = data.title;
+      inspectorSub.textContent = data.sub;
+      inspectorBody.innerHTML = data.body;
+      inspectorLinks.innerHTML = '';
+      if (data.links && data.links.length) {
+        data.links.forEach(function (link) {
+          var a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.label;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          inspectorLinks.appendChild(a);
+        });
+        inspectorLinks.classList.remove('hidden');
+      } else {
+        inspectorLinks.classList.add('hidden');
+      }
+    }
+
+    archTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        applyArchFilter(tab.getAttribute('data-arch-filter'));
+      });
+    });
+
+    archNodes.forEach(function (node) {
+      node.addEventListener('click', function () {
+        selectArchNode(node);
+      });
+    });
+
+    applyArchFilter('all');
+    selectArchNode(archDiagram.querySelector('[data-arch-id="api-gateway"]'));
+  }
 })();
 </script>
 </body>
