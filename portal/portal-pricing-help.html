@@ -58,14 +58,17 @@
 
 <section class="help-section card" id="how-priced">
 <h2>How your price is calculated</h2>
-<p style="font-size:14px;line-height:1.7;color:var(--neutral-700)">Every quote follows the same structure you see on the quote result card:</p>
+<p style="font-size:14px;line-height:1.7;color:var(--neutral-700)">American West uses one rating pipeline for every service tier. Your quote breakdown shows each step in plain language:</p>
 <ol style="font-size:14px;line-height:1.8;color:var(--neutral-700);padding-left:20px;margin-top:var(--space-md)">
-<li><strong>Base rate</strong> — the starting price for your lane and service tier, based on weight or volume.</li>
-<li><strong>Fuel surcharge</strong> — a variable percentage tied to current diesel fuel prices, updated weekly.</li>
-<li><strong>Accessorial charges</strong> — additional services such as residential delivery, lift gate, or declared value coverage.</li>
-<li><strong>Total</strong> — the sum of all line items above.</li>
+<li><strong>Cube from dimensions</strong> — each item: (length × width × height in inches) ÷ 1,728 = cubic feet; shipment total = sum of all lines × quantity.</li>
+<li><strong>Rate group</strong> — total cube is placed in a bracket (&lt;251 · 251–500 · 501–1,000 · 1,001–2,000 · 2,001–5,000 cf). The largest bracket requires a custom quote.</li>
+<li><strong>Linehaul charge</strong> — per-pound rate from your lane/tier and rate group × shipment weight (lbs). If the lane’s minimum charge is higher, the minimum applies instead.</li>
+<li><strong>Fuel surcharge</strong> — linehaul charge × current fuel percentage (updated weekly from diesel indices).</li>
+<li><strong>Insurance</strong> — 1% of declared value with a $25 minimum; $0 if you enter no declared value.</li>
+<li><strong>Accessorials</strong> — optional services such as residential delivery or lift gate, added to the total.</li>
 </ol>
-<p style="font-size:13px;color:var(--neutral-600);margin-top:var(--space-md)"><a href="portal-quote-request.html">← Back to quote request</a></p>
+<p style="font-size:13px;color:var(--neutral-600);margin-top:var(--space-md)">Each service tier (Threshold, White Glove No Inspection, White Glove Inspection) runs the same steps with a different rate table — that is why tier prices differ for the same shipment.</p>
+<p style="font-size:13px;color:var(--neutral-600);margin-top:var(--space-sm)"><a href="portal-quote-request.html">← Back to quote request</a></p>
 </section>
 
 <section class="help-section" id="service-tiers">
@@ -103,6 +106,8 @@
 <section class="help-section card" id="common-terms">
 <h2>Common terms</h2>
 <dl class="help-glossary">
+<dt id="terms-insurance">Declared value insurance</dt>
+<dd>1% of your declared shipment value, with a $25 minimum charge. Enter $0 declared value to omit this line.</dd>
 <dt id="terms-cwt">CWT</dt>
 <dd>A pricing method based on shipment weight. "CWT" means "per hundredweight" (100 lbs).</dd>
 <dt id="terms-cube">Cube</dt>
@@ -118,7 +123,9 @@
 
 <section class="help-section card" id="insurance">
 <h2>Declared value &amp; insurance</h2>
-<p style="font-size:14px;line-height:1.7;color:var(--neutral-700)">Standard coverage applies up to the lower of <strong>$500 per article</strong> or <strong>$1 per pound</strong>. Shipments with higher declared value may need additional coverage.</p>
+<p style="font-size:14px;line-height:1.7;color:var(--neutral-700)">When you enter a declared value, your quote includes an <strong>insurance charge of 1% of declared value, with a $25 minimum</strong>. If declared value is $0, no insurance charge is added.</p>
+<p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)"><strong>Example:</strong> $18,000 declared value → 1% = $180.00 insurance (above the $25 floor).</p>
+<p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)">Standard coverage terms still apply up to the lower of <strong>$500 per article</strong> or <strong>$1 per pound</strong> unless additional coverage is arranged.</p>
 <p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)"><strong>Excluded or specialty items</strong> — statuary, fine art, rare antiques, and one-of-a-kind items may not be fully covered under standard terms. Please confirm with our team before shipping high-value or specialty goods.</p>
 <p style="font-size:13px;margin-top:var(--space-lg)">Still have questions? <a href="portal-self-service.html">Contact Support</a></p>
 </section>

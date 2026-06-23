@@ -23,7 +23,7 @@
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
 <img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
 <span class="cobrand-sep" aria-hidden="true">×</span>
-<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img-inapp">
 </a>
 <nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
 <a href="portal-quote-request.html" class="active">My Quotes</a>
@@ -52,17 +52,17 @@
 <div class="field"><label>Destination</label><input value="Portland, OR 97201"></div>
 <div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="2,400"></div>
 <div class="field">
-<div class="field-label-row"><label for="portal-cube">Cube</label>
-<a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#portal-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="modal">Not sure of your total cube? Build it from item dimensions</a></div>
+<div class="field-label-row"><label for="portal-cube">Cube (cu ft)</label>
+<a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#portal-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="modal">Build from item dimensions (L × W × H ÷ 1,728)</a></div>
 <input id="portal-cube" class="tabular" data-shipment-cube value="520">
 </div>
-<div class="field"><label>Unit of Measure</label><select><option>CWT</option><option>Cube</option></select></div>
+<p style="font-size:12px;color:var(--neutral-600);margin-top:4px">520 cu ft → rate group 2 (251–500 cf bracket). Group 6 requires a custom quote.</p>
 <div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$18,000"></div>
 <div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance coverage. <a href="portal-pricing-help.html#insurance">Learn about declared value &amp; insurance</a></div>
 </div>
 
 <h2 style="font-size:16px;font-weight:700;margin:var(--space-lg) 0 var(--space-md)">Compare service tiers</h2>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Your shipment qualifies for multiple home-delivery tiers. Prices include fuel surcharge.</p>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Each tier uses the same calculation — linehaul + fuel + insurance — with a different rate table row. Totals below include fuel and insurance; residential delivery is added at checkout.</p>
 <div class="service-tier-grid">
 <div class="service-tier-card">
 <h4>Threshold</h4>
@@ -73,7 +73,7 @@
 <li>✓ Delivered to garage/porch</li>
 </ul>
 </div>
-<div class="service-tier-card is-recommended">
+<div class="service-tier-card">
 <h4>White Glove No Inspection</h4>
 <p class="service-tier-price tabular">$2,045.00</p>
 <ul class="service-tier-features">
@@ -82,7 +82,7 @@
 <li>✕ No pre-delivery inspection</li>
 </ul>
 </div>
-<div class="service-tier-card">
+<div class="service-tier-card is-recommended">
 <h4>White Glove Inspection</h4>
 <p class="service-tier-price tabular">$2,185.00</p>
 <ul class="service-tier-features">
@@ -100,13 +100,15 @@
 <p class="portal-quote-total tabular">$2,185.00</p>
 <p style="font-size:13px;opacity:.85;margin-bottom:var(--space-sm)">SEA → PDX · Estimated transit 3–5 days</p>
 
+<p class="portal-compute-note">How this price was calculated: we look up your delivery ZIP to a home-delivery tier, find the per-pound rate for your cube bracket (520 cf = group 2), multiply by weight, apply the lane minimum if needed, then add fuel (28.4% of linehaul) and insurance (1% of declared value, $25 minimum).</p>
+
 <div class="portal-breakdown">
-<div class="portal-breakdown-line"><span>Base rate (lane)</span><span class="tabular">$1,420.00</span></div>
-<div class="portal-breakdown-line"><span>Fuel surcharge (28.4%)<a href="portal-pricing-help.html#terms-fuel" class="portal-help-link">What does this mean?</a></span><span class="tabular">$403.28</span></div>
+<div class="portal-breakdown-line"><span>Linehaul charge<span class="portal-breakdown-formula">$0.61/lb × 2,400 lbs = $1,468.00 (lane minimum not applied)</span></span><span class="tabular">$1,468.00</span></div>
+<div class="portal-breakdown-line"><span>Fuel surcharge (28.4% × linehaul)<a href="portal-pricing-help.html#terms-fuel" class="portal-help-link">What does this mean?</a><span class="portal-breakdown-formula">$1,468.00 × 28.4% = $416.91</span></span><span class="tabular">$416.91</span></div>
+<div class="portal-breakdown-line"><span>Declared value insurance<span class="portal-breakdown-formula">max(1% × $18,000, $25) = $180.00</span></span><span class="tabular">$180.00</span></div>
 <div class="portal-breakdown-line"><span>Residential delivery<a href="portal-pricing-help.html#terms-accessorial" class="portal-help-link">?</a></span><span class="tabular">$120.00</span></div>
-<div class="portal-breakdown-line"><span>Declared value coverage</span><span class="tabular">$41.72</span></div>
 <div class="portal-breakdown-line total"><span>Total</span><span class="tabular">$2,185.00</span></div>
-<p style="font-size:11px;opacity:.7;margin-top:var(--space-sm)">Fuel surcharge updated weekly from current diesel prices.</p>
+<p style="font-size:11px;opacity:.7;margin-top:var(--space-sm)">Fuel surcharge updated weekly from current diesel prices. Insurance is one charge per shipment, not per service tier.</p>
 </div>
 
 <a href="portal-quote-confirmation.html" class="btn btn-burgundy" style="width:100%;margin-top:var(--space-lg);margin-bottom:var(--space-sm)">Accept &amp; Book</a>

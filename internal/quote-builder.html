@@ -80,7 +80,7 @@
 <div class="field">
 <div class="field-label-row"><label for="quote-cube">Cube</label>
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
-<input id="quote-cube" class="tabular" data-shipment-cube value="1,480">
+<input id="quote-cube" class="tabular" data-shipment-cube value="494">
 </div>
 <div class="field"><label>Commodity</label><select><option selected>FAK</option><option>Case Goods</option><option>Upholstery</option></select></div>
 <div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$45,000"></div>
@@ -104,21 +104,24 @@
 <div class="disclosure-body">
 <div class="field"><label>Competitor Name</label><input value="Regional Freight Co."></div>
 <div class="field"><label>Quoted Rate</label><input class="tabular" value="$3,650.00"></div>
-<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">+$197.50 (+5.4%)</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
+<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">−$56.02 (−1.5%)</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
 </div></details>
 </div>
 <div class="card" style="position:sticky;top:var(--space-md)">
 <h3 class="panel-title">Pricing Breakdown</h3>
 <div class="pricing-lines" data-auto-pricing data-standard-quote-note>
-<div class="pricing-line"><span>Base rate (42 CWT × $58.00)</span><span class="tabular">$2,436.00</span></div>
-<div class="pricing-line"><span>Customer override (−5%)</span><span class="tabular">−$121.80</span></div>
-<div class="pricing-line"><span>Lane override (SEA-PDX)</span><span class="tabular">+$45.00</span></div>
-<div class="pricing-line"><span>Fuel surcharge (28.4%) <small style="color:var(--neutral-600)">as of Jun 16</small></span><span class="tabular">$657.42</span></div>
+<div class="pricing-line"><span>Linehaul charge<span class="pricing-line-formula">$0.58/lb × 4,200 lbs = $2,436.00</span></span><span class="tabular">$2,436.00</span></div>
+<div class="pricing-line"><span>Lane minimum check<span class="pricing-line-formula">max($2,436.00, $2,100.00 lane min) — calculated wins</span></span><span class="tabular">—</span></div>
+<div class="pricing-line"><span>Customer override (−5%)<span class="pricing-line-formula">Platform discount on linehaul</span></span><span class="tabular">−$121.80</span></div>
+<div class="pricing-line"><span>Lane override (SEA-PDX)<span class="pricing-line-formula">Platform adjustment</span></span><span class="tabular">+$45.00</span></div>
+<div class="pricing-line"><span>Fuel surcharge (28.4%) <small style="color:var(--neutral-600)">as of Jun 16</small><span class="pricing-line-formula">28.4% × $2,436.00 linehaul (after minimum, before discount)</span></span><span class="tabular">$691.82</span></div>
+<div class="pricing-line"><span>Insurance (1% DV, $25 min)<span class="pricing-line-formula">max(1% × $45,000, $25) = $450.00</span></span><span class="tabular">$450.00</span></div>
 <div class="pricing-line"><span>Lift gate</span><span class="tabular">$85.00</span></div>
 <div class="pricing-line"><span>Residential delivery</span><span class="tabular">$120.00</span></div>
 <div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular">18.2%</span></div>
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
-<div class="pricing-line total"><span>Total</span><span class="tabular">$3,847.50</span></div>
+<div class="pricing-line total"><span>Total</span><span class="tabular">$3,706.02</span></div>
+<p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)">494 cu ft → rate group 2 (251–500 cf). Source pipeline: per-pound rate × weight → lane minimum → fuel on linehaul → insurance once per shipment.</p>
 </div>
 <p data-cfq-manual hidden style="font-size:13px;color:var(--neutral-600);padding:var(--space-md) 0">Enter manual rates above to see pricing breakdown.</p>
 <div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">

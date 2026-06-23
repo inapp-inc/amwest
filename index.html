@@ -534,7 +534,7 @@
   <p class="wt-config-hint">Click any configuration area for scope, ownership, and pricing impact ↓</p>
 
   <div class="wt-config-callout">
-    <strong>Largest maintenance surface:</strong> The rate table matrix — one editor for every origin station and service level combination. Every quoted shipment passes through it after origin-specific adjustments. Click any card below for detail; open interactive demos from the Mockup index.
+    <strong>Rating pipeline:</strong> ZIP → lane/tier → cube bracket → per-pound rate × weight → lane minimum → fuel on linehaul → insurance (1% DV, $25 min). Four service types run in parallel; any unresolved step returns Call-for-Quote.
   </div>
 
   <div class="wt-config-legend">
@@ -549,13 +549,13 @@
       <span class="wt-phase-badge ph1a">Phase 1a</span>
       <span class="wt-config-status ready">Mocked</span>
       <h3>Origin station × service-type grid</h3>
-      <p>Per-origin density factors, minimum charges, and linehaul adjustments for each service level — seven stations × four service types.</p>
+      <p>Pickup ZIP → origin station; platform adjustments (density, linehaul %) per service level — seven stations × four service types.</p>
     </button>
     <button type="button" class="wt-config-card wt-config-card--featured" data-config-id="rate-matrix">
       <span class="wt-phase-badge ph1a">Phase 1a</span>
       <span class="wt-config-status ready">Mocked</span>
       <h3>Rate table matrix entry</h3>
-      <p>Lane zone × weight/cube break freight rates — one maintained template for every origin and service level.</p>
+      <p>Per-pound rates and lane minimum charges by zone × cube bracket — one editor for every origin and service level.</p>
     </button>
     <button type="button" class="wt-config-card" data-config-id="b2b-lanes">
       <span class="wt-phase-badge ph1b">Phase 1b</span>
@@ -981,12 +981,13 @@
       sub: '13 features — one core workflow: log in, price a shipment, govern the quote, produce a PDF',
       body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Core workflow:</strong> A sales rep logs in, prices a shipment for a customer, and the quote is governed, recorded, and produced as a PDF — plus margin-floor enforcement and full quote provenance. Tariff version history, diff comparison, and quote search/comparison are deferred to Phase 1b.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Domain modules (5 of 9)</div><ul class="wt-drawer-list">' +
-        '<li><strong>Pricing Engine</strong> — hierarchical tariff resolution (base→customer→lane→commodity); CWT, Cube, Seat, % Invoice, Flat Rate; margin floor &amp; minimum charge</li>' +
+        '<li><strong>Pricing Engine</strong> — lane/tier + cube bracket lookup → per-pound rate × weight → lane minimum → fuel on linehaul → insurance (1% DV, $25 min); four service types in parallel</li>' +
         '<li><strong>Tariff Administration</strong> — web CRUD only; version history and side-by-side diff deferred to Phase 1b</li>' +
         '<li><strong>Customer Management</strong> — master records, assigned tariffs, discounts, assigned rep</li>' +
         '<li><strong>Quote Management</strong> — spot quote generation; lifecycle state machine; full provenance per quote. Plain quote list only — search and quote-to-quote comparison deferred to Phase 1b</li>' +
         '<li><strong>Workflow &amp; Governance</strong> — approval rules for discount, margin, cube, weight, network thresholds</li>' +
         '</ul></div>' +
+        drawerFormula(drawerPipelineCore) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integration hubs (2 of 4 active)</div><ul class="wt-drawer-list">' +
         '<li><strong>Market Data Hub</strong> — EIA.gov weekly diesel pull; fuel surcharge config consumed by Pricing Engine (engine config data, not standalone UI)</li>' +
         '<li><strong>Document Hub</strong> — headless PDF rendering; quote PDFs stored in object storage with retrievable URLs</li>' +
@@ -1095,6 +1096,30 @@
     }
   };
 
+  function drawerFormula(inner) {
+    return '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Calculation formulae</div><div class="wt-drawer-formula-block">' + inner + '</div></div>';
+  }
+
+  function drawerFormulaNa(note) {
+    return drawerFormula('<p class="wt-drawer-formula-na">' + note + '</p>');
+  }
+
+  var drawerPipelineIntro = '<p class="wt-drawer-formula-note">American West source rating pipeline — B2B, Threshold, WGNI, and WGI each run these steps in parallel. Any unresolved ZIP, lane, or cube bracket (group 6) returns Call-for-Quote with no partial rate.</p>';
+
+  var drawerPipelineCore =
+    drawerPipelineIntro +
+    '<div class="wt-drawer-formula-line"><strong>Cube bracket (weight group)</strong> = if cube &lt;251 → 1 · &lt;501 → 2 · &lt;1,001 → 3 · &lt;2,001 → 4 · &lt;5,001 → 5 · else Call-for-Quote</div>' +
+    '<div class="wt-drawer-formula-line"><strong>Per-pound rate</strong> = rate-table lookup [origin station × lane or tier × cube bracket]</div>' +
+    '<div class="wt-drawer-formula-line"><strong>Linehaul (pre-minimum)</strong> = per-pound rate × weight (lbs)</div>' +
+    '<div class="wt-drawer-formula-line"><strong>Linehaul (final)</strong> = max(linehaul pre-minimum, lane minimum charge)</div>' +
+    '<div class="wt-drawer-formula-line"><strong>Fuel surcharge</strong> = linehaul (final) × fuel %<em>Applied after minimum enforcement — not before</em></div>' +
+    '<div class="wt-drawer-formula-line"><strong>Insurance</strong> = if declared value = 0 then $0 else max(declared value × 1%, $25)<em>One insurance charge per shipment, shared across service types</em></div>' +
+    '<div class="wt-drawer-formula-line"><strong>Total (per service type)</strong> = linehaul (final) + fuel surcharge + insurance</div>';
+
+  var drawerPipelineCube =
+    '<div class="wt-drawer-formula-line"><strong>Line cube (cf)</strong> = (length × width × height in inches) ÷ 1,728</div>' +
+    '<div class="wt-drawer-formula-line"><strong>Shipment cube</strong> = Σ (line cube × quantity)</div>';
+
   var moduleData = {
     quote: {
       icon: '💰',
@@ -1109,6 +1134,10 @@
         '<li>Lifecycle stepper, collapsed provenance for reps, PDF via Document Hub</li>' +
         '<li>E-signature and TMS export graduate in Phase 1b</li>' +
         '</ul></div>' +
+        drawerFormula(
+          drawerPipelineCore +
+          '<div class="wt-drawer-formula-line"><strong>Platform additions</strong> — customer discount, lane override, and accessorials layer on after the source pipeline; fuel remains tied to linehaul after minimum<em>Example: $0.58/lb × 4,200 lbs = $2,436 linehaul → 28.4% fuel = $691.82 → 1% × $45,000 DV = $450 insurance</em></div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="rep">Sales rep — price &amp; submit quotes</button></li>' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="manager">Sales manager — approve &amp; release</button></li>' +
@@ -1137,6 +1166,12 @@
         '<li>5-step Tariff Configurator and override hierarchy on Tariff Detail</li>' +
         '<li>Version history, rollback, and competitor comparison — Phase 1b</li>' +
         '</ul></div>' +
+        drawerFormula(
+          drawerPipelineCube +
+          '<div class="wt-drawer-formula-line"><strong>Lane minimum</strong> stored on the same rate-table row as the per-pound rate — not a separate override entity</div>' +
+          '<div class="wt-drawer-formula-line"><strong>B2B lane key</strong> = delivery ZIP → 5-digit exception, else 3-digit prefix → lane name</div>' +
+          '<div class="wt-drawer-formula-line"><strong>HD tier key</strong> = delivery ZIP → POI/tier name (5-digit match, else 3-digit prefix fallback)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
         '<li>Tariff list with filter, clone, and detail editor</li>' +
         '<li>Override hierarchy tab — stacked resolution order</li>' +
@@ -1167,6 +1202,10 @@
         '<li>Lane-specific discount overrides on Discount Structure tab</li>' +
         '<li>Assigned tariffs, sales rep, and quote history</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>Platform discount</strong> = linehaul (final) × (discount % ÷ 100)<em>Applied after source linehaul minimum; before fuel in rep-facing breakdown</em></div>' +
+          '<div class="wt-drawer-formula-line"><strong>Lane override</strong> = fixed ± amount after service-level discount</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="rep">Sales rep — select customer when building quotes</button></li>' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="admin">Pricing admin — maintain account tariff assignments</button></li>' +
@@ -1193,6 +1232,10 @@
         '<li><strong>Validation lists</strong> — origins, commodities, UOM (low priority / seed data)</li>' +
         '<li>Full permission matrix and MFA — Phase 1b</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>Approval trigger</strong> when margin % &lt; floor, discount exceeds authority, or cube bracket = 6 (Call-for-Quote)</div>' +
+          drawerPipelineCube
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="admin">Pricing admin — users, roles &amp; approval rules</button></li>' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="manager">Sales manager — approval queue actions</button></li>' +
@@ -1245,6 +1288,11 @@
         '<li><strong>TMS rate-key mapping</strong> — carrier booking system translation at shipment handoff</li>' +
         '<li>Accessorial charge rules — lift gate, residential, declared value</li>' +
         '</ul></div>' +
+        drawerFormula(
+          drawerPipelineCore +
+          '<div class="wt-drawer-formula-line"><strong>Fuel tables</strong> — weekly EIA diesel index → fuel surcharge % consumed by engine</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Accessorials</strong> — flat fees added after core total (lift gate, residential, etc.)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="ops">Operations — maintain fuel, accessorials &amp; lanes</button></li>' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="admin">Pricing admin — review surcharge impact on tariffs</button></li>' +
@@ -1298,6 +1346,14 @@
         '<li>Shipment Tracker — Quote→Delivery lifecycle; POD download; requote</li>' +
         '<li>Self-service tools — address book, saved commodities</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<p class="wt-drawer-formula-note">Customer-facing breakdown mirrors the source pipeline in plain language.</p>' +
+          drawerPipelineCube +
+          '<div class="wt-drawer-formula-line"><strong>Linehaul</strong> = per-pound rate × weight; minimum lane charge applied if higher</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Fuel</strong> = linehaul × weekly fuel %</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Insurance</strong> = max(1% × declared value, $25) — $0 if no declared value</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Your total</strong> = linehaul + fuel + insurance (+ accessorials if selected)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="customer">Customer (portal) — full self-service journey</button></li>' +
         '</ul></div>' +
@@ -1347,12 +1403,16 @@
       icon: '🗺️',
       title: 'Origin station × service-type grid',
       sub: 'Tariff setup · Phase 1a MVP · Maintained by pricing admin',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Before lane rates apply:</strong> Each origin station applies density factors, minimum freight charges, and linehaul adjustments by service level — commercial B2B, threshold, white-glove with and without inspection.</div></div>' +
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Before lane rates apply:</strong> Pickup ZIP resolves to an origin station; shipment cube sets the rate bracket; per-pound rates and lane minimums live on the rate matrix rows.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">What pricing admins maintain</div><ul class="wt-drawer-list">' +
-        '<li>Density and minimum charge rules per origin station and service level</li>' +
-        '<li>Linehaul adjustment factors that modify base rates before lane lookup</li>' +
-        '<li>Gap visibility across all stations in one view — not scattered across separate rate sheets</li>' +
+        '<li>Origin station enablement and service-level adjustment factors on Tariff Detail</li>' +
+        '<li>Which origin station a pickup ZIP prefix maps to</li>' +
+        '<li>Visibility across all stations — confirm every service level is configured before reps quote</li>' +
         '</ul></div>' +
+        drawerFormula(
+          drawerPipelineCube +
+          '<div class="wt-drawer-formula-line"><strong>Origin station</strong> = pickup ZIP 3-digit prefix → origin code (LAX, DFW, TMV, …)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Why one consolidated grid</div><p class="wt-drawer-prose">Pricing teams need to compare origins side by side — for example, confirming threshold service is configured for Atlanta before reps quote that lane. A single matrix prevents missing combinations that today hide in spreadsheet blocks.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Every quote applies the correct origin adjustment before freight rates are looked up</li>' +
@@ -1371,10 +1431,16 @@
         '<li>White-glove rates — with and without inspection, quoted per cubic foot</li>' +
         '<li>Zone definitions and break headers that vary by origin station</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>Per-pound rate</strong> = VLOOKUP(lane or tier, origin rate table, column for cube bracket)</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Linehaul (pre-minimum)</strong> = per-pound rate × weight (lbs)</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Lane minimum</strong> = VLOOKUP(lane or tier, same table, minimum column)</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Linehaul (final)</strong> = max(linehaul pre-minimum, lane minimum)<em>Minimum lives on the same matrix row as the rate — not a separate override</em></div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Why one editor, many combinations</div><p class="wt-drawer-prose">Every origin and service level uses the same maintenance pattern — only the zones, break points, and numbers differ. One governed editor replaces dozens of duplicate spreadsheets while keeping a full audit trail per combination.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
-        '<li>Destination region and billable weight or cube determine the base freight line on every quote</li>' +
-        '<li>Customer discounts and lane overrides apply on top of matrix output — not instead of it</li>' +
+        '<li>Destination region and cube bracket determine which rate-table column applies</li>' +
+        '<li>Linehaul = per-pound rate × weight; lane minimum enforced on the same matrix row</li>' +
         '</ul></div>' +
         configMockupFooter
     },
@@ -1388,6 +1454,10 @@
         '<li>Human-readable lane descriptions tied to each destination region</li>' +
         '<li>Alignment between geographic coverage and rate table rows</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>B2B lane (Z)</strong> = if 5-digit ZIP in exception table → lane name; else if 3-digit prefix in table → lane name; else Call-for-Quote</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Rate row</strong> = lane name selects row in origin B2B rate matrix for cube bracket column</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Separate from home delivery</div><p class="wt-drawer-prose">Commercial freight uses regional lane groupings at a coarser geographic grain. Residential and last-mile delivery uses full ZIP-to-tier rules — different business process, different maintenance team, different screen.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Shipment destination resolves to the correct lane before freight rates are retrieved</li>' +
@@ -1405,6 +1475,10 @@
         '<li>Point-of-injection and tier naming reps see on quotes</li>' +
         '<li>Base price per cube values that feed accessorial and delivery calculations</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>Home tier (W)</strong> = if 5-digit ZIP in table → POI/tier name; else if 3-digit prefix in table → tier; else Call-for-Quote</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Rate row</strong> = tier name selects row in Threshold / WGNI / WGI rate matrix (column offset +1 vs B2B layout)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Why its own maintenance area</div><p class="wt-drawer-prose">Residential tiers change with market density, carrier partners, and seasonal capacity — on a different cadence than commercial lane tables. Operations can update delivery coverage without risking commercial rate integrity.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Threshold and home delivery quotes resolve tier before freight and accessorial rules run</li>' +
@@ -1422,6 +1496,7 @@
         '<li>Discount level translation so booked revenue matches quoted margin</li>' +
         '<li>Fuel surcharge index alignment between pricing platform and carrier systems</li>' +
         '</ul></div>' +
+        drawerFormulaNa('No customer-facing arithmetic — translates internal quote attributes to carrier TMS rate keys at export so booked revenue matches the governed quote.') +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Configuration vs. export action</div><p class="wt-drawer-prose">Reps trigger TMS export from the quote — but the translation rules live here as governed reference data. When carrier schemas or discount programs change, operations updates mappings once rather than retraining reps on manual workarounds.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Export is blocked until a valid mapping exists — preventing revenue leakage at booking</li>' +
@@ -1439,6 +1514,7 @@
         '<li>Which published rate schedules apply to this shipper</li>' +
         '<li>Sales rep assignment for quote attribution and commission</li>' +
         '</ul></div>' +
+        drawerFormulaNa('No freight arithmetic at account level — assigned rate schedules and discount records determine which pricing rules the engine applies on each quote.') +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Separate from negotiated discounts</div><p class="wt-drawer-prose">Account setup answers who the customer is and which rate schedules they qualify for. Negotiated discount percentages are deal terms — maintained separately so reps can update pricing concessions without touching core account data.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Quote Builder auto-applies the correct rate schedules and rep ownership</li>' +
@@ -1456,6 +1532,10 @@
         '<li>Lane-specific overrides where a customer has regional deal terms</li>' +
         '<li>Effective dating and approval alignment with margin governance rules</li>' +
         '</ul></div>' +
+        drawerFormula(
+          '<div class="wt-drawer-formula-line"><strong>Platform discount</strong> = linehaul (final) × (discount % ÷ 100)</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Net after discount</strong> = linehaul (final) − discount amount ± lane override<em>Source workbook has no account discount — this is a platform governance layer</em></div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">How discounts stack</div><p class="wt-drawer-prose">Base freight comes from the rate matrix and origin adjustments first. Customer discount applies next, before margin checks and manager approval. Lane-specific overrides take precedence over service-level defaults.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Margin gauge and approval rules reflect true post-discount profitability</li>' +
@@ -1473,6 +1553,7 @@
         '<li>Service-tier descriptions that explain white-glove, threshold, and commercial options</li>' +
         '<li>Version-controlled updates when legal or product language changes</li>' +
         '</ul></div>' +
+        drawerFormulaNa('No pricing calculation — template content is merged into the quote PDF at generation time alongside the calculated breakdown.') +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Why governed configuration</div><p class="wt-drawer-prose">Legal owns the language; the platform renders it consistently on every quote. Storing templates as configuration preserves version history and keeps reps from embedding outdated clauses in individual quotes.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Generate PDF always uses the current approved template version</li>' +
@@ -1490,6 +1571,11 @@
         '<li>Threshold notices when shipments exceed high cube volumes</li>' +
         '<li>Email routing for origin-specific pricing alerts and escalations</li>' +
         '</ul></div>' +
+        drawerFormula(
+          drawerPipelineCube +
+          '<div class="wt-drawer-formula-line"><strong>Cube bracket</strong> = if cube &lt;251 → 1 · &lt;501 → 2 · &lt;1,001 → 3 · &lt;2,001 → 4 · &lt;5,001 → 5 · else Call-for-Quote (group 6)</div>' +
+          '<div class="wt-drawer-formula-line"><strong>Cubic divisor constant</strong> = 1,728 cu in per cu ft (system constant)</div>'
+        ) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Launch vs. self-service</div><p class="wt-drawer-prose">These values may ship as fixed settings at go-live if admin screens are deferred. The mock screen shows where operations would self-serve changes without a development release.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Shipment Configurator calculates billable cube using the governed conversion factor</li>' +
@@ -1507,6 +1593,7 @@
         '<li>Commodity types and units of measure reps can select</li>' +
         '<li>Standard discount increment steps used in approval workflows</li>' +
         '</ul></div>' +
+        drawerFormulaNa('No pricing formula — governs allowed values for discount steps (e.g. ±5%, ±10%) and picklists so reps cannot enter invalid service levels or commodities.') +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Launch vs. self-service</div><p class="wt-drawer-prose">Lists are stable at launch and may be seeded during implementation. Admin screens let pricing teams add a new origin or commodity without waiting for a code deployment.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Impact on quoting</div><ul class="wt-drawer-list">' +
         '<li>Invalid combinations are caught at data entry — not discovered after pricing fails</li>' +
@@ -1663,7 +1750,8 @@
       badge: 'Layer 3 · Phase 1a', badgeClass: 'ph1a',
       title: 'Pricing Engine',
       sub: 'Hierarchical tariff resolution and margin calculation.',
-      body: '<p>Resolves tariff hierarchy for lane pricing and margin calculation. Fuel surcharge config is consumed from Market Data Hub (engine-level in MVP — no standalone Reference Data UI until Phase 1b). Computes linehaul, margins, and spot overrides.</p>' +
+      body: '<p>Resolves the source rating pipeline: lane/zone and cube-bracket lookup → per-pound rate × weight → max with lane minimum → fuel on linehaul → insurance at 1% declared value ($25 min). Four service types (B2B, Threshold, WGNI, WGI) run in parallel.</p>' +
+        drawerPipelineCore.replace(drawerPipelineIntro, '<p class="wt-drawer-formula-note">Core engine formulae:</p>') +
         '<dl><dt>Hub dependency</dt><dd>Market Data Hub (EIA fuel)</dd></dl>',
       links: [{ label: 'Quote builder', href: 'internal/quote-builder.html' }]
     },
@@ -1920,11 +2008,11 @@
       badge: 'Phase 1a · 1b', badgeClass: 'mixed',
       title: 'Pricing Admin user flow',
       sub: 'Tariff lifecycle ownership — origin adjustments, rate matrix, configurator, and governance; commercial lanes and TMS handoff mapping in Phase 1b.',
-      alt: '<strong>Rate maintenance:</strong> The rate table matrix is the highest-volume pricing surface — one editor covers every origin station and service level. Commercial B2B lanes and residential delivery tiers are maintained separately because pricing teams use different geographic rules.',
+      alt: '<strong>Source pipeline:</strong> lane/tier + cube bracket → per-pound rate × weight → max with lane minimum → fuel on linehaul → insurance at 1% DV ($25 min). Commercial lanes and residential tiers use different ZIP lookup rules.',
       steps: [
         { title: 'Tariff List', desc: 'Browse, filter, and clone tariffs.', phase: 'ph1a', href: 'internal/tariffs.html', label: 'Tariff List' },
         { title: 'Origin station grid', desc: '7 origins × 4 service types — density and adjustment cells.', phase: 'ph1a', href: 'internal/tariff-detail.html', label: 'Tariff Detail' },
-        { title: 'Rate table matrix', desc: '28 combinations — base zone × cube-break per-unit rates.', phase: 'ph1a', href: 'internal/tariff-rate-matrix.html', label: 'Rate Matrix' },
+        { title: 'Rate table matrix', desc: 'Per-pound rates and lane minimums by zone × cube bracket.', phase: 'ph1a', href: 'internal/tariff-rate-matrix.html', label: 'Rate Matrix' },
         { title: 'Tariff Configurator', desc: '5 steps: basics, origin stations, pricing model, overrides, review.', phase: 'ph1a', href: 'internal/tariff-wizard.html', label: 'Configurator' },
         { title: 'Version compare', desc: 'Diff two versions; rollback with confirmation.', phase: 'ph1b', href: 'internal/tariff-comparison.html', label: 'Comparison' },
         { title: 'Agreement template', desc: 'Cover sheet language for Quote PDF output.', phase: 'ph1a', href: 'internal/admin-agreement-template.html', label: 'Agreement Template' },
