@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TMS Export — American West</title>
+<title>Admin Configuration — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Presentation hub</a>
 </div>
-
 <div class="ops-layout">
 <aside class="rail">
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
@@ -29,36 +28,24 @@
 <a href="dashboard.html"><span>Dashboard</span></a>
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
-<a href="quotes.html" class="active"><span>Quotes</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
 <a href="reference.html"><span>Reference</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-users.html"><span>Admin</span></a>
-
-<div class="rail-divider"></div>
-<div class="rail-section-label">Customer self-service</div>
-<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
-<div class="rail-section-label">Sales team</div>
-<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
-</nav></aside>
+<a href="admin-config.html" class="active"><span>Config</span></a>
+</nav>
+</aside>
 <main class="main">
 <div class="main-content">
-
-<div class="page-header"><div><h1>Export to TMS Format</h1></div></div>
-<div class="card" style="max-width:560px;text-align:center;padding:var(--space-xl)">
-<p style="font-size:48px;margin-bottom:var(--space-md)">✓</p>
-<h2 class="panel-heading">Export complete</h2>
-<p style="font-size:14px;color:var(--neutral-600);margin-bottom:var(--space-lg)">Q-2026-0823 exported as <strong>Q2026_0823_TMS.xlsx</strong> — normalized via <a href="reference-tms-mapping.html">TMS rate-key mapping</a>.</p>
-<a href="quotes.html" class="btn btn-primary">Back to Quotes</a>
-<a href="quote-detail.html" class="btn btn-secondary" style="margin-left:var(--space-sm)">View Quote</a>
+<div class="page-header"><div><h1>Admin Configuration</h1><p class="text-muted-sm" style="margin-top:4px">Agreement templates, system constants, and validation lists</p></div></div>
+<div class="admin-config-cards">
+<a href="admin-agreement-template.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Agreement / Cover Sheet</h3><p class="text-muted-sm">Legal boilerplate and service-tier language for Quote PDF</p></a>
+<a href="admin-system-config.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">System Configuration</h3><p class="text-muted-sm">Cubic divisor, thresholds, notification routing <span class="badge badge-draft">Low priority</span></p></a>
+<a href="admin-list-management.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Validation Lists</h3><p class="text-muted-sm">Origins, commodities, UOM, discount steps <span class="badge badge-draft">Low priority</span></p></a>
+<a href="admin-users.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Users &amp; Roles</h3><p class="text-muted-sm">Accounts, permissions, approval rules</p></a>
 </div>
 </div>
 <footer class="mock-footer">
-<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
-<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
-<span class="cobrand-sep" aria-hidden="true">×</span>
-<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
-</a>
-<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
 <p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
 </footer>
 </main>

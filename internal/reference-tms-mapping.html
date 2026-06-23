@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMS Rate-Key Mapping — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
+</head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="reference.html" class="active"><span>Reference</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-users.html"><span>Admin</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+<div class="page-header">
+<div>
+<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Reference Data</a></p>
+<h1>TMS Rate-Key / Export Mapping</h1>
+<p class="text-muted-sm" style="margin-top:4px">Normalization config for Ops Systems Hub · Source: <code>b2b_tmv_table</code>, <code>thr_tmv_table</code>, <code>wgni_tmv_table</code>, <code>wgi_tmv_table</code>, <code>mr2</code> (+ export tabs)</p>
+</div>
+<button type="button" class="btn btn-primary">Save Mapping</button>
+</div>
+<div class="config-callout"><strong>Export is not just an action:</strong> TMS handoff requires tariff/level codes, discount-level assignment, and fuel-index selection configured here — the same mapping the workbook uses before generating <code>*_export</code> sheets.</div>
+<div class="tabs-wrap">
+<input type="radio" name="tms-tab" id="tms1" class="tab-radio" checked>
+<input type="radio" name="tms-tab" id="tms2" class="tab-radio">
+<input type="radio" name="tms-tab" id="tms3" class="tab-radio">
+<div class="tabs" role="tablist">
+<label for="tms1" class="tab-label" role="tab">B2B / WG</label>
+<label for="tms2" class="tab-label" role="tab">Threshold (HD)</label>
+<label for="tms3" class="tab-label" role="tab">MR2 / Misc</label>
+</div>
+<div class="tab-panels">
+<div class="tab-panel" role="tabpanel">
+<table class="data-table">
+<thead><tr><th>Platform service</th><th>TMS tariff code</th><th>Level code</th><th>Discount level</th><th>Fuel index</th><th>Export template</th></tr></thead>
+<tbody>
+<tr><td>B2B · LAX</td><td class="tabular"><input value="B2B-LAX-2026"></td><td class="tabular"><input value="L1"></td><td><select><option>Standard</option><option>Preferred</option></select></td><td><select><option selected>EIA National</option><option>Manual override</option></select></td><td>b2b_tmv_export</td></tr>
+<tr><td>WG Inspection · LAX</td><td class="tabular"><input value="WGI-LAX-2026"></td><td class="tabular"><input value="L2"></td><td><select><option selected>Standard</option></select></td><td><select><option selected>EIA National</option></select></td><td>wgi_tmv_export</td></tr>
+<tr><td>WG No Insp. · ATL</td><td class="tabular"><input value="WGNI-ATL-2026"></td><td class="tabular"><input value="L1"></td><td><select><option>Standard</option></select></td><td><select><option selected>EIA National</option></select></td><td>wgni_tmv_export</td></tr>
+</tbody>
+</table>
+</div>
+<div class="tab-panel" role="tabpanel">
+<table class="data-table">
+<thead><tr><th>Platform service</th><th>TMS tariff code</th><th>Tier mapping</th><th>BPPC field</th><th>Fuel index</th><th>Export template</th></tr></thead>
+<tbody>
+<tr><td>Threshold · LAX</td><td class="tabular"><input value="THR-LAX-2026"></td><td>HD tier table</td><td>BPPC</td><td><select><option selected>EIA National</option></select></td><td>thr_tmv_export</td></tr>
+</tbody>
+</table>
+</div>
+<div class="tab-panel" role="tabpanel">
+<table class="data-table">
+<thead><tr><th>Rule name</th><th>MR2 code</th><th>Applies when</th><th>Export template</th></tr></thead>
+<tbody>
+<tr><td>Minimum charge floor</td><td class="tabular"><input value="MR2-MIN"></td><td>Quote total &lt; tariff minimum</td><td>mr2_export</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p style="margin-top:var(--space-md)"><a href="quote-tms-export.html" class="btn btn-link">View sample export result →</a> · <a href="reference.html" class="btn btn-link">← Reference Data</a></p>
+</div>
+<footer class="mock-footer">
+<a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>

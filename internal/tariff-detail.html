@@ -83,16 +83,20 @@
 <div class="field"><label>Lane Reference</label><input data-lane-field value="National B2B Matrix"></div>
 <div class="field"><label>Margin Floor</label><input class="tabular" data-margin-field value="15%"></div>
 </div>
-<h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Origin station configuration</h4>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Shared component with Tariff Configurator — per-station density and adjustment %.</p>
-<table class="data-table"><thead><tr><th>Station</th><th>Included</th><th>Density</th><th>Min charge adj.</th><th>Linehaul adj.</th></tr></thead>
+<h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Origin station × service-type grid</h4>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">7 origins × 4 service types = <strong>28 configurable cells</strong> (density factor, min/linehaul adjustment per cell). Shared with Tariff Configurator.</p>
+<table class="data-table"><thead><tr><th>Station</th><th>B2B</th><th>Threshold</th><th>WG No Insp.</th><th>WG Insp.</th></tr></thead>
 <tbody>
-<tr><td class="tabular">LAX</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.5</td><td class="tabular">0%</td><td class="tabular">+5%</td></tr>
-<tr><td class="tabular">SFO</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.5</td><td class="tabular">0%</td><td class="tabular">0%</td></tr>
-<tr><td class="tabular">DFW</td><td><span class="badge badge-active">Yes</span></td><td class="tabular">8.0</td><td class="tabular">0%</td><td class="tabular">0%</td></tr>
-<tr><td class="tabular">EWR</td><td><span class="badge badge-draft">No</span></td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td class="tabular">LAX</td><td class="tabular">8.5 / 0% / +5%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / +3%</td><td class="tabular">8.5 / 0% / +5%</td></tr>
+<tr><td class="tabular">SFO</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td></tr>
+<tr><td class="tabular">DFW</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td></tr>
+<tr><td class="tabular">EWR</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
 </tbody></table>
-<a href="tariff-wizard.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">Edit in Configurator</a>
+<p style="font-size:12px;color:var(--neutral-600);margin-top:var(--space-sm)">Cells show density / min charge adj. / linehaul adj.</p>
+<div style="display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-md)">
+<a href="tariff-wizard.html" class="btn btn-secondary btn-sm">Edit in Configurator</a>
+<a href="tariff-rate-matrix.html" class="btn btn-primary btn-sm">Open Rate Table Matrix (28 tabs)</a>
+</div>
 </div>
 </div>
 <div class="tab-panel" id="panel-overrides" role="tabpanel" aria-labelledby="t2">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Users & Roles — American West</title>
+<title>B2B Lane Configuration — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Presentation hub</a>
 </div>
-
 <div class="ops-layout">
 <aside class="rail">
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
@@ -30,43 +29,37 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference</span></a>
+<a href="reference.html" class="active"><span>Reference</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
-<a href="admin-users.html" class="active"><span>Admin</span></a>
-
+<a href="admin-users.html"><span>Admin</span></a>
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
-<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer"><span>Customer Portal</span></a>
 <div class="rail-section-label">Sales team</div>
 <a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
 </nav>
 </aside>
 <main class="main">
 <div class="main-content">
-
-<div class="page-header"><div><h1>Users</h1></div><div><a href="admin-config.html" class="btn btn-secondary">Admin configuration</a> <a href="admin-invite.html" class="btn btn-primary">+ Invite User</a></div></div>
-<div class="tabs-wrap">
-<input type="radio" name="ut" id="u1" class="tab-radio" checked>
-<input type="radio" name="ut" id="u2" class="tab-radio">
-<div class="tabs" role="tablist"><label for="u1" class="tab-label" role="tab">Users</label><label for="u2" class="tab-label" role="tab">Role Permissions</label></div>
-<div class="tab-panels">
-<div class="tab-panel" role="tabpanel"><table class="data-table">
-<thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customers</th><th>Status</th><th>Actions</th></tr></thead>
+<div class="page-header">
+<div>
+<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Reference Data</a> / Lanes</p>
+<h1>B2B Lane Configuration</h1>
+<p class="text-muted-sm" style="margin-top:4px">3-digit base-ZIP → lane description · Source tabs: <code>origin_zips</code>, <code>3zips</code></p>
+</div>
+<a href="reference-lane-b2b-edit.html" class="btn btn-primary">+ Add B2B Zone</a>
+</div>
+<div class="config-callout"><strong>Distinct from home delivery tiers:</strong> B2B and white-glove rate matrices use 3-digit base-ZIP lookup rows. This screen maps each base zone to a lane description consumed by the rate table matrix and quote auto-resolve.</div>
+<table class="data-table">
+<thead><tr><th>Base ZIP (3-digit)</th><th>Lane description</th><th>Origin station</th><th>CFQ flag</th><th>Linked tariffs</th><th>Actions</th></tr></thead>
 <tbody>
-<tr><td>Jordan Ellis</td><td>jordan.ellis@americanwest.com</td><td>Sales Rep</td><td class="tabular">12</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a></td></tr>
-<tr><td>Morgan Reyes</td><td>morgan.reyes@americanwest.com</td><td>Sales Manager</td><td>—</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a></td></tr>
-<tr><td>Admin User</td><td>admin@americanwest.com</td><td>Admin</td><td>—</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a> · <a href="admin-user-edit.html">Disable</a></td></tr>
-</tbody></table></div>
-<div class="tab-panel" role="tabpanel"><table class="data-table">
-<thead><tr><th>Permission</th><th>Rep</th><th>Manager</th><th>Admin</th></tr></thead>
-<tbody>
-<tr><td>Create quotes</td><td>✓</td><td>✓</td><td>✓</td></tr>
-<tr><td>Approve quotes</td><td>—</td><td>✓</td><td>✓</td></tr>
-<tr><td>Edit tariffs</td><td>—</td><td>—</td><td>✓</td></tr>
-<tr><td>Manage users</td><td>—</td><td>—</td><td>✓</td></tr>
-</tbody></table></div>
-</div></div>
-
+<tr><td class="tabular">900</td><td>Los Angeles metro</td><td>LAX</td><td>—</td><td class="tabular"><a href="tariff-detail.html">6</a></td><td><a href="reference-lane-b2b-edit.html">Edit</a></td></tr>
+<tr><td class="tabular">902</td><td>Inglewood / South Bay</td><td>LAX</td><td>—</td><td class="tabular">4</td><td><a href="reference-lane-b2b-edit.html">Edit</a></td></tr>
+<tr><td class="tabular">303</td><td>Atlanta metro</td><td>ATL</td><td>—</td><td class="tabular">5</td><td><a href="reference-lane-b2b-edit.html">Edit</a></td></tr>
+<tr><td class="tabular">596</td><td>Montana rural</td><td>—</td><td><span class="badge badge-cfq">Call-for-Quote</span></td><td class="tabular">0</td><td><a href="reference-lane-b2b-edit.html">Edit</a></td></tr>
+</tbody>
+</table>
+<p style="margin-top:var(--space-md)"><a href="reference-lanes.html" class="btn btn-link">← Lane configuration hub</a> · <a href="reference-tiers-hd.html" class="btn btn-link">Home delivery tiers →</a></p>
 </div>
 <footer class="mock-footer">
 <a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
@@ -74,7 +67,7 @@
 <span class="cobrand-sep" aria-hidden="true">×</span>
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
-<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
+<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review.</p>
 <p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
 </footer>
 </main>

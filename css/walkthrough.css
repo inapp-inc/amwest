@@ -1786,6 +1786,171 @@ h1.wt-hero-title em {
   background: var(--wt-amber-lt);
 }
 
+/* ── WORKBOOK CONFIGURATION INVENTORY ── */
+#wt-config { background: var(--wt-page); }
+.wt-config-callout {
+  background: var(--wt-accent-lt);
+  border-left: 3px solid var(--wt-accent);
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--wt-ink-mid);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  border-radius: 0 8px 8px 0;
+}
+.wt-config-callout strong { color: var(--wt-accent); }
+.wt-config-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 28px;
+  font-size: 12px;
+  color: var(--wt-ink-soft);
+}
+.wt-config-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.wt-config-dot.ready { background: var(--wt-green); }
+.wt-config-dot.ph1a { background: var(--wt-accent); }
+.wt-config-dot.ph1b { background: var(--wt-burgundy); }
+.wt-config-dot.low { background: #9CA3AF; }
+.wt-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--wt-rule-md);
+  border: 1px solid var(--wt-rule-md);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.wt-config-card {
+  display: block;
+  width: 100%;
+  background: var(--wt-surface);
+  padding: 22px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: background .2s, box-shadow .2s;
+  position: relative;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.wt-config-card:hover {
+  background: var(--wt-page);
+  box-shadow: inset 0 0 0 2px var(--wt-accent-mid);
+}
+.wt-config-card.is-open {
+  background: var(--wt-accent-lt);
+  box-shadow: inset 0 0 0 2px var(--wt-accent-mid);
+}
+.wt-config-card::after {
+  content: '→';
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  font-size: 14px;
+  color: var(--wt-accent);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.wt-config-card:hover::after,
+.wt-config-card.is-open::after { opacity: 1; }
+.wt-config-hint {
+  margin-top: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--wt-ink-soft);
+}
+.wt-drawer-prose {
+  font-size: 13px;
+  color: var(--wt-ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+.wt-drawer-mockup-hint {
+  font-size: 13px;
+  color: var(--wt-ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+.wt-drawer-mockup-hint a {
+  color: var(--wt-accent);
+  font-weight: 600;
+}
+.wt-config-card--featured {
+  background: linear-gradient(135deg, var(--wt-accent-lt) 0%, var(--wt-surface) 70%);
+}
+.wt-config-card--featured:hover {
+  background: linear-gradient(135deg, #dce2f5 0%, var(--wt-page) 70%);
+}
+.wt-config-card .wt-phase-badge {
+  margin-bottom: 10px;
+}
+.wt-config-status {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.wt-config-status.ready {
+  color: var(--wt-green);
+  background: var(--wt-green-lt);
+}
+.wt-config-status.low {
+  color: #6B7280;
+  background: #F3F4F6;
+}
+.wt-config-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--wt-ink);
+  margin-bottom: 8px;
+  line-height: 1.35;
+  padding-right: 72px;
+}
+.wt-config-card p {
+  font-size: 12px;
+  color: var(--wt-ink-soft);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.wt-config-source {
+  display: block;
+  font-size: 11px;
+  color: var(--wt-ink-soft);
+  font-family: ui-monospace, monospace;
+}
+.wt-config-not-config {
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--wt-ink-soft);
+  line-height: 1.6;
+  padding: 14px 18px;
+  background: var(--wt-surface);
+  border-radius: 8px;
+  border: 1px solid var(--wt-rule-md);
+}
+.wt-mockup-jump {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wt-accent);
+  text-decoration: none;
+}
+.wt-mockup-jump:hover { text-decoration: underline; }
+
 /* ── MOCKUP INDEX ── */
 #wt-mockups { background: var(--wt-surface); }
 .wt-mockup-grid {

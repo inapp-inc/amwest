@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reference Data — American West</title>
+<title>Edit B2B Lane Zone — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Presentation hub</a>
 </div>
-
 <div class="ops-layout">
 <aside class="rail">
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
@@ -33,25 +32,19 @@
 <a href="reference.html" class="active"><span>Reference</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-users.html"><span>Admin</span></a>
-
-<div class="rail-divider"></div>
-<div class="rail-section-label">Customer self-service</div>
-<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
-<div class="rail-section-label">Sales team</div>
-<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
 </nav>
 </aside>
 <main class="main">
 <div class="main-content">
-
-<div class="page-header"><div><h1>Reference Data</h1><p class="text-muted-sm" style="margin-top:4px">10 configuration domains from source workbooks — fuel, lanes, TMS mapping, and more</p></div></div>
-<div class="portal-cards">
-<a href="reference-fuel.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Fuel Tables</h3><p class="page-lead">Fuel surcharge rates and history · Current: 28.4%</p></a>
-<a href="reference-accessorials.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Accessorials</h3><p class="page-lead">Lift gate, residential, declared value, and more</p></a>
-<a href="reference-lanes.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Lane / ZIP Grouping</h3><p class="page-lead">B2B base-ZIP lanes and home-delivery tiers (separate lookup patterns)</p></a>
-<a href="reference-tms-mapping.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">TMS Rate-Key Mapping</h3><p class="page-lead">Tariff/level codes, discount level, fuel index for export normalization</p></a>
+<div class="page-header"><div><h1>Edit B2B Lane Zone</h1></div></div>
+<div class="card" style="max-width:560px">
+<div class="field"><label>Base ZIP (3-digit)</label><input class="tabular" value="900"></div>
+<div class="field"><label>Lane description</label><input value="Los Angeles metro"></div>
+<div class="field"><label>Origin station</label><select><option selected>LAX</option><option>SFO</option><option>DFW</option><option>ATL</option></select></div>
+<div class="field"><label><input type="checkbox"> Call-for-Quote zone (disable auto-pricing)</label></div>
+<div class="field"><label>Included ZIP prefixes (optional)</label><textarea rows="3">900xx, 901xx, 902xx</textarea></div>
 </div>
-
+<div class="sticky-footer"><a href="reference-lanes-b2b.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Zone</button></div>
 </div>
 <footer class="mock-footer">
 <a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
@@ -59,7 +52,6 @@
 <span class="cobrand-sep" aria-hidden="true">×</span>
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
-<p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
 <p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
 </footer>
 </main>

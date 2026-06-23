@@ -845,6 +845,264 @@
     });
   }
 
+  /* ── Tariff rate table matrix (28 origin × service-type tabs) ── */
+  function initRateMatrix() {
+    var picker = document.getElementById('rate-matrix-picker');
+    var tbody = document.getElementById('rate-matrix-body');
+    var thead = document.getElementById('rate-matrix-thead');
+    if (!picker || !tbody) return;
+
+    var origins = [
+      { code: 'lax', label: 'LAX', factor: 1.0, enabled: true },
+      { code: 'sfo', label: 'SFO', factor: 1.02, enabled: true },
+      { code: 'dfw', label: 'DFW', factor: 0.96, enabled: true },
+      { code: 'ord', label: 'ORD', factor: 0.98, enabled: true },
+      { code: 'atl', label: 'ATL', factor: 0.94, enabled: true },
+      { code: 'ewr', label: 'EWR', factor: 1.05, enabled: false },
+      { code: 'mia', label: 'MIA', factor: 0.97, enabled: true }
+    ];
+    var services = [
+      { prefix: 'b2b', label: 'B2B', zoneDigits: 3, uom: 'CWT', rateBase: 52.0, rateStep: 1.15, suffix: '' },
+      { prefix: 'thr', label: 'Threshold', zoneDigits: 5, uom: '$/cf', rateBase: 5.15, rateStep: 0.12, suffix: '/cf' },
+      { prefix: 'wgni', label: 'WG No Insp.', zoneDigits: 3, uom: 'CWT', rateBase: 56.5, rateStep: 1.25, suffix: '' },
+      { prefix: 'wgi', label: 'WG Inspection', zoneDigits: 3, uom: 'CWT', rateBase: 61.0, rateStep: 1.35, suffix: '' }
+    ];
+    var breaks = [
+      { label: '0–250 cf', weight: 1.0 },
+      { label: '251–500 cf', weight: 0.94 },
+      { label: '501–750 cf', weight: 0.88 },
+      { label: '751–1,000 cf', weight: 0.84 },
+      { label: '1,001+ cf', weight: 0.79 }
+    ];
+
+    var originZones = {
+      lax: [
+        { zone: '900', desc: 'Los Angeles metro' },
+        { zone: '902', desc: 'Inglewood / South Bay' },
+        { zone: '905', desc: 'Torrance corridor' },
+        { zone: '910', desc: 'Pasadena / San Gabriel' },
+        { zone: '913', desc: 'San Fernando Valley' },
+        { zone: '920', desc: 'San Diego north' },
+        { zone: '921', desc: 'San Diego central' },
+        { zone: '925', desc: 'Inland Empire west' }
+      ],
+      sfo: [
+        { zone: '940', desc: 'San Francisco peninsula' },
+        { zone: '941', desc: 'San Francisco city' },
+        { zone: '943', desc: 'Palo Alto / Stanford' },
+        { zone: '945', desc: 'East Bay — Oakland' },
+        { zone: '951', desc: 'San Jose metro' },
+        { zone: '954', desc: 'Santa Rosa north bay' }
+      ],
+      dfw: [
+        { zone: '750', desc: 'Dallas metro core' },
+        { zone: '752', desc: 'Dallas east' },
+        { zone: '761', desc: 'Fort Worth' },
+        { zone: '770', desc: 'Houston overlap lane' },
+        { zone: '787', desc: 'Austin feeder' }
+      ],
+      ord: [
+        { zone: '606', desc: 'Chicago loop' },
+        { zone: '607', desc: 'Chicago north side' },
+        { zone: '604', desc: 'Western suburbs' },
+        { zone: '531', desc: 'Milwaukee corridor' },
+        { zone: '463', desc: 'NW Indiana' }
+      ],
+      atl: [
+        { zone: '303', desc: 'Atlanta metro' },
+        { zone: '300', desc: 'Alpharetta / north' },
+        { zone: '301', desc: 'Marietta / west' },
+        { zone: '306', desc: 'Athens feeder' },
+        { zone: '314', desc: 'Savannah coastal' }
+      ],
+      ewr: [
+        { zone: '070', desc: 'Newark metro' },
+        { zone: '071', desc: 'Jersey City' },
+        { zone: '100', desc: 'Manhattan cross-dock' }
+      ],
+      mia: [
+        { zone: '331', desc: 'Miami core' },
+        { zone: '333', desc: 'Fort Lauderdale' },
+        { zone: '334', desc: 'West Palm corridor' },
+        { zone: '341', desc: 'Naples south' }
+      ]
+    };
+
+    var combinations = [];
+    origins.forEach(function (origin) {
+      services.forEach(function (service) {
+        var id = service.prefix + '_' + origin.code;
+        var zones = originZones[origin.code] || [];
+        var enabled = origin.enabled && !(origin.code === 'ewr' && service.prefix === 'thr');
+        combinations.push({
+          id: id,
+          origin: origin,
+          service: service,
+          enabled: enabled,
+          configured: enabled && hashCode(id) % 5 !== 0
+        });
+      });
+    });
+
+    var activeId = 'wgi_lax';
+
+    function hashCode(str) {
+      var h = 0;
+      for (var i = 0; i < str.length; i++) {
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0;
+      }
+      return Math.abs(h);
+    }
+
+    function formatRate(value, service) {
+      if (service.uom === '$/cf') return '$' + value.toFixed(2) + service.suffix;
+      return '$' + value.toFixed(2);
+    }
+
+    function computeRate(combo, rowIndex, breakIndex) {
+      var s = combo.service;
+      var o = combo.origin;
+      var seed = hashCode(combo.id + '-' + rowIndex + '-' + breakIndex);
+      var jitter = (seed % 17) / 100;
+      var rowAdj = rowIndex * s.rateStep * 0.35;
+      var breakMult = breaks[breakIndex].weight;
+      var val = (s.rateBase + rowAdj + jitter) * o.factor * breakMult;
+      if (s.prefix === 'wgi') val *= 1.04;
+      if (s.prefix === 'wgni') val *= 0.97;
+      return val;
+    }
+
+    function getMatrixRows(combo) {
+      if (!combo.enabled) return [];
+      var zones = originZones[combo.origin.code] || [];
+      if (!combo.configured) return [];
+      return zones.map(function (z, ri) {
+        var zoneDisplay = combo.service.zoneDigits === 5
+          ? z.zone + String((ri % 9) + 1).padStart(2, '0')
+          : z.zone;
+        return {
+          zone: zoneDisplay,
+          desc: z.desc,
+          rates: breaks.map(function (_, bi) {
+            return computeRate(combo, ri, bi);
+          })
+        };
+      });
+    }
+
+    function renderPicker() {
+      picker.innerHTML = '';
+      combinations.forEach(function (combo) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        var stateLabel = !combo.enabled ? ' · station off' : (combo.configured ? ' · configured' : ' · empty');
+        btn.className = 'config-picker-btn' + (combo.id === activeId ? ' is-active' : '');
+        btn.setAttribute('role', 'option');
+        btn.setAttribute('aria-selected', combo.id === activeId ? 'true' : 'false');
+        btn.dataset.comboId = combo.id;
+        btn.innerHTML = combo.service.label + ' · ' + combo.origin.label +
+          '<span class="config-picker-meta">' + combo.id + stateLabel + '</span>';
+        btn.addEventListener('click', function () {
+          activeId = btn.dataset.comboId;
+          renderPicker();
+          renderMatrix();
+        });
+        picker.appendChild(btn);
+      });
+    }
+
+    function renderMatrix() {
+      var combo = combinations.filter(function (c) { return c.id === activeId; })[0];
+      if (!combo) return;
+
+      var labelEl = document.getElementById('rate-matrix-label');
+      var zoneEl = document.getElementById('rate-matrix-zone-type');
+      var tabEl = document.getElementById('rate-matrix-tab-id');
+      var breakEl = document.getElementById('rate-matrix-break-axis');
+      var rowCountEl = document.getElementById('rate-matrix-row-count');
+      var statusEl = document.getElementById('rate-matrix-status');
+
+      if (labelEl) {
+        labelEl.textContent = combo.id + ' · ' + combo.service.label + ' · ' + combo.origin.label;
+      }
+      if (zoneEl) {
+        zoneEl.textContent = combo.service.zoneDigits + '-digit base ZIP (' + combo.service.label + ')';
+      }
+      if (tabEl) tabEl.textContent = combo.id;
+      if (breakEl) {
+        breakEl.textContent = combo.service.prefix === 'thr'
+          ? 'Cube breaks (cf) · BPPC $/cf'
+          : 'Cube breaks (cf) · ' + combo.service.uom + ' per unit';
+      }
+
+      if (thead) {
+        var headerCells = ['Base zone', 'Lane / description'];
+        breaks.forEach(function (b) { headerCells.push(b.label); });
+        thead.innerHTML = '<tr>' + headerCells.map(function (h) {
+          return '<th scope="col">' + h + '</th>';
+        }).join('') + '</tr>';
+      }
+
+      tbody.innerHTML = '';
+      var rows = getMatrixRows(combo);
+
+      if (!combo.enabled) {
+        tbody.innerHTML = '<tr><td colspan="' + (breaks.length + 2) + '" style="padding:24px;text-align:center;color:var(--neutral-600)">' +
+          '<strong>' + combo.origin.label + '</strong> is not an active origin station for this tariff — enable it in the origin-station grid before configuring <code>' + combo.id + '</code>.</td></tr>';
+        if (rowCountEl) rowCountEl.textContent = '0 zones (station disabled)';
+        if (statusEl) {
+          var configuredCount = combinations.filter(function (c) { return c.configured; }).length;
+          statusEl.textContent = configuredCount + ' of 28 matrices configured';
+        }
+        return;
+      }
+
+      if (!combo.configured || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="' + (breaks.length + 2) + '" style="padding:24px;text-align:center;color:var(--neutral-600)">' +
+          'No rates entered for <code>' + combo.id + '</code> yet — import from CSV or copy from another origin/service combination.</td></tr>';
+        if (rowCountEl) rowCountEl.textContent = '0 zones (empty matrix)';
+        if (statusEl) {
+          var cfg = combinations.filter(function (c) { return c.configured; }).length;
+          statusEl.textContent = cfg + ' of 28 matrices configured';
+        }
+        return;
+      }
+
+      rows.forEach(function (row) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<th scope="row" class="tabular">' + row.zone + '</th><td>' + row.desc + '</td>';
+        row.rates.forEach(function (rate, bi) {
+          var td = document.createElement('td');
+          var input = document.createElement('input');
+          input.type = 'text';
+          input.className = 'tabular';
+          input.value = formatRate(rate, combo.service);
+          input.setAttribute('aria-label', row.zone + ' at break ' + breaks[bi].label);
+          td.appendChild(input);
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      if (rowCountEl) rowCountEl.textContent = rows.length + ' zone' + (rows.length === 1 ? '' : 's');
+      if (statusEl) {
+        var configuredCount = combinations.filter(function (c) { return c.configured; }).length;
+        statusEl.textContent = configuredCount + ' of 28 matrices configured';
+        statusEl.className = 'badge ' + (combo.configured ? 'badge-active' : 'badge-draft');
+      }
+
+      var wrap = document.querySelector('.rate-matrix-wrap');
+      if (wrap) {
+        wrap.scrollTop = 0;
+        wrap.scrollLeft = 0;
+      }
+    }
+
+    renderPicker();
+    renderMatrix();
+  }
+
   ready(function () {
     initTabs();
     initDropdowns();
@@ -863,5 +1121,6 @@
     initOriginStationToggles();
     initSteppedSelectors();
     initHelpSearch();
+    initRateMatrix();
   });
 })();

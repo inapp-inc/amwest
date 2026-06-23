@@ -66,9 +66,19 @@
 <tbody><tr><td><a href="tariff-detail.html">TAR-HD-TH-002</a></td><td>Threshold</td><td><span class="badge badge-active">Active</span></td></tr>
 <tr><td><a href="tariff-detail.html">TAR-B2B-WG-001</a></td><td>White Glove (customer override)</td><td><span class="badge badge-active">Active</span></td></tr></tbody></table></div>
 <div class="tab-panel" role="tabpanel"><div class="card">
-<div class="field"><label>Overall Discount</label><input class="tabular" value="5%"></div>
-<table class="data-table" style="margin-top:var(--space-md)"><thead><tr><th>Lane</th><th>Discount</th></tr></thead>
-<tbody><tr><td>SEA-PDX-METRO</td><td class="tabular">0%</td></tr></tbody></table></div></div>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Per-service-type discount fields from workbook <code>Discount</code> tab — not a single flat percentage.</p>
+<table class="data-table"><thead><tr><th>Service type</th><th>Discount %</th><th>Min density override</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>B2B</td><td class="tabular"><input value="5%"></td><td class="tabular"><input value="—"></td><td>National account default</td></tr>
+<tr><td>Threshold</td><td class="tabular"><input value="3%"></td><td class="tabular"><input value="—"></td><td>HD residential program</td></tr>
+<tr><td>White Glove No Insp.</td><td class="tabular"><input value="5%"></td><td class="tabular"><input value="—"></td><td>Matches B2B for this customer</td></tr>
+<tr><td>White Glove Inspection</td><td class="tabular"><input value="4%"></td><td class="tabular"><input value="7.0 lbs/cf"></td><td>Lower discount, min density floor</td></tr>
+</tbody></table>
+<h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Lane-specific overrides</h4>
+<table class="data-table"><thead><tr><th>Lane</th><th>Service</th><th>Discount</th></tr></thead>
+<tbody><tr><td>SEA-PDX-METRO</td><td>B2B</td><td class="tabular"><input value="0%"></td></tr></tbody></table>
+<p style="margin-top:var(--space-md)"><a href="admin-agreement-template.html" class="btn btn-link">Agreement / cover sheet template →</a></p>
+</div></div>
 <div class="tab-panel" role="tabpanel"><table class="data-table"><thead><tr><th>Quote #</th><th>Amount</th><th>Status</th><th></th></tr></thead>
 <tbody><tr><td><a href="quote-detail.html">Q-2026-0823</a></td><td class="tabular">$3,620</td><td><span class="badge badge-approved">Approved</span></td><td><a href="quote-detail.html">Open</a></td></tr></tbody></table></div>
 </div></div>

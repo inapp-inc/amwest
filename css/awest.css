@@ -1889,6 +1889,142 @@ a.kanban-card:hover {
   color: var(--neutral-600);
 }
 
+/* Configuration surfaces — rate matrix, lane lookup tables */
+.config-callout {
+  background: var(--aw-blue-50, #e8ebf7);
+  border-left: 3px solid var(--aw-blue-500);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--neutral-600);
+  line-height: 1.55;
+  margin-bottom: var(--space-md);
+  border-radius: 0 6px 6px 0;
+}
+
+.config-callout strong {
+  color: var(--neutral-900);
+}
+
+.config-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+
+.config-picker-btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 6px;
+  background: var(--white);
+  cursor: pointer;
+  line-height: 1.35;
+  transition: border-color .15s, background .15s;
+}
+
+.config-picker-btn:hover {
+  border-color: var(--aw-blue-300);
+}
+
+.config-picker-btn.is-active {
+  border-color: var(--aw-blue-500);
+  background: var(--aw-blue-50, #e8ebf7);
+  color: var(--aw-blue-500);
+}
+
+.config-picker-btn .config-picker-meta {
+  display: block;
+  font-weight: 400;
+  font-size: 10px;
+  color: var(--neutral-600);
+  margin-top: 2px;
+}
+
+.rate-matrix-wrap {
+  overflow: auto;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  max-height: 480px;
+}
+
+.rate-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.rate-matrix-table th,
+.rate-matrix-table td {
+  border: 1px solid var(--neutral-200);
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+.rate-matrix-table thead th {
+  background: var(--surface-100);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.rate-matrix-table tbody th {
+  background: var(--surface-100);
+  font-weight: 600;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  text-align: left;
+}
+
+.rate-matrix-table thead th:first-child {
+  left: 0;
+  z-index: 3;
+}
+
+.rate-matrix-table input {
+  width: 72px;
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rate-matrix-table input:focus {
+  border-color: var(--aw-blue-500);
+  outline: none;
+  background: var(--white);
+}
+
+.config-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-md);
+  font-size: 13px;
+}
+
+.config-meta-row dt {
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.config-meta-row dd {
+  margin: 0;
+  color: var(--neutral-600);
+}
+
+.admin-config-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
 /* Responsive & accessibility */
 @media (max-width: 1024px) {
   .rail {

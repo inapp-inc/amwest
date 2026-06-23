@@ -44,14 +44,12 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Lanes</h1></div><a href="reference-lane-edit.html" class="btn btn-primary">+ New Lane Group</a></div>
-<table class="data-table">
-<thead><tr><th>Lane Name</th><th>Type</th><th>Regions</th><th>Tariffs</th><th>Actions</th></tr></thead>
-<tbody>
-<tr><td>SEA-PDX-METRO</td><td>Metro</td><td>Seattle, Portland metros</td><td class="tabular"><a href="tariff-detail.html">4</a></td><td><a href="reference-lane-edit.html">Edit</a></td></tr>
-<tr><td>PDX-BOI-ZIP</td><td>ZIP Group</td><td>972xx, 837xx</td><td class="tabular">2</td><td><a href="reference-lane-edit.html">Edit</a></td></tr>
-<tr><td>Rural Montana Zone</td><td><span class="badge badge-cfq">Call-for-Quote</span></td><td>MT rural ZIPs</td><td class="tabular">0</td><td><a href="reference-lane-edit.html">Edit</a></td></tr>
-</tbody></table>
+<div class="page-header"><div><h1>Lane / ZIP Configuration</h1><p class="text-muted-sm" style="margin-top:4px">Two lookup patterns — do not conflate B2B base-ZIP with home-delivery tier tables</p></div></div>
+<div class="portal-cards">
+<a href="reference-lanes-b2b.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">B2B Lane Configuration</h3><p class="page-lead">3-digit base-ZIP → lane description · <code>origin_zips</code>, <code>3zips</code></p></a>
+<a href="reference-tiers-hd.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Home Delivery Tier Configuration</h3><p class="page-lead">5-digit ZIP → POI/Tier → BPPC · <code>zips</code>, <code>tiers</code></p></a>
+<a href="reference-lane-edit.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Legacy lane groups</h3><p class="page-lead">Metro / ZIP group / CFQ zones (generic lane management UI)</p></a>
+</div>
 <a href="reference.html" class="btn btn-link" style="margin-top:var(--space-md)">← Reference Data</a>
 
 </div>

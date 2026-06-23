@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agreement / Cover Sheet Template — American West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://www.awest.com/wp-content/uploads/2020/07/cropped-AW-Logo-with-Sun-32x32.png" type="image/png">
+<link rel="stylesheet" href="../css/awest-tokens.css">
+<link rel="stylesheet" href="../css/awest.css">
+<link rel="stylesheet" href="../css/demo-chrome.css">
+</head><body>
+<div class="demo-banner" role="status">
+  <span class="demo-banner-badge">Demo mockup</span>
+  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+</div>
+<div class="ops-layout">
+<aside class="rail">
+<a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
+<img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
+<span class="cobrand-sep" aria-hidden="true">×</span>
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
+</a>
+<nav class="rail-nav">
+<a href="admin-users.html" class="active"><span>Admin</span></a>
+</nav>
+</aside>
+<main class="main">
+<div class="main-content">
+<div class="page-header">
+<div>
+<p style="font-size:13px;margin-bottom:4px"><a href="admin-config.html">Admin configuration</a></p>
+<h1>Agreement / Cover Sheet Template</h1>
+<p class="text-muted-sm" style="margin-top:4px">Document-generation config · Source: <code>Terms &amp; Agreements</code>, <code>Discount</code> cover sheet</p>
+</div>
+<button type="button" class="btn btn-primary">Save Template</button>
+</div>
+<div class="config-callout"><strong>Feeds Quote PDF:</strong> Selects legal boilerplate, service-tier inclusion language, and insurance/disclaimer blocks merged into branded quote output via Document Hub — separate from customer-specific discount terms on Customer Detail.</div>
+<div class="card">
+<div class="field"><label>Template name</label><input value="Standard B2B Quote Cover Sheet — 2026"></div>
+<div class="field"><label>Applicable service types</label>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+<label><input type="checkbox" checked> B2B</label>
+<label><input type="checkbox" checked> Threshold</label>
+<label><input type="checkbox" checked> White Glove No Insp.</label>
+<label><input type="checkbox" checked> White Glove Inspection</label>
+</div>
+</div>
+<div class="field"><label>Legal boilerplate block</label><textarea rows="5">This quote is subject to American West Transportation terms and conditions. Rates valid for 30 days from issue date unless otherwise noted. Fuel surcharge applied per current EIA index...</textarea></div>
+<div class="field"><label>Service tier inclusion language</label><textarea rows="4">White Glove Inspection includes in-home placement, unpack, and debris removal. Threshold delivery is curbside or first dry area. Business delivery requires commercial dock or forklift availability...</textarea></div>
+<div class="field"><label>Insurance / liability disclaimer</label><textarea rows="3">Declared value coverage optional — see Pricing Help Center for tier limits. Carrier liability capped per Bill of Lading unless additional coverage purchased.</textarea></div>
+<div class="field"><label>Preview merge fields</label><p class="text-muted-sm">{customer_name} · {quote_number} · {effective_date} · {assigned_rep}</p></div>
+</div>
+<p style="margin-top:var(--space-md)"><a href="quote-pdf.html" class="btn btn-link">Preview sample PDF →</a> · <a href="admin-config.html" class="btn btn-link">← Admin configuration</a></p>
+</div>
+<footer class="mock-footer">
+<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+</footer>
+</main>
+</div>
+<script src="../js/awest-mockup.js"></script>
+</body></html>
