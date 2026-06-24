@@ -661,6 +661,38 @@
     });
   }
 
+  /* ── Pricing breakdown drawer (quote detail) ── */
+  function initPricingBreakdownDrawer() {
+    var openBtn = document.querySelector('[data-pricing-breakdown-open]');
+    var veil = document.getElementById('pricing-breakdown-veil');
+    if (!openBtn || !veil) return;
+
+    var closeBtn = veil.querySelector('[data-pricing-breakdown-close]');
+
+    function openDrawer() {
+      veil.classList.add('is-open');
+      veil.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeDrawer() {
+      veil.classList.remove('is-open');
+      veil.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    veil.addEventListener('click', function (e) {
+      if (e.target === veil) closeDrawer();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && veil.classList.contains('is-open')) closeDrawer();
+    });
+  }
+
   /* ── Call-for-Quote lane demo (?cfq=1) ── */
   function initCallForQuoteMode() {
     var panel = document.querySelector('[data-cfq-panel]');
@@ -1114,6 +1146,7 @@
     initTariffOverview();
     initUomDensity();
     initShipmentConfigurator();
+    initPricingBreakdownDrawer();
     initCallForQuoteMode();
     initCubeThresholdNotice();
     initHighValueNotice();

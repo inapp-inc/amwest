@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reference Data — American West</title>
+<title>Reference Configuration — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -30,9 +30,9 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html" class="active"><span>Reference</span></a>
+<a href="reference.html" class="active"><span>Reference Configuration</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
-<a href="admin-users.html"><span>Admin</span></a>
+<a href="admin-config.html"><span>Admin Configuration</span></a>
 
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
@@ -44,12 +44,24 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Reference Data</h1><p class="text-muted-sm" style="margin-top:4px">10 configuration domains from source workbooks — fuel, lanes, TMS mapping, and more</p></div></div>
+<div class="page-header"><div><h1>Reference Configuration</h1><p class="text-muted-sm" style="margin-top:4px">Operations reference data — fuel, accessorials, lane lookups, and TMS export mapping. Tariff matrices, customer discounts, and platform admin settings live under their own configuration hubs.</p></div></div>
+
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Reference &amp; operations configuration</h2>
+<div class="portal-cards" style="margin-bottom:var(--space-xl)">
+<a href="reference-fuel.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Fuel surcharge configuration</h3><p class="page-lead">EIA-linked fuel tables, overrides, and history · Current: 28.4%</p></a>
+<a href="reference-accessorials.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Accessorial configuration</h3><p class="page-lead">Lift gate, residential delivery, declared value, and insurance rules</p></a>
+<a href="reference-lanes-b2b.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">B2B lane configuration</h3><p class="page-lead">3-digit base-ZIP → lane name for commercial and white-glove freight</p></a>
+<a href="reference-tiers-hd.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Home delivery tier configuration</h3><p class="page-lead">5-digit ZIP → POI/tier → base price per cube — separate from B2B lanes</p></a>
+<a href="reference-lanes.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Lane / ZIP grouping hub</h3><p class="page-lead">Entry to B2B lanes, home delivery tiers, and legacy metro/CFQ groups</p></a>
+<a href="reference-tms-mapping.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">TMS rate-key / export mapping</h3><p class="page-lead">Tariff codes, discount level, and fuel index for carrier booking handoff</p></a>
+</div>
+
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Related pricing configuration</h2>
 <div class="portal-cards">
-<a href="reference-fuel.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Fuel Tables</h3><p class="page-lead">Fuel surcharge rates and history · Current: 28.4%</p></a>
-<a href="reference-accessorials.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Accessorials</h3><p class="page-lead">Lift gate, residential, declared value, and more</p></a>
-<a href="reference-lanes.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Lane / ZIP Grouping</h3><p class="page-lead">B2B base-ZIP lanes and home-delivery tiers (separate lookup patterns)</p></a>
-<a href="reference-tms-mapping.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">TMS Rate-Key Mapping</h3><p class="page-lead">Tariff/level codes, discount level, fuel index for export normalization</p></a>
+<a href="tariff-wizard.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Origin station × service-type grid</h3><p class="page-lead">Tariff configurator — density factor and linehaul adjustments per origin × service level</p></a>
+<a href="tariff-rate-matrix.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Rate table matrix configuration</h3><p class="page-lead">Per-pound rates and lane minimums by zone × cube bracket — 28 origin × service matrices</p></a>
+<a href="customers.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Customer master &amp; discount configuration</h3><p class="page-lead">Shipper profiles and negotiated discounts by service level — not account-wide %</p></a>
+<a href="admin-config.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Admin configuration</h3><p class="page-lead">Agreement templates, system constants, validation lists, and users &amp; roles</p></a>
 </div>
 
 </div>

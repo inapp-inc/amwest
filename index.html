@@ -205,7 +205,7 @@
   <div class="wt-arch-note">
     <strong>MVP scope (Phase 1a):</strong> Log in → price a shipment → govern the quote → produce a PDF. Two hubs active (Market Data, Document). Tariff CRUD, origin-station adjustment grid, consolidated <strong>rate table matrix</strong>, configurator, and override hierarchy; customer master with negotiated discounts by service level; plain quote list; full provenance. Commercial lanes, residential delivery tiers, TMS handoff mapping, agreement template, and reference-data UI graduate in Phase 1b.
   </div>
-  <p class="wt-arch-hint">Click any component to inspect · Filter by phase to see what ships when</p>
+  <p class="wt-arch-hint">Click a layer to expand · Click any component to inspect · Filter by phase to see what ships when</p>
 
   <div class="wt-arch-diagram" id="wt-arch-diagram">
     <div class="wt-arch-toolbar" role="toolbar" aria-label="Architecture phase filter">
@@ -221,61 +221,111 @@
 
     <div class="wt-arch-layout">
       <div class="wt-arch-canvas" aria-label="Interactive architecture diagram">
-        <div class="wt-arch-layer" data-layer="5">
-          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">5</span> Presentation</div>
-          <div class="wt-arch-nodes">
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="ui-internal" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a+</span>Internal Web UI</button>
-            <button type="button" class="wt-arch-node ph2" data-arch-id="ui-portal" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Customer Portal</button>
-            <button type="button" class="wt-arch-node ph3" data-arch-id="ui-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>Sales Pipeline</button>
-          </div>
-        </div>
-        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
-        <div class="wt-arch-layer" data-layer="4">
-          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">4</span> API Gateway</div>
-          <div class="wt-arch-nodes">
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="api-gateway" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>Auth · Routing · Validation</button>
-          </div>
-        </div>
-        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
-        <div class="wt-arch-layer" data-layer="3">
-          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">3</span> Domain Services <span class="wt-arch-layer-sub">modular monolith</span></div>
-          <div class="wt-arch-nodes">
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-pricing" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Pricing Engine</button>
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-tariff" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Tariff Admin</button>
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-customer" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Customer Mgmt</button>
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-quote" data-phases="ph1a ph2 ph3"><span class="wt-arch-node-phase">1a</span>Quote Mgmt</button>
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-workflow" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Workflow &amp; Governance</button>
-            <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-reference" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>Reference Data</button>
-            <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-analytics" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b</span>Analytics</button>
-            <button type="button" class="wt-arch-node ph3" data-arch-id="mod-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM &amp; Sales</button>
-          </div>
-        </div>
-        <div class="wt-arch-connector" aria-hidden="true"><span>↓ hub boundary</span></div>
-        <div class="wt-arch-layer wt-arch-layer-hub" data-layer="2">
-          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">2</span> Integration Hub <span class="wt-arch-layer-sub">no direct vendor calls from domain</span></div>
-          <div class="wt-arch-nodes">
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-market" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Market Data</button>
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-document" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Document</button>
-            <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-rating" data-phases="ph1b ph2"><span class="wt-arch-node-phase">1b</span>Rating &amp; Quote</button>
-            <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-ops" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b+</span>Ops Systems</button>
-          </div>
-          <div class="wt-arch-external">
-            <span class="wt-arch-external-label">External systems</span>
-            <div class="wt-arch-nodes wt-arch-nodes-ext">
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-eia" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>EIA.gov</button>
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-storage" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Object Storage</button>
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-docusign" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>DocuSign</button>
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-tms" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>TMS</button>
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph2" data-arch-id="ext-freight" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Freight tracking</button>
-              <button type="button" class="wt-arch-node wt-arch-node-ext ph3" data-arch-id="ext-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM platform</button>
+        <div class="wt-arch-layer is-collapsed" data-layer="5">
+          <button type="button" class="wt-arch-layer-toggle" aria-expanded="false" aria-controls="wt-arch-layer-5">
+            <span class="wt-arch-layer-num">5</span>
+            <span class="wt-arch-layer-title">Presentation</span>
+            <span class="wt-arch-layer-summary">
+              <span class="wt-arch-summary-chip ph1a">Internal UI</span>
+              <span class="wt-arch-summary-chip ph2">Portal</span>
+              <span class="wt-arch-summary-chip ph3">Sales UI</span>
+            </span>
+            <span class="wt-arch-layer-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="wt-arch-layer-body" id="wt-arch-layer-5" hidden>
+            <div class="wt-arch-nodes">
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="ui-internal" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a+</span>Internal Web UI</button>
+              <button type="button" class="wt-arch-node ph2" data-arch-id="ui-portal" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Customer Portal</button>
+              <button type="button" class="wt-arch-node ph3" data-arch-id="ui-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>Sales Pipeline</button>
             </div>
           </div>
         </div>
         <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
-        <div class="wt-arch-layer" data-layer="1">
-          <div class="wt-arch-layer-head"><span class="wt-arch-layer-num">1</span> Data Layer</div>
-          <div class="wt-arch-nodes">
-            <button type="button" class="wt-arch-node ph1a" data-arch-id="data-layer" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>PostgreSQL · S3 · Audit trail</button>
+        <div class="wt-arch-layer is-collapsed" data-layer="4">
+          <button type="button" class="wt-arch-layer-toggle" aria-expanded="false" aria-controls="wt-arch-layer-4">
+            <span class="wt-arch-layer-num">4</span>
+            <span class="wt-arch-layer-title">API Gateway</span>
+            <span class="wt-arch-layer-summary">
+              <span class="wt-arch-summary-chip ph1a">Auth · Routing</span>
+            </span>
+            <span class="wt-arch-layer-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="wt-arch-layer-body" id="wt-arch-layer-4" hidden>
+            <div class="wt-arch-nodes">
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="api-gateway" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>Auth · Routing · Validation</button>
+            </div>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
+        <div class="wt-arch-layer is-collapsed" data-layer="3">
+          <button type="button" class="wt-arch-layer-toggle" aria-expanded="false" aria-controls="wt-arch-layer-3">
+            <span class="wt-arch-layer-num">3</span>
+            <span class="wt-arch-layer-title">Domain Services <span class="wt-arch-layer-sub">modular monolith</span></span>
+            <span class="wt-arch-layer-summary">
+              <span class="wt-arch-summary-chip ph1a">5 MVP modules</span>
+              <span class="wt-arch-summary-chip ph1b">+3 post-MVP</span>
+            </span>
+            <span class="wt-arch-layer-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="wt-arch-layer-body" id="wt-arch-layer-3" hidden>
+            <div class="wt-arch-nodes">
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-pricing" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Pricing Engine</button>
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-tariff" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Tariff Admin</button>
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-customer" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Customer Mgmt</button>
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-quote" data-phases="ph1a ph2 ph3"><span class="wt-arch-node-phase">1a</span>Quote Mgmt</button>
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="mod-workflow" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Workflow &amp; Governance</button>
+              <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-reference" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>Reference Data</button>
+              <button type="button" class="wt-arch-node ph1b" data-arch-id="mod-analytics" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b</span>Analytics</button>
+              <button type="button" class="wt-arch-node ph3" data-arch-id="mod-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM &amp; Sales</button>
+            </div>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓ hub boundary</span></div>
+        <div class="wt-arch-layer wt-arch-layer-hub is-collapsed" data-layer="2">
+          <button type="button" class="wt-arch-layer-toggle" aria-expanded="false" aria-controls="wt-arch-layer-2">
+            <span class="wt-arch-layer-num">2</span>
+            <span class="wt-arch-layer-title">Integration Hub <span class="wt-arch-layer-sub">no direct vendor calls</span></span>
+            <span class="wt-arch-layer-summary">
+              <span class="wt-arch-summary-chip ph1a">4 hubs</span>
+              <span class="wt-arch-summary-chip ph1b">6 externals</span>
+            </span>
+            <span class="wt-arch-layer-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="wt-arch-layer-body" id="wt-arch-layer-2" hidden>
+            <div class="wt-arch-nodes">
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-market" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>Market Data</button>
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="hub-document" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Document</button>
+              <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-rating" data-phases="ph1b ph2"><span class="wt-arch-node-phase">1b</span>Rating &amp; Quote</button>
+              <button type="button" class="wt-arch-node ph1b" data-arch-id="hub-ops" data-phases="ph1b ph2 ph3"><span class="wt-arch-node-phase">1b+</span>Ops Systems</button>
+            </div>
+            <div class="wt-arch-external">
+              <span class="wt-arch-external-label">External systems</span>
+              <div class="wt-arch-nodes wt-arch-nodes-ext">
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-eia" data-phases="ph1a"><span class="wt-arch-node-phase">1a</span>EIA.gov</button>
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph1a" data-arch-id="ext-storage" data-phases="ph1a ph1b"><span class="wt-arch-node-phase">1a</span>Object Storage</button>
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-docusign" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>DocuSign</button>
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph1b" data-arch-id="ext-tms" data-phases="ph1b"><span class="wt-arch-node-phase">1b</span>TMS</button>
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph2" data-arch-id="ext-freight" data-phases="ph2"><span class="wt-arch-node-phase">2</span>Freight tracking</button>
+                <button type="button" class="wt-arch-node wt-arch-node-ext ph3" data-arch-id="ext-crm" data-phases="ph3"><span class="wt-arch-node-phase">3</span>CRM platform</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="wt-arch-connector" aria-hidden="true"><span>↓</span></div>
+        <div class="wt-arch-layer is-collapsed" data-layer="1">
+          <button type="button" class="wt-arch-layer-toggle" aria-expanded="false" aria-controls="wt-arch-layer-1">
+            <span class="wt-arch-layer-num">1</span>
+            <span class="wt-arch-layer-title">Data Layer</span>
+            <span class="wt-arch-layer-summary">
+              <span class="wt-arch-summary-chip ph1a">PostgreSQL · S3</span>
+              <span class="wt-arch-summary-chip ph1a">Audit trail</span>
+            </span>
+            <span class="wt-arch-layer-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="wt-arch-layer-body" id="wt-arch-layer-1" hidden>
+            <div class="wt-arch-nodes">
+              <button type="button" class="wt-arch-node ph1a" data-arch-id="data-layer" data-phases="ph1a ph1b ph2 ph3"><span class="wt-arch-node-phase">1a</span>PostgreSQL · S3 · Audit trail</button>
+            </div>
           </div>
         </div>
       </div>
@@ -284,10 +334,10 @@
         <div class="wt-arch-inspector-default" id="wt-arch-inspector-default">
           <div class="wt-arch-inspector-icon" aria-hidden="true">◎</div>
           <h3 class="wt-arch-inspector-title">Explore the stack</h3>
-          <p class="wt-arch-inspector-lead">Select any layer, module, hub, or external system to see its role, delivery phase, and connections.</p>
+          <p class="wt-arch-inspector-lead">Expand a layer to see its components, then select any module, hub, or external system for role, phase, and connections.</p>
           <ul class="wt-arch-inspector-tips">
+            <li>Layers start collapsed — click a row head to expand the full stack.</li>
             <li>Domain modules never call vendors directly — all external traffic routes through Layer 2.</li>
-            <li>Phase 1a ships as a modular monolith with 5 modules; comparison, version diff, and dashboard screens are Phase 1b.</li>
             <li>Use the phase filter to preview the 13-feature MVP vs. full-scope architecture.</li>
           </ul>
         </div>
@@ -305,7 +355,7 @@
   <div class="wt-tech-stack" id="wt-tech-stack">
     <div class="wt-eyebrow">Technology stack</div>
     <h3 class="wt-tech-title">Platform technology stack</h3>
-    <p class="wt-tech-lead">Recommended technologies by layer — each chip shows when it enters the delivery plan. Equivalent substitutions are possible; the architecture stays hub-first and modular regardless of vendor.</p>
+    <p class="wt-tech-lead">Recommended technologies by layer — click any row to expand the full list. Each chip shows when it enters the delivery plan.</p>
     <div class="wt-tech-legend" aria-label="Phase key">
       <span><i class="wt-leg-dot ph1a"></i> Phase 1a · MVP</span>
       <span><i class="wt-leg-dot ph1b"></i> Phase 1b · Post-MVP</span>
@@ -313,10 +363,20 @@
       <span><i class="wt-leg-dot ph3"></i> Phase 3 · CRM</span>
     </div>
     <div class="wt-arch-stack wt-tech-table">
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Layer 5</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Presentation</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-5">
+          <span class="wt-arch-phase ph1a">Layer 5</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Presentation</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">React · TypeScript</span>
+              <span class="wt-stack-head ph1a">Tailwind · Vite</span>
+              <span class="wt-stack-more">+5</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-5" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">React</span>
             <span class="wt-tech-chip ph1a">TypeScript</span>
@@ -330,10 +390,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Layer 4</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">API gateway</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-4">
+          <span class="wt-arch-phase ph1a">Layer 4</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">API gateway</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">NestJS · Node.js</span>
+              <span class="wt-stack-head ph1a">JWT · OpenAPI</span>
+              <span class="wt-stack-more">+4</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-4" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">Node.js</span>
             <span class="wt-tech-chip ph1a">NestJS</span>
@@ -347,10 +417,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Layer 3</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Domain services</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-3">
+          <span class="wt-arch-phase ph1a">Layer 3</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Domain services</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">5 MVP modules</span>
+              <span class="wt-stack-head ph1b">Reference · Analytics</span>
+              <span class="wt-stack-more">+1</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-3" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">NestJS modular monolith</span>
             <span class="wt-tech-chip ph1a">Pricing Engine module</span>
@@ -363,10 +443,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Layer 2</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Integration hubs</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-2">
+          <span class="wt-arch-phase ph1a">Layer 2</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Integration hubs</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">Market · Document</span>
+              <span class="wt-stack-head ph1b">DocuSign · TMS</span>
+              <span class="wt-stack-more">+5</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-2" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">EIA.gov REST adapter</span>
             <span class="wt-tech-chip ph1a">node-cron</span>
@@ -380,10 +470,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Layer 1</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Data &amp; storage</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-1">
+          <span class="wt-arch-phase ph1a">Layer 1</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Data &amp; storage</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">PostgreSQL · Prisma</span>
+              <span class="wt-stack-head ph1a">Amazon S3</span>
+              <span class="wt-stack-more">+3</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-1" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">PostgreSQL</span>
             <span class="wt-tech-chip ph1a">Prisma ORM</span>
@@ -394,10 +494,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Identity</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Authentication</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-id">
+          <span class="wt-arch-phase ph1a">Identity</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Authentication</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">JWT · RBAC</span>
+              <span class="wt-stack-head ph1b">TOTP MFA</span>
+              <span class="wt-stack-more">+2</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-id" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">bcrypt</span>
             <span class="wt-tech-chip ph1a">JWT sessions</span>
@@ -407,10 +517,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row">
-        <div class="wt-arch-phase ph1a">Ops</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Hosting &amp; delivery</div>
+      <div class="wt-arch-row wt-arch-row--collapsible is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-ops">
+          <span class="wt-arch-phase ph1a">Ops</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Hosting &amp; delivery</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">Docker · AWS</span>
+              <span class="wt-stack-head ph1a">GitHub Actions</span>
+              <span class="wt-stack-more">+3</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-ops" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">Docker</span>
             <span class="wt-tech-chip ph1a">AWS ECS / EKS</span>
@@ -421,10 +541,19 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row optional">
-        <div class="wt-arch-phase ph1b">Async</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Messaging &amp; jobs</div>
+      <div class="wt-arch-row wt-arch-row--collapsible optional is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-async">
+          <span class="wt-arch-phase ph1b">Async</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Messaging &amp; jobs</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1b">RabbitMQ · BullMQ</span>
+              <span class="wt-stack-head ph1b">Redis</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-async" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1b">RabbitMQ</span>
             <span class="wt-tech-chip ph1b">BullMQ</span>
@@ -432,10 +561,19 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row optional">
-        <div class="wt-arch-phase ph1b">Search</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Search &amp; caching</div>
+      <div class="wt-arch-row wt-arch-row--collapsible optional is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-search">
+          <span class="wt-arch-phase ph1b">Search</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Search &amp; caching</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1b">OpenSearch · Redis</span>
+              <span class="wt-stack-head ph1b">PostgreSQL FTS</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-search" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1b">OpenSearch</span>
             <span class="wt-tech-chip ph1b">Redis cache</span>
@@ -443,10 +581,20 @@
           </div>
         </div>
       </div>
-      <div class="wt-arch-row optional">
-        <div class="wt-arch-phase ph1b">Observe</div>
-        <div class="wt-arch-main">
-          <div class="wt-arch-name">Observability</div>
+      <div class="wt-arch-row wt-arch-row--collapsible optional is-collapsed">
+        <button type="button" class="wt-arch-row-toggle" aria-expanded="false" aria-controls="wt-tech-row-observe">
+          <span class="wt-arch-phase ph1b">Observe</span>
+          <span class="wt-arch-row-content">
+            <span class="wt-arch-name">Observability</span>
+            <span class="wt-stack-summary">
+              <span class="wt-stack-head ph1a">Winston logging</span>
+              <span class="wt-stack-head ph1b">OpenTelemetry · Grafana</span>
+              <span class="wt-stack-more">+2</span>
+            </span>
+          </span>
+          <span class="wt-arch-row-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="wt-arch-row-panel" id="wt-tech-row-observe" hidden>
           <div class="wt-tech-chips">
             <span class="wt-tech-chip ph1a">Winston logging</span>
             <span class="wt-tech-chip ph1b">OpenTelemetry</span>
@@ -502,7 +650,7 @@
     <button type="button" class="wt-mod-tile" data-module-id="reference">
       <span class="wt-mod-phase ph1b">Phase 1b · Post-MVP</span>
       <div class="wt-mod-icon">🗂️</div>
-      <h3>Reference Data Hub</h3>
+      <h3>Reference Configuration</h3>
       <p>Fuel tables, accessorials, B2B lane config (3-digit ZIP), home-delivery tiers (5-digit → BPPC), and TMS rate-key export mapping.</p>
     </button>
     <button type="button" class="wt-mod-tile" data-module-id="analytics">
@@ -773,6 +921,7 @@
   <div class="wt-mockup-group" id="wt-mockup-config">
     <h3><span class="wt-phase-badge ph1a">Cross-phase</span> Pricing &amp; reference data mockups</h3>
     <div class="wt-mockup-grid">
+      <div class="wt-mockup-card"><a href="internal/reference.html">Reference Configuration</a><p>Hub for fuel, accessorials, lanes, TMS mapping, and related pricing config</p></div>
       <div class="wt-mockup-card"><a href="internal/tariff-detail.html">Origin Station Grid</a><p>Per-origin density, minimums, and linehaul adjustments by service level</p></div>
       <div class="wt-mockup-card"><a href="internal/tariff-rate-matrix.html">Rate Table Matrix</a><p>Lane zone × weight/cube break freight rates for every origin and service level</p></div>
       <div class="wt-mockup-card"><a href="internal/reference-lanes-b2b.html">B2B Lane Config</a><p>Commercial destination regions mapped to lane names</p></div>
@@ -784,7 +933,7 @@
       <div class="wt-mockup-card"><a href="internal/customer-detail.html">Customer Detail</a><p>Profile tab — master record</p></div>
       <div class="wt-mockup-card"><a href="internal/customer-detail.html">Customer Discounts</a><p>Discount Structure tab — per service type</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-agreement-template.html">Agreement Template</a><p>Quote PDF legal boilerplate &amp; tier language</p></div>
-      <div class="wt-mockup-card"><a href="internal/admin-config.html">Admin Config Hub</a><p>Entry to system constants &amp; validation lists</p></div>
+      <div class="wt-mockup-card"><a href="internal/admin-config.html">Admin Configuration</a><p>Agreement template, system constants, validation lists, users</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-system-config.html">System Configuration</a><p>Cubic divisor, thresholds, email routing</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-list-management.html">Validation Lists</a><p>Origins, commodities, UOM picklists</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-list-edit.html">Edit List Values</a><p>Single picklist editor</p></div>
@@ -823,7 +972,7 @@
       <div class="wt-mockup-card"><a href="internal/quote-comparison.html">Quote Comparison</a><p>Side-by-side quote diff</p></div>
       <div class="wt-mockup-card"><a href="internal/tariff-comparison.html">Tariff Comparison</a><p>Side-by-side tariff diff — restored from MVP cut</p></div>
       <div class="wt-mockup-card"><a href="internal/dashboard.html">Dashboard</a><p>KPI cards, pending approvals, recent quotes</p></div>
-      <div class="wt-mockup-card"><a href="internal/reference.html">Reference Data Hub</a><p>Fuel, accessorials, lanes</p></div>
+      <div class="wt-mockup-card"><a href="internal/reference.html">Reference Configuration</a><p>Fuel, accessorials, lanes, TMS mapping — full config hub</p></div>
       <div class="wt-mockup-card"><a href="internal/reference-fuel.html">Fuel Tables</a><p>Fuel surcharge management</p></div>
       <div class="wt-mockup-card"><a href="internal/reference-accessorials.html">Accessorials</a><p>Accessorial charge rules</p></div>
       <div class="wt-mockup-card"><a href="internal/reference-lanes.html">Lane / ZIP hub</a><p>Entry to B2B lanes vs home-delivery tiers</p></div>
@@ -838,7 +987,7 @@
       <div class="wt-mockup-card"><a href="internal/tariff-competitor-comparison.html">Competitor Comparison</a><p>AW rate vs competitor quote</p></div>
       <div class="wt-mockup-card"><a href="internal/quote-esign.html">E-Signature</a><p>DocuSign send flow</p></div>
       <div class="wt-mockup-card"><a href="internal/quote-tms-export.html">TMS Export</a><p>Export confirmation (uses mapping config)</p></div>
-      <div class="wt-mockup-card"><a href="internal/admin-config.html">Admin Configuration Hub</a><p>Agreement template, system constants, validation lists</p></div>
+      <div class="wt-mockup-card"><a href="internal/admin-config.html">Admin Configuration</a><p>Agreement template, system constants, validation lists, users</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-agreement-template.html">Agreement / Cover Sheet</a><p>Quote PDF legal boilerplate and tier language</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-system-config.html">System Configuration</a><p>Cubic divisor, thresholds, email routing (low priority)</p></div>
       <div class="wt-mockup-card"><a href="internal/admin-list-management.html">Validation Lists</a><p>Origins, commodities, UOM picklists (low priority)</p></div>
@@ -987,7 +1136,6 @@
         '<li><strong>Quote Management</strong> — spot quote generation; lifecycle state machine; full provenance per quote. Plain quote list only — search and quote-to-quote comparison deferred to Phase 1b</li>' +
         '<li><strong>Workflow &amp; Governance</strong> — approval rules for discount, margin, cube, weight, network thresholds</li>' +
         '</ul></div>' +
-        drawerFormula(drawerPipelineCore) +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integration hubs (2 of 4 active)</div><ul class="wt-drawer-list">' +
         '<li><strong>Market Data Hub</strong> — EIA.gov weekly diesel pull; fuel surcharge config consumed by Pricing Engine (engine config data, not standalone UI)</li>' +
         '<li><strong>Document Hub</strong> — headless PDF rendering; quote PDFs stored in object storage with retrievable URLs</li>' +
@@ -1247,7 +1395,7 @@
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
         '<a href="internal/admin-users.html" target="_blank" rel="noopener noreferrer">Users &amp; Roles</a>' +
-        '<a href="internal/admin-config.html" target="_blank" rel="noopener noreferrer">Admin Config Hub</a>' +
+        '<a href="internal/admin-config.html" target="_blank" rel="noopener noreferrer">Admin Configuration</a>' +
         '<a href="internal/admin-agreement-template.html" target="_blank" rel="noopener noreferrer">Agreement Template</a>' +
         '<a href="internal/admin-system-config.html" target="_blank" rel="noopener noreferrer">System Configuration</a>' +
         '<a href="internal/admin-list-management.html" target="_blank" rel="noopener noreferrer">Validation Lists</a>' +
@@ -1278,8 +1426,8 @@
     },
     reference: {
       icon: '🗂️',
-      title: 'Reference Data Hub',
-      sub: 'Domain module · Reference Data · Phase 1b Post-MVP',
+      title: 'Reference Configuration',
+      sub: 'Domain module · Reference configuration · Phase 1b Post-MVP',
       body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1b"><strong>Promoted module:</strong> Fuel tables, accessorial rules, and lane/ZIP groups move from engine-embedded config to a managed UI hub consumed by the Pricing Engine.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
         '<li>Fuel surcharge tables with EIA.gov weekly refresh banner</li>' +
@@ -1302,7 +1450,7 @@
         '<li><strong>Hub:</strong> Market Data (EIA feed) · consumed by Pricing Engine</li>' +
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
-        '<a href="internal/reference.html" target="_blank" rel="noopener noreferrer">Reference Hub</a>' +
+        '<a href="internal/reference.html" target="_blank" rel="noopener noreferrer">Reference Configuration</a>' +
         '<a href="internal/reference-fuel.html" target="_blank" rel="noopener noreferrer">Fuel Tables</a>' +
         '<a href="internal/reference-lanes-b2b.html" target="_blank" rel="noopener noreferrer">B2B Lanes</a>' +
         '<a href="internal/reference-tiers-hd.html" target="_blank" rel="noopener noreferrer">HD Tiers</a>' +
@@ -1905,6 +2053,15 @@
     var currentFilter = 'all';
     var selectedNode = null;
 
+    function setArchLayerExpanded(layer, expanded) {
+      layer.classList.toggle('is-collapsed', !expanded);
+      layer.classList.toggle('is-expanded', expanded);
+      var toggle = layer.querySelector('.wt-arch-layer-toggle');
+      var body = layer.querySelector('.wt-arch-layer-body');
+      if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      if (body) body.hidden = !expanded;
+    }
+
     function applyArchFilter(filter) {
       currentFilter = filter;
       archTabs.forEach(function (tab) {
@@ -1961,14 +2118,44 @@
       });
     });
 
+    archDiagram.querySelectorAll('.wt-arch-layer-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var layer = btn.closest('.wt-arch-layer');
+        setArchLayerExpanded(layer, layer.classList.contains('is-collapsed'));
+      });
+    });
+
     archNodes.forEach(function (node) {
-      node.addEventListener('click', function () {
+      node.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var layer = node.closest('.wt-arch-layer');
+        if (layer && layer.classList.contains('is-collapsed')) {
+          setArchLayerExpanded(layer, true);
+        }
         selectArchNode(node);
       });
     });
 
     applyArchFilter('all');
-    selectArchNode(archDiagram.querySelector('[data-arch-id="api-gateway"]'));
+  }
+
+  function setTechRowExpanded(row, expanded) {
+    row.classList.toggle('is-collapsed', !expanded);
+    row.classList.toggle('is-expanded', expanded);
+    var toggle = row.querySelector('.wt-arch-row-toggle');
+    var panel = row.querySelector('.wt-arch-row-panel');
+    if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    if (panel) panel.hidden = !expanded;
+  }
+
+  var techStack = document.getElementById('wt-tech-stack');
+  if (techStack) {
+    techStack.querySelectorAll('.wt-arch-row--collapsible .wt-arch-row-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var row = btn.closest('.wt-arch-row--collapsible');
+        setTechRowExpanded(row, row.classList.contains('is-collapsed'));
+      });
+    });
   }
 
   /* Interactive user flows */
@@ -2026,7 +2213,7 @@
       sub: 'Keep reference data current — fuel, B2B lanes, HD tiers, TMS mapping — and hand off accepted quotes to TMS.',
       alt: '<strong>Two lane patterns:</strong> B2B uses 3-digit base-ZIP rows; home delivery uses 5-digit ZIP → tier → BPPC. TMS export requires rate-key mapping configured before the export action runs.',
       steps: [
-        { title: 'Reference Hub', desc: 'Central entry to fuel, accessorials, lanes, TMS mapping.', phase: 'ph1b', href: 'internal/reference.html', label: 'Reference Hub' },
+        { title: 'Reference Configuration', desc: 'Central entry to fuel, accessorials, lanes, TMS mapping, and related pricing config.', phase: 'ph1b', href: 'internal/reference.html', label: 'Reference Configuration' },
         { title: 'Fuel Tables', desc: 'Current surcharge banner; refresh from EIA.gov.', phase: 'ph1b', href: 'internal/reference-fuel.html', label: 'Fuel Tables' },
         { title: 'B2B lanes', desc: '3-digit base-ZIP → lane description.', phase: 'ph1b', href: 'internal/reference-lanes-b2b.html', label: 'B2B Lanes' },
         { title: 'HD tiers', desc: '5-digit ZIP → POI/tier → BPPC for Threshold service.', phase: 'ph1b', href: 'internal/reference-tiers-hd.html', label: 'HD Tiers' },

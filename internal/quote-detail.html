@@ -30,9 +30,9 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html" class="active"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference</span></a>
+<a href="reference.html"><span>Reference Configuration</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
-<a href="admin-users.html"><span>Admin</span></a>
+<a href="admin-config.html"><span>Admin Configuration</span></a>
 
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
@@ -67,13 +67,15 @@
 </div></div></details>
 <div style="display:grid;grid-template-columns:1fr 360px;gap:var(--space-lg)">
 <div class="card"><h3 class="panel-title">Shipment Summary</h3>
-<p>Weight: <span class="tabular">4,200 lbs</span> · Cube: <span class="tabular">890</span> · Commodity: FAK</p></div>
+<p>Weight: <span class="tabular">4,200 lbs</span> · Cube: <span class="tabular">494</span> · Commodity: FAK · Declared value: <span class="tabular">$45,000</span></p></div>
 <div class="card"><h3 class="panel-title">Pricing Breakdown</h3>
 <div class="pricing-lines">
-<div class="pricing-line"><span>Base + overrides + fuel</span><span class="tabular">$3,172.00</span></div>
-<div class="pricing-line"><span>Accessorials</span><span class="tabular">$448.00</span></div>
-<div class="pricing-line total"><span>Total</span><span class="tabular">$3,620.00</span></div>
-</div></div></div>
+<div class="pricing-line"><span>Base + overrides + fuel</span><span class="tabular">$3,051.02</span></div>
+<div class="pricing-line"><span>Accessorials</span><span class="tabular">$655.00</span></div>
+<div class="pricing-line total"><span>Total</span><span class="tabular">$3,706.02</span></div>
+</div>
+<button type="button" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)" data-pricing-breakdown-open>View detailed breakdown</button>
+</div></div>
 <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap">
 <a href="quote-pdf.html" class="btn btn-primary">Generate PDF</a>
 <a href="quote-esign.html" class="btn btn-primary">Send for E-Signature</a>
@@ -96,5 +98,34 @@
 </footer>
 </main>
 </div>
+
+<div class="shipment-config-veil" id="pricing-breakdown-veil" aria-hidden="true">
+<div class="shipment-config-panel" data-shell="drawer" role="dialog" aria-modal="true" aria-labelledby="pricing-breakdown-title">
+<div class="shipment-config-head">
+<div>
+<h2 id="pricing-breakdown-title">Detailed pricing breakdown</h2>
+<p class="shipment-config-totals">Q-2026-0823 · Pacific Home Furnishings · Seattle Metro → Portland Metro</p>
+</div>
+<button type="button" class="btn btn-secondary btn-sm" data-pricing-breakdown-close aria-label="Close">✕</button>
+</div>
+<div class="shipment-config-body">
+<div class="pricing-lines">
+<div class="pricing-line"><span>Linehaul charge<span class="pricing-line-formula">$0.58/lb × 4,200 lbs = $2,436.00</span></span><span class="tabular">$2,436.00</span></div>
+<div class="pricing-line"><span>Lane minimum check<span class="pricing-line-formula">max($2,436.00, $2,100.00 lane min) — calculated wins</span></span><span class="tabular">—</span></div>
+<div class="pricing-line"><span>Customer override (−5%)<span class="pricing-line-formula">Platform discount on linehaul</span></span><span class="tabular">−$121.80</span></div>
+<div class="pricing-line"><span>Lane override (SEA-PDX)<span class="pricing-line-formula">Platform adjustment</span></span><span class="tabular">+$45.00</span></div>
+<div class="pricing-line"><span>Fuel surcharge (28.4%) <small style="color:var(--neutral-600)">as of Jun 16</small><span class="pricing-line-formula">28.4% × $2,436.00 linehaul (after minimum, before discount)</span></span><span class="tabular">$691.82</span></div>
+<div class="pricing-line"><span>Insurance (1% DV, $25 min)<span class="pricing-line-formula">max(1% × $45,000, $25) = $450.00</span></span><span class="tabular">$450.00</span></div>
+<div class="pricing-line"><span>Lift gate</span><span class="tabular">$85.00</span></div>
+<div class="pricing-line"><span>Residential delivery</span><span class="tabular">$120.00</span></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular">18.2%</span></div>
+<div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
+<div class="pricing-line total"><span>Total</span><span class="tabular">$3,706.02</span></div>
+<p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)">494 cu ft → rate group 2 (251–500 cf). Source pipeline: per-pound rate × weight → lane minimum → fuel on linehaul → insurance once per shipment.</p>
+</div>
+</div>
+</div>
+</div>
+
 <script src="../js/awest-mockup.js"></script>
 </body></html>
