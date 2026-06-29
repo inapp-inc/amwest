@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html" class="active"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 
@@ -54,7 +55,7 @@
 <div class="filter-bar" data-filter-target="#analytics-lanes">
 <div class="field"><label for="a-range">Date Range</label><select id="a-range" name="range"><option value="All">All</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
 <div class="field"><label for="a-customer">Customer</label><select id="a-customer" name="customer"><option value="All">All</option><option value="Pacific Home Furnishings">Pacific Home Furnishings</option><option value="Cascade Furniture Co.">Cascade Furniture Co.</option></select></div>
-<div class="field"><label for="a-lane">Lane</label><select id="a-lane" name="lane"><option value="All">All</option><option value="SEA-PDX">SEA-PDX</option><option value="PDX-BOI">PDX-BOI</option></select></div>
+<div class="field"><label for="a-lane">Lane</label><select id="a-lane" name="lane"><option value="All">All</option><option value="TMV-SC">TMV-SC</option><option value="PDX-BOI">PDX-BOI</option></select></div>
 <div class="filter-actions"><button type="button" class="btn btn-primary btn-sm" data-filter-apply>Apply</button><button type="button" class="btn btn-secondary btn-sm" data-filter-reset>Reset</button></div>
 </div>
 <p class="filter-count" data-filter-count>Showing all 2 lane records</p>
@@ -64,9 +65,7 @@
 <div class="card"><h3 class="panel-title">Tariff Performance</h3><div class="chart-placeholder"><div class="chart-bar" style="height:50%;background:var(--signal-green)"></div><div class="chart-bar" style="height:75%;background:var(--signal-green)"></div><div class="chart-bar" style="height:65%"></div></div></div>
 <div class="card"><h3 class="panel-title">Lane Performance</h3>
 <table id="analytics-lanes" class="data-table"><thead><tr><th>Lane</th><th>Quotes</th><th>Avg Margin</th></tr></thead>
-<tbody>
-<tr data-lane="SEA-PDX" data-customer="Pacific Home Furnishings" data-range="30"><td>SEA-PDX</td><td class="tabular">47</td><td class="tabular">21.3%</td></tr>
-<tr data-lane="PDX-BOI" data-customer="Cascade Furniture Co." data-range="90"><td>PDX-BOI</td><td class="tabular">23</td><td class="tabular">19.8%</td></tr></tbody></table></div>
+<tbody><!-- populated by session store --></tbody></table></div>
 </div>
 <p style="margin-top:var(--space-md);font-size:13px"><a href="quotes.html">Drill through to Quote List →</a></p>
 
@@ -78,9 +77,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

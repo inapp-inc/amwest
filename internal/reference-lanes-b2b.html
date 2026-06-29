@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 <div class="ops-layout">
 <aside class="rail">
@@ -29,7 +29,7 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html" class="active"><span>Reference Configuration</span></a>
+<a href="reference.html" class="active"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 <div class="rail-divider"></div>
@@ -43,13 +43,13 @@
 <div class="main-content">
 <div class="page-header">
 <div>
-<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Reference Configuration</a> / Lanes</p>
+<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Pricing Setup</a> / Lanes</p>
 <h1>B2B Lane Configuration</h1>
 <p class="text-muted-sm" style="margin-top:4px">3-digit base-ZIP → lane description · Source tabs: <code>origin_zips</code>, <code>3zips</code></p>
 </div>
 <a href="reference-lane-b2b-edit.html" class="btn btn-primary">+ Add B2B Zone</a>
 </div>
-<div class="config-callout"><strong>Distinct from home delivery tiers:</strong> B2B and white-glove rate matrices use 3-digit base-ZIP lookup rows. This screen maps each base zone to a lane description consumed by the rate table matrix and quote auto-resolve.</div>
+<div class="config-callout"><strong>Distinct from home delivery tiers:</strong> B2B uses 3-digit base-ZIP lookup with optional 5-digit exceptions (e.g. Anderson SC 29621 → SC zone). CFQ lanes require manual rating in Quote Builder.</div>
 <table class="data-table">
 <thead><tr><th>Base ZIP (3-digit)</th><th>Lane description</th><th>Origin station</th><th>CFQ flag</th><th>Linked tariffs</th><th>Actions</th></tr></thead>
 <tbody>
@@ -68,9 +68,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

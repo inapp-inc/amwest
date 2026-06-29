@@ -258,3 +258,94 @@ a.wt-footer-cobrand .logo-img-inapp {
     height: 30px;
   }
 }
+
+/* Detail page grids — replaces tab panels where all sections should be visible */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.detail-grid--stack {
+  grid-template-columns: 1fr;
+}
+
+.detail-grid__full {
+  grid-column: 1 / -1;
+}
+
+.detail-grid__cell .panel-title {
+  margin-top: 0;
+}
+
+@media (max-width: 960px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Option grid — replaces segmented controls for service / UOM pickers */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.option-grid label {
+  display: block;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--surface-200);
+  border-radius: var(--radius);
+  background: var(--surface-200);
+  text-align: center;
+}
+
+.option-grid input {
+  display: none;
+}
+
+.option-grid input:checked + span,
+.option-grid label:has(input:checked),
+.option-grid label.is-selected {
+  background: var(--white);
+  color: var(--neutral-900);
+  font-weight: 600;
+  border-color: var(--aw-blue-300);
+}
+
+/* Quote detail — summary visible; line items collapsed by default */
+.quote-pricing-summary {
+  margin-bottom: var(--space-md);
+}
+
+.quote-total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+.quote-total-line .tabular {
+  font-size: 20px;
+  color: var(--neutral-900);
+}
+
+.term-hint {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--neutral-500);
+  cursor: help;
+  border-bottom: 1px dotted var(--neutral-400);
+}
+
+.flow-hint {
+  font-size: 13px;
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-md);
+}

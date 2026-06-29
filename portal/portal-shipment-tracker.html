@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="customer-portal">
@@ -26,7 +26,7 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
-<a href="portal-quote-request.html">My Quotes</a>
+<a href="portal-quote-request.html">Get a Quote</a>
 <a href="portal-shipment-tracker.html" class="active">Shipments</a>
 <a href="portal-self-service.html">Support</a>
 <a href="portal-pricing-help.html">Pricing Guide</a>
@@ -46,9 +46,9 @@
 
 <h1 class="portal-page-title">Shipments</h1>
 <div class="card" style="margin-bottom:var(--space-lg)">
-<h3 class="panel-title">SH-8842 · Seattle → Portland</h3>
+<h3 class="panel-title">SH-8842 · High Point → Anderson</h3>
 <div class="timeline">
-<span class="tl-step done">Quote</span><span class="tl-step done">Accepted</span><span class="tl-step done">BOL</span>
+<span class="tl-step done">Quote</span><span class="tl-step done">Accepted</span><span class="tl-step done">Bill of Lading</span>
 <span class="tl-step done">Pickup</span><span class="tl-step current">Tracking</span><span class="tl-step">Delivery</span><span class="tl-step">Invoice</span>
 </div>
 <p class="page-lead">In transit · ETA Jun 22, 2026</p>
@@ -56,7 +56,7 @@
 <div class="card">
 <h3 class="panel-title">SH-8790 · Delivered</h3>
 <div class="timeline">
-<span class="tl-step done">Quote</span><span class="tl-step done">Accepted</span><span class="tl-step done">BOL</span>
+<span class="tl-step done">Quote</span><span class="tl-step done">Accepted</span><span class="tl-step done">Bill of Lading</span>
 <span class="tl-step done">Pickup</span><span class="tl-step done">Tracking</span><span class="tl-step done">Delivery</span><span class="tl-step done">Invoice</span>
 </div>
 <a href="portal-pod.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">Download POD</a>
@@ -73,9 +73,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

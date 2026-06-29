@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html" class="active"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 <div class="rail-divider"></div>
@@ -45,9 +46,9 @@
 
 <div class="page-header">
 <div>
-<p style="font-size:13px;margin-bottom:4px"><a href="tariffs.html">Tariffs</a> / <a href="tariff-detail.html">TAR-B2B-WG-001</a></p>
-<h1>Rate Table Matrix</h1>
-<p class="text-muted-sm" style="margin-top:4px">One screen template · 28 origin × service-type combinations per tariff (workbook tabs <code>b2b_*</code>, <code>thr_*</code>, <code>wgni_*</code>, <code>wgi_*</code>)</p>
+<p style="font-size:13px;margin-bottom:4px"><a href="tariffs.html">Tariffs</a> / <a href="tariff-detail.html">TAR-B2B-BASE</a></p>
+<h1>Rate Tables by Origin &amp; Service</h1>
+<p class="text-muted-sm" style="margin-top:4px">Edit per-pound rates and minimum charges for each origin station and service level. There are 28 combinations per tariff (7 origins × 4 service types).</p>
 </div>
 <div>
 <a href="tariff-detail.html" class="btn btn-secondary">← Tariff Detail</a>
@@ -56,18 +57,18 @@
 </div>
 
 <div class="config-callout">
-<strong>Source workbook pattern:</strong> Each combination is a separate tab in the client reference workbook, but structurally identical — base-zone lookup rows (3-digit B2B or 5-digit home delivery) against cube/weight-break columns. Quotes resolve through this matrix after origin-station adjustments.
+<strong>How quotes use these tables:</strong> When you build a quote, the system looks up the origin station and service type, finds the matching rate table below, and applies any customer or lane adjustments on top.
 </div>
 
 <dl class="config-meta-row" id="rate-matrix-meta">
-<dt>Active combination</dt><dd id="rate-matrix-label">wgi_lax · White Glove Inspection · LAX</dd>
-<dt>Zone lookup</dt><dd id="rate-matrix-zone-type">3-digit base ZIP (B2B / WG)</dd>
-<dt>Break axis</dt><dd id="rate-matrix-break-axis">Cube breaks (cf) · CWT UOM</dd>
-<dt>Rows in matrix</dt><dd id="rate-matrix-row-count">8 zones</dd>
-<dt>Workbook tab</dt><dd id="rate-matrix-tab-id" class="tabular">wgi_lax</dd>
+<dt>Editing</dt><dd id="rate-matrix-label">White Glove Inspection · LAX</dd>
+<dt>Zone lookup</dt><dd id="rate-matrix-zone-type">3-digit ZIP (commercial / white glove)</dd>
+<dt>Rate breaks</dt><dd id="rate-matrix-break-axis">v35 weight groups (1–125 … 5000+ CFQ) · B2B/WG = CWT · Threshold = $/cf</dd>
+<dt>Zones in table</dt><dd id="rate-matrix-row-count">8 zones</dd>
+<dt>System ID</dt><dd id="rate-matrix-tab-id" class="tabular"><span class="text-muted-sm">Shown for pricing analysts</span></dd>
 </dl>
 
-<h3 class="panel-title" style="font-size:14px;margin-bottom:var(--space-sm)">Select origin × service type <span class="text-muted-sm">(7 origins × 4 service types = 28 matrices)</span></h3>
+<h3 class="panel-title" style="font-size:14px;margin-bottom:var(--space-sm)">Choose origin &amp; service level</h3>
 <div class="config-picker-grid" id="rate-matrix-picker" role="listbox" aria-label="Origin and service type combinations"></div>
 
 <div class="card" style="margin-top:var(--space-lg)">
@@ -82,11 +83,13 @@
 <tr>
 <th scope="col">Base zone</th>
 <th scope="col">Lane / description</th>
-<th scope="col">0–250 cf</th>
-<th scope="col">251–500 cf</th>
-<th scope="col">501–750 cf</th>
-<th scope="col">751–1,000 cf</th>
-<th scope="col">1,001+ cf</th>
+<th scope="col">1–125 lbs</th>
+<th scope="col">126–250 lbs</th>
+<th scope="col">251–500 lbs</th>
+<th scope="col">501–1,000 lbs</th>
+<th scope="col">1,001–2,000 lbs</th>
+<th scope="col">2,001–5,000 lbs</th>
+<th scope="col">5,000+ CFQ</th>
 </tr>
 </thead>
 <tbody id="rate-matrix-body"></tbody>
@@ -102,9 +105,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

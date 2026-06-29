@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 <div class="ops-layout">
 <aside class="rail">
@@ -42,20 +42,28 @@
 <table class="data-table">
 <thead><tr><th>List name</th><th>Values</th><th>Used by</th><th>Last updated</th><th>Actions</th></tr></thead>
 <tbody>
-<tr><td>Origins</td><td>LAX, SFO, DFW, ORD, ATL, EWR, MIA</td><td>Tariff matrix, Quote Builder</td><td class="tabular">Jan 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
-<tr><td>Service levels</td><td>B2B, Threshold, WG No Insp., WG Insp.</td><td>All pricing screens</td><td class="tabular">Jan 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
-<tr><td>UOM</td><td>CWT, Cube, Seat, % Invoice, Flat Rate</td><td>Tariff Detail, Quote Builder</td><td class="tabular">Jan 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
-<tr><td>Commodities</td><td>Upholstery, Case goods, Electronics, …</td><td>Quote Builder, overrides</td><td class="tabular">Dec 2025</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
-<tr><td>Discount steps</td><td>0%, 2.5%, 5%, 7.5%, 10%, …</td><td>Customer discount, governance</td><td class="tabular">Nov 2025</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
+<tr><td>Origins</td><td>LAX, DFW, TMV, PHX, SFO, ATL, EWR</td><td>Tariff matrix, Quote Builder</td><td class="tabular">Jun 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
+<tr><td>Service levels</td><td>B2B, Threshold, WG No Insp., WG Insp.</td><td>All pricing screens</td><td class="tabular">Jun 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
+<tr><td>UOM</td><td>CWT, Cube, Flat</td><td>Tariff Detail, Quote Builder</td><td class="tabular">Jun 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
+<tr><td>Commodities</td><td>FAK, CAS, UPH, Carton, Blanketwrap</td><td>Quote Builder, overrides</td><td class="tabular">Jun 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
+<tr><td>Discount steps</td><td>±15%, ±10%, ±5%, 0%, …</td><td>Customer discount, governance</td><td class="tabular">Jun 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
 <tr><td>Min density / min $-per-cube flags</td><td>Enforce min density, Enforce min $/cf</td><td>Pricing Engine</td><td class="tabular">Jan 2026</td><td><a href="admin-list-edit.html">Manage</a></td></tr>
 </tbody>
 </table>
 <p style="margin-top:var(--space-md)"><a href="admin-config.html" class="btn btn-link">← Admin configuration</a></p>
 </div>
 <footer class="mock-footer">
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

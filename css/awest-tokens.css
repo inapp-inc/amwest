@@ -12,9 +12,19 @@
   /* Application neutrals */
   --neutral-900: #1C1F24;
   --neutral-600: #3A3F47;
+  --neutral-500: #6B7280;
+  --page-bg: #FAFBFC;
   --surface-100: #F4F5F7;
+  --surface-150: #EEF1F4;
   --surface-200: #E3E6EA;
+  --surface-border: #D8DEE6;
   --white: #FFFFFF;
+
+  /* Light rail (mockup ops layout) */
+  --rail-bg: #FFFFFF;
+  --rail-text: #3A3F47;
+  --rail-text-active: #00208A;
+  --rail-border: #E3E6EA;
 
   /* Semantic signals (pricing app only) */
   --signal-green: #2E7D4F;

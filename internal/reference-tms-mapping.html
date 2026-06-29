@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 <div class="ops-layout">
 <aside class="rail">
@@ -29,7 +29,7 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html" class="active"><span>Reference Configuration</span></a>
+<a href="reference.html" class="active"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 </nav>
@@ -38,52 +38,47 @@
 <div class="main-content">
 <div class="page-header">
 <div>
-<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Reference Configuration</a></p>
-<h1>TMS Rate-Key / Export Mapping</h1>
-<p class="text-muted-sm" style="margin-top:4px">Normalization config for Ops Systems Hub · Source: <code>b2b_tmv_table</code>, <code>thr_tmv_table</code>, <code>wgni_tmv_table</code>, <code>wgi_tmv_table</code>, <code>mr2</code> (+ export tabs)</p>
+<p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Pricing Setup</a></p>
+<h1>AlphaTruck Rate-Key Mapping</h1>
+<p class="text-muted-sm" style="margin-top:4px">Maps platform service types to AlphaTruck tariff codes (D7/D8 B2B v35, DM/DN HD), MCTC level codes, and BW/BX/BY service keys. CSV exports upload via FileZilla to AlphaTruck.</p>
 </div>
 <button type="button" class="btn btn-primary">Save Mapping</button>
 </div>
-<div class="config-callout"><strong>Export is not just an action:</strong> TMS handoff requires tariff/level codes, discount-level assignment, and fuel-index selection configured here — the same mapping the workbook uses before generating <code>*_export</code> sheets.</div>
-<div class="tabs-wrap">
-<input type="radio" name="tms-tab" id="tms1" class="tab-radio" checked>
-<input type="radio" name="tms-tab" id="tms2" class="tab-radio">
-<input type="radio" name="tms-tab" id="tms3" class="tab-radio">
-<div class="tabs" role="tablist">
-<label for="tms1" class="tab-label" role="tab">B2B / WG</label>
-<label for="tms2" class="tab-label" role="tab">Threshold (HD)</label>
-<label for="tms3" class="tab-label" role="tab">MR2 / Misc</label>
-</div>
-<div class="tab-panels">
-<div class="tab-panel" role="tabpanel">
-<table class="data-table">
-<thead><tr><th>Platform service</th><th>TMS tariff code</th><th>Level code</th><th>Discount level</th><th>Fuel index</th><th>Export template</th></tr></thead>
+<div class="config-callout"><strong>AlphaTruck codes:</strong> B2B uses <code>D7</code> (rate) + <code>D8</code> (minimum). Home delivery uses <code>DM</code> + <code>DN</code>. Service types: <code>BW</code> (B2B), <code>BX</code> (Threshold), <code>BY</code> (White Glove). MCTC level (e.g. 4558) is read-only from tariff.</div>
+<div class="detail-grid detail-grid--stack">
+<section class="detail-grid__cell card">
+<h3 class="panel-title">B2B (v35 per-pound)</h3>
+<table class="data-table" data-tms-section="b2b">
+<thead><tr><th>Platform service</th><th>TMS type</th><th>Rate code</th><th>Min code</th><th>Level</th><th>Discount level</th><th>Fuel index</th><th>Export sheet</th></tr></thead>
 <tbody>
-<tr><td>B2B · LAX</td><td class="tabular"><input value="B2B-LAX-2026"></td><td class="tabular"><input value="L1"></td><td><select><option>Standard</option><option>Preferred</option></select></td><td><select><option selected>EIA National</option><option>Manual override</option></select></td><td>b2b_tmv_export</td></tr>
-<tr><td>WG Inspection · LAX</td><td class="tabular"><input value="WGI-LAX-2026"></td><td class="tabular"><input value="L2"></td><td><select><option selected>Standard</option></select></td><td><select><option selected>EIA National</option></select></td><td>wgi_tmv_export</td></tr>
-<tr><td>WG No Insp. · ATL</td><td class="tabular"><input value="WGNI-ATL-2026"></td><td class="tabular"><input value="L1"></td><td><select><option>Standard</option></select></td><td><select><option selected>EIA National</option></select></td><td>wgni_tmv_export</td></tr>
+<tr><td>B2B · TMV</td><td class="tabular">BW</td><td class="tabular"><input value="D7"></td><td class="tabular"><input value="D8"></td><td class="tabular"><input value="4558" readonly></td><td class="tabular"><input value="4558"></td><td><select><option selected>EIA National</option></select></td><td>b2b_tmv_export</td></tr>
 </tbody>
 </table>
-</div>
-<div class="tab-panel" role="tabpanel">
-<table class="data-table">
-<thead><tr><th>Platform service</th><th>TMS tariff code</th><th>Tier mapping</th><th>BPPC field</th><th>Fuel index</th><th>Export template</th></tr></thead>
+</section>
+<section class="detail-grid__cell card">
+<h3 class="panel-title">Threshold / White Glove (HD)</h3>
+<table class="data-table" data-tms-section="threshold">
+<thead><tr><th>Platform service</th><th>TMS type</th><th>Rate code</th><th>Min code</th><th>BPPC</th><th>Level</th><th>Fuel index</th><th>Export sheet</th></tr></thead>
 <tbody>
-<tr><td>Threshold · LAX</td><td class="tabular"><input value="THR-LAX-2026"></td><td>HD tier table</td><td>BPPC</td><td><select><option selected>EIA National</option></select></td><td>thr_tmv_export</td></tr>
+<tr><td>Threshold · TMV</td><td class="tabular">BX</td><td class="tabular"><input value="DM"></td><td class="tabular"><input value="DN"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="4558" readonly></td><td><select><option selected>EIA National</option></select></td><td>thr_tmv_export</td></tr>
+<tr><td>White Glove · TMV</td><td class="tabular">BY</td><td class="tabular"><input value="DM"></td><td class="tabular"><input value="DN"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="4558" readonly></td><td><select><option selected>EIA National</option></select></td><td>wgi_tmv_export</td></tr>
 </tbody>
 </table>
-</div>
-<div class="tab-panel" role="tabpanel">
-<table class="data-table">
-<thead><tr><th>Rule name</th><th>MR2 code</th><th>Applies when</th><th>Export template</th></tr></thead>
+</section>
+<section class="detail-grid__cell card">
+<h3 class="panel-title">MR2 — ZIP → BPPC grouping</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-sm)">MR2 compresses delivery ZIPs to a BPPC (metro POI) for HD rate lookup — not a minimum-charge rule.</p>
+<table class="data-table" data-tms-section="mr2">
+<thead><tr><th>Delivery ZIP</th><th>BPPC</th><th>POI / Tier</th><th>Export template</th></tr></thead>
 <tbody>
-<tr><td>Minimum charge floor</td><td class="tabular"><input value="MR2-MIN"></td><td>Quote total &lt; tariff minimum</td><td>mr2_export</td></tr>
+<tr><td class="tabular">29621</td><td class="tabular">29601</td><td>Greenville Tier 1</td><td>mr2_export</td></tr>
+<tr><td class="tabular">00501</td><td class="tabular">012401</td><td>New York City Tier 1</td><td>mr2_export</td></tr>
+<tr><td class="tabular">01001</td><td class="tabular">01001</td><td>Hartford Tier 1</td><td>mr2_export</td></tr>
 </tbody>
 </table>
+</section>
 </div>
-</div>
-</div>
-<p style="margin-top:var(--space-md)"><a href="quote-tms-export.html" class="btn btn-link">View sample export result →</a> · <a href="reference.html" class="btn btn-link">← Reference Configuration</a></p>
+<p style="margin-top:var(--space-md)"><a href="quote-tms-export.html" class="btn btn-link">View AlphaTruck export preview →</a> · <a href="reference.html" class="btn btn-link">← Pricing Setup</a></p>
 </div>
 <footer class="mock-footer">
 <a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">
@@ -91,9 +86,17 @@
 <span class="cobrand-sep" aria-hidden="true">×</span>
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

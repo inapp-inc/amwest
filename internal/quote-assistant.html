@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proof of Delivery — American West</title>
+<title>Quote Assistant — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -18,39 +18,54 @@
   <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
-<div class="customer-portal">
-<header class="portal-nav">
+<div class="ops-layout">
+<aside class="rail">
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
 <img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
 <span class="cobrand-sep" aria-hidden="true">×</span>
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
-<nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
-<a href="portal-quote-request.html">Get a Quote</a>
-<a href="portal-shipment-tracker.html" class="active">Shipments</a>
-<a href="portal-self-service.html">Support</a>
-<a href="portal-pricing-help.html">Pricing Guide</a>
+<nav class="rail-nav">
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="quote-assistant.html" class="active"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-config.html"><span>Admin Configuration</span></a>
+<div class="rail-divider"></div>
+<div class="rail-section-label">Customer self-service</div>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer"><span>Customer Portal</span></a>
+<div class="rail-section-label">Sales team</div>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
 </nav>
-<div class="dropdown" data-dropdown>
-<button type="button" class="dropdown-trigger portal-account" aria-expanded="false" aria-haspopup="true">Pacific Home Furnishings ▾</button>
-<div class="dropdown-menu" role="menu">
-<div class="dropdown-label">Switch account</div>
-<button type="button" role="menuitem" class="dropdown-item active" data-dropdown-select="Pacific Home Furnishings">Pacific Home Furnishings</button>
-<button type="button" role="menuitem" class="dropdown-item" data-dropdown-select="Cascade Furniture Co.">Cascade Furniture Co.</button>
-<hr class="dropdown-divider">
-<a href="../internal/login.html" role="menuitem" class="dropdown-item">Sign out</a>
-</div>
-</div>
-</header>
-<main class="portal-main">
+</aside>
+<main class="main">
+<div class="main-content">
 
-<div class="page-header" style="margin-bottom:var(--space-lg)"><div><h1 class="portal-page-title portal-page-title--flush">Proof of Delivery</h1><p style="margin-top:4px">SH-8790 · Delivered Jun 14, 2026</p></div>
-<a href="portal-shipment-tracker.html" class="btn btn-secondary">Back</a></div>
-<div class="card" style="max-width:640px;padding:var(--space-xl)">
-<p style="font-size:14px;margin-bottom:var(--space-md)"><strong>Delivered to:</strong> Anderson delivery, 97201<br>
-<strong>Signed by:</strong> J. Martinez · <strong>Time:</strong> 2:47 PM</p>
-<div style="background:var(--surface-200);height:200px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--neutral-600);font-size:14px">POD signature image</div>
-<a href="portal-shipment-tracker.html" class="btn btn-primary" style="margin-top:var(--space-lg)">Download POD</a>
+<div class="page-header">
+<div><h1>Quote Assistant</h1><p class="text-muted-sm" style="margin-top:4px">Guided quote setup — describe the shipment or pick a common task. The assistant pre-fills the quote builder for you.</p></div>
+<a href="quote-builder.html" class="btn btn-secondary">Open Quote Builder</a>
+</div>
+
+<div id="quote-assistant-root" class="assistant-layout">
+<div class="card assistant-thread-wrap">
+<div class="assistant-thread"></div>
+<div class="assistant-input-row">
+<input type="text" data-assistant-input placeholder="Type a message or use quick replies above…" aria-label="Message">
+<button type="button" class="btn btn-primary" data-assistant-send>Send</button>
+</div>
+</div>
+<div class="card assistant-preview-wrap">
+<h3 class="panel-title">Live quote preview</h3>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Pricing updates as the assistant gathers shipment details.</p>
+<div data-assistant-preview class="assistant-preview">
+<p style="font-size:13px;color:var(--neutral-600)">Start a flow to see the breakdown here.</p>
+</div>
+</div>
+</div>
+
 </div>
 <footer class="mock-footer">
 <a href="../index.html" class="mock-footer-cobrand cobrand-lockup cobrand-lockup--footer" title="American West × InApp demo mockup">

@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 
@@ -46,47 +47,36 @@
 
 <div class="page-header">
 <div><h1>Dashboard</h1></div>
-<div class="page-header-meta"><span>Jordan Ellis</span><span class="badge badge-approved">Sales Rep</span><a href="quote-builder.html" class="btn btn-primary">+ New Quote</a></div>
+<div class="page-header-meta"><span data-dashboard-user-name>—</span><span class="badge badge-approved" data-dashboard-user-role>Sales Rep</span><a href="quote-builder.html" class="btn btn-primary">+ New Quote</a></div>
 </div>
 <div class="kpi-row">
-<a href="quotes.html?view=open&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Open%20Quotes" class="kpi-card kpi-card--drill" title="View your open quotes (6)">
-<div class="value tabular">6</div><div class="label">Open Quotes</div><span class="kpi-drill-hint">View 6 quotes →</span>
+<a href="quotes.html?view=open&amp;from=dashboard&amp;drill=Open%20Quotes" class="kpi-card kpi-card--drill" data-dashboard-kpi="open" title="View your open quotes">
+<div class="value tabular">—</div><div class="label">Open Quotes</div><span class="kpi-drill-hint">View quotes →</span>
 </a>
-<a href="quotes.html?status=pending&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Pending%20Approval" class="kpi-card kpi-card--drill" title="View your quotes pending approval (2)">
-<div class="value tabular">2</div><div class="label">Pending Approval</div><span class="kpi-drill-hint">Review 2 quotes →</span>
+<a href="quotes.html?status=pending&amp;from=dashboard&amp;drill=Pending%20Approval" class="kpi-card kpi-card--drill" data-dashboard-kpi="pending" title="View quotes pending approval">
+<div class="value tabular">—</div><div class="label">Pending Approval</div><span class="kpi-drill-hint">Review quotes →</span>
 </a>
-<a href="quotes.html?status=sent&amp;period=week&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Quotes%20Sent%20This%20Week" class="kpi-card kpi-card--drill" title="View quotes you sent this week (1)">
-<div class="value tabular">1</div><div class="label">Quotes Sent This Week</div><span class="kpi-drill-hint">View 1 quote →</span>
+<a href="quotes.html?status=sent&amp;period=week&amp;from=dashboard&amp;drill=Quotes%20Sent%20This%20Week" class="kpi-card kpi-card--drill" data-dashboard-kpi="sent-week" title="View quotes sent this week">
+<div class="value tabular">—</div><div class="label">Quotes Sent This Week</div><span class="kpi-drill-hint">View quotes →</span>
 </a>
-<a href="analytics.html?metric=win-rate&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Win%20Rate" class="kpi-card kpi-card--drill" title="View your win rate analytics (68%)">
-<div class="value tabular">68%</div><div class="label">Win Rate</div><span class="kpi-drill-hint">View analytics →</span>
+<a href="analytics.html?metric=win-rate&amp;from=dashboard&amp;drill=Win%20Rate" class="kpi-card kpi-card--drill" data-dashboard-kpi="win-rate" title="View win rate analytics">
+<div class="value tabular">—</div><div class="label">Win Rate</div><span class="kpi-drill-hint">View analytics →</span>
 </a>
 </div>
-<div class="panel">
+<div class="panel" data-dashboard-panel="pending">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
-<h2 class="panel-title" style="margin:0"><a href="quotes.html?status=pending&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Pending%20Approval" class="panel-title-link">Pending Approvals</a></h2>
-<a href="quotes.html?status=pending&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=Pending%20Approval">View all 2 →</a>
+<h2 class="panel-title" style="margin:0"><a href="quotes.html?status=pending&amp;from=dashboard&amp;drill=Pending%20Approval" class="panel-title-link" data-dashboard-panel-link="pending">Pending Approvals</a></h2>
+<a href="quotes.html?status=pending&amp;from=dashboard&amp;drill=Pending%20Approval" data-dashboard-view-all="pending">View all →</a>
 </div>
 <table class="data-table">
 <thead><tr><th>Customer</th><th>Quote #</th><th>Discount</th><th>Margin</th><th>Margin Health</th><th></th></tr></thead>
-<tbody>
-<tr data-drill-href="quote-detail.html"><td>Pacific Home Furnishings</td><td class="tabular"><a href="quote-detail.html">Q-2026-0847</a></td><td class="tabular">12%</td><td class="tabular">18.2%</td>
-<td><div class="margin-gauge"><div class="margin-gauge-track"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:40%"></div></div><span class="margin-gauge-label tabular">18.2%</span></div></td>
-<td><a href="quote-detail.html" class="btn btn-sm btn-secondary">Review</a></td></tr>
-<tr data-drill-href="quote-detail.html"><td>Northwest Retail Group</td><td class="tabular"><a href="quote-detail.html">Q-2026-0842</a></td><td class="tabular">15%</td><td class="tabular">14.1%</td>
-<td><div class="margin-gauge"><div class="margin-gauge-track"><div class="margin-gauge-fill red" style="width:35%"></div><div class="margin-gauge-tick" style="left:40%"></div></div><span class="margin-gauge-label tabular">14.1%</span></div></td>
-<td><a href="quote-detail.html" class="btn btn-sm btn-secondary">Review</a></td></tr>
-</tbody></table>
+<tbody><!-- populated by session store --></tbody></table>
 </div>
-<div class="panel">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)"><h2 class="panel-title" style="margin:0"><a href="quotes.html?view=open&amp;rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=My%20Recent%20Quotes" class="panel-title-link">My Recent Quotes</a></h2><a href="quotes.html?rep=Jordan%20Ellis&amp;from=dashboard&amp;drill=My%20Recent%20Quotes">View all 6 →</a></div>
+<div class="panel" data-dashboard-panel="recent">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)"><h2 class="panel-title" style="margin:0"><a href="quotes.html?view=open&amp;from=dashboard&amp;drill=My%20Recent%20Quotes" class="panel-title-link" data-dashboard-panel-link="recent">My Recent Quotes</a></h2><a href="quotes.html?view=open&amp;from=dashboard&amp;drill=My%20Recent%20Quotes" data-dashboard-view-all="recent">View all →</a></div>
 <table class="data-table">
 <thead><tr><th>Quote #</th><th>Customer</th><th>Status</th><th>Last Updated</th><th></th></tr></thead>
-<tbody>
-<tr data-drill-href="quote-detail.html"><td class="tabular"><a href="quote-detail.html">Q-2026-0770</a></td><td>Pacific Home Furnishings</td><td><span class="badge badge-accepted">Accepted</span></td><td class="tabular">Jun 22, 2026</td><td><a href="quote-detail.html">Open</a></td></tr>
-<tr data-drill-href="quote-detail.html"><td class="tabular"><a href="quote-detail.html">Q-2026-0823</a></td><td>Pacific Home Furnishings</td><td><span class="badge badge-approved">Approved</span></td><td class="tabular">Jun 18, 2026</td><td><a href="quote-detail.html">Open</a></td></tr>
-<tr data-drill-href="quote-detail.html"><td class="tabular"><a href="quote-detail.html">Q-2026-0819</a></td><td>Cascade Furniture Co.</td><td><span class="badge badge-sent">Sent</span></td><td class="tabular">Jun 15, 2026</td><td><a href="quote-detail.html">Open</a></td></tr>
-</tbody></table>
+<tbody><!-- populated by session store --></tbody></table>
 </div>
 
 </div>
@@ -97,9 +87,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

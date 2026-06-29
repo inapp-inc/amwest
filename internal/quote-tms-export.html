@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html" class="active"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 
@@ -43,13 +44,16 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Export to TMS Format</h1></div></div>
-<div class="card" style="max-width:560px;text-align:center;padding:var(--space-xl)">
+<div class="page-header"><div><h1>AlphaTruck Export</h1><p class="page-lead">Exports the booked quote as CSV for FileZilla upload to AlphaTruck — normalized via D7/D8 (B2B) or DM/DN (HD) rate keys.</p></div></div>
+<div class="card" style="max-width:640px;padding:var(--space-xl)">
 <p style="font-size:48px;margin-bottom:var(--space-md)">✓</p>
 <h2 class="panel-heading">Export complete</h2>
-<p style="font-size:14px;color:var(--neutral-600);margin-bottom:var(--space-lg)">Q-2026-0823 exported as <strong>Q2026_0823_TMS.xlsx</strong> — normalized via <a href="reference-tms-mapping.html">TMS rate-key mapping</a>.</p>
+<p style="font-size:14px;color:var(--neutral-600);margin-bottom:var(--space-md)">Q-2026-0823 exported as <strong>Q2026_0823_alphatruck.csv</strong> — BW/D7/D8 · level 4558 · TMV origin.</p>
+<pre class="export-preview" style="text-align:left;font-size:12px;background:var(--surface-100);padding:var(--space-md);border-radius:8px;overflow:auto">tariff,base,class,break1,break2,break3,break4,break5,min
+D7,29.10,BW,125,250,500,1000,2000,73.00</pre>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-lg)">Upload via FileZilla to AlphaTruck inbound folder. See <a href="reference-tms-mapping.html">TMS rate-key mapping</a>.</p>
 <a href="quotes.html" class="btn btn-primary">Back to Quotes</a>
-<a href="quote-detail.html" class="btn btn-secondary" style="margin-left:var(--space-sm)">View Quote</a>
+<a href="quote-detail.html?id=Q-2026-0823" class="btn btn-secondary" style="margin-left:var(--space-sm)">View Quote</a>
 </div>
 </div>
 <footer class="mock-footer">
@@ -59,9 +63,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

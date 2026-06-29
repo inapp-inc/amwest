@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reference Configuration — American West</title>
+<title>Pricing Setup — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html" class="active"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html" class="active"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 
@@ -44,24 +45,29 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Reference Configuration</h1><p class="text-muted-sm" style="margin-top:4px">Operations reference data — fuel, accessorials, lane lookups, and TMS export mapping. Tariff matrices, customer discounts, and platform admin settings live under their own configuration hubs.</p></div></div>
+<div class="page-header"><div><h1>Pricing Setup</h1><p class="text-muted-sm" style="margin-top:4px">Rates and rules that feed every quote — fuel, accessorials, lanes, and carrier booking codes. Customer discounts and tariff programs are managed under <a href="customers.html">Customers</a> and <a href="tariffs.html">Tariffs</a>.</p></div></div>
 
-<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Reference &amp; operations configuration</h2>
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Day-to-day pricing inputs</h2>
 <div class="portal-cards" style="margin-bottom:var(--space-xl)">
-<a href="reference-fuel.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Fuel surcharge configuration</h3><p class="page-lead">EIA-linked fuel tables, overrides, and history · Current: 28.4%</p></a>
-<a href="reference-accessorials.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Accessorial configuration</h3><p class="page-lead">Lift gate, residential delivery, declared value, and insurance rules</p></a>
-<a href="reference-lanes-b2b.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">B2B lane configuration</h3><p class="page-lead">3-digit base-ZIP → lane name for commercial and white-glove freight</p></a>
-<a href="reference-tiers-hd.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Home delivery tier configuration</h3><p class="page-lead">5-digit ZIP → POI/tier → base price per cube — separate from B2B lanes</p></a>
-<a href="reference-lanes.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Lane / ZIP grouping hub</h3><p class="page-lead">Entry to B2B lanes, home delivery tiers, and legacy metro/CFQ groups</p></a>
-<a href="reference-tms-mapping.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">TMS rate-key / export mapping</h3><p class="page-lead">Tariff codes, discount level, and fuel index for carrier booking handoff</p></a>
+<a href="reference-fuel.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Fuel surcharge</h3><p class="page-lead">National fuel index, overrides, and change history · Current: 28.4%</p></a>
+<a href="reference-accessorials.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Accessorial charges</h3><p class="page-lead">Lift gate, residential delivery, declared value, and insurance rules</p></a>
+<a href="reference-lanes-b2b.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Commercial lane tables</h3><p class="page-lead">ZIP-to-lane lookup for business and white-glove freight</p></a>
+<a href="reference-tiers-hd.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Home delivery tier tables</h3><p class="page-lead">Residential ZIP tiers and base price per cube — separate from commercial lanes</p></a>
+<a href="reference-lanes.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Lane &amp; ZIP hub</h3><p class="page-lead">Entry point for commercial lanes, home delivery tiers, and call-for-quote zones</p></a>
+<a href="reference-tms-mapping.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Carrier booking codes</h3><p class="page-lead">Maps each service and origin to the codes used when sending a booked quote to dispatch</p></a>
 </div>
 
-<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Related pricing configuration</h2>
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Quote workflow</h2>
+<div class="portal-cards" style="margin-bottom:var(--space-xl)">
+<a href="quote-layer-templates.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Quote layer templates</h3><p class="page-lead">Rep-editable adjustment catalog — quote discount, customer-term exceptions, accessorials</p></a>
+</div>
+
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Tariff &amp; account setup</h2>
 <div class="portal-cards">
-<a href="tariff-wizard.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Origin station × service-type grid</h3><p class="page-lead">Tariff configurator — density factor and linehaul adjustments per origin × service level</p></a>
-<a href="tariff-rate-matrix.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Rate table matrix configuration</h3><p class="page-lead">Per-pound rates and lane minimums by zone × cube bracket — 28 origin × service matrices</p></a>
-<a href="customers.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Customer master &amp; discount configuration</h3><p class="page-lead">Shipper profiles and negotiated discounts by service level — not account-wide %</p></a>
-<a href="admin-config.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Admin configuration</h3><p class="page-lead">Agreement templates, system constants, validation lists, and users &amp; roles</p></a>
+<a href="tariff-wizard.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Tariff configurator</h3><p class="page-lead">Guided setup for origin station × service level adjustments</p></a>
+<a href="tariff-rate-matrix.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Rate tables by origin &amp; service</h3><p class="page-lead">Per-pound rates and minimums — 28 origin × service combinations per tariff</p></a>
+<a href="customers.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Customer discounts</h3><p class="page-lead">Negotiated terms by service level — not one account-wide percentage</p></a>
+<a href="admin-config.html" class="card" style="text-decoration:none;color:inherit"><h3 class="panel-title">Admin settings</h3><p class="page-lead">Agreement templates, system constants, validation lists, and users</p></a>
 </div>
 
 </div>
@@ -72,9 +78,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

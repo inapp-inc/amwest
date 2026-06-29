@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sales Pipeline — American West</title>
+<title>Quote Layer Templates — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -26,35 +26,43 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <nav class="rail-nav">
-<a href="../internal/dashboard.html"><span>Dashboard</span></a>
-<a href="../internal/tariffs.html"><span>Tariffs</span></a>
-<a href="../internal/customers.html"><span>Customers</span></a>
-<a href="../internal/quotes.html"><span>Quotes</span></a>
-<a href="../internal/reference.html"><span>Pricing Setup</span></a>
-<a href="../internal/analytics.html"><span>Analytics</span></a>
-<a href="../internal/admin-config.html"><span>Admin Configuration</span></a>
+<a href="dashboard.html"><span>Dashboard</span></a>
+<a href="tariffs.html"><span>Tariffs</span></a>
+<a href="customers.html"><span>Customers</span></a>
+<a href="quotes.html"><span>Quotes</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html" class="active"><span>Pricing Setup</span></a>
+<a href="analytics.html"><span>Analytics</span></a>
+<a href="admin-config.html"><span>Admin Configuration</span></a>
 
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
 <a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
 <div class="rail-section-label">Sales team</div>
-<a href="crm-dashboard.html" class="active"><span>Sales Pipeline</span></a>
+<a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
 </nav>
 </aside>
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Sales Pipeline</h1><p class="page-lead">Quote stages by status · <span class="tabular">—</span> total value · — active quotes</p>
-<p class="text-muted-sm" data-kanban-hint style="margin-top:var(--space-sm)">Click a card to open the quote. <strong>Shift+click</strong> a card to move it to another stage.</p></div><a href="crm-dashboard.html" class="btn btn-secondary">← Overview</a></div>
-<div class="drill-banner" data-drill-banner hidden></div>
-<div class="kanban">
-<div class="kanban-col" data-stage="draft"><h3><a href="../internal/quotes.html?status=draft&amp;from=crm-dashboard&amp;drill=Draft%20stage" class="panel-title-link">Draft</a> <span class="page-lead">(0)</span></h3></div>
-<div class="kanban-col" data-stage="pending"><h3><a href="../internal/quotes.html?status=pending&amp;from=crm-dashboard&amp;drill=Pending%20Approval%20stage" class="panel-title-link">Pending Approval</a> <span class="page-lead">(0)</span></h3></div>
-<div class="kanban-col" data-stage="approved"><h3><a href="../internal/quotes.html?status=approved&amp;from=crm-dashboard&amp;drill=Approved%20stage" class="panel-title-link">Approved</a> <span class="page-lead">(0)</span></h3></div>
-<div class="kanban-col" data-stage="sent"><h3><a href="../internal/quotes.html?status=sent&amp;from=crm-dashboard&amp;drill=Sent%20stage" class="panel-title-link">Sent</a> <span class="page-lead">(0)</span></h3></div>
-<div class="kanban-col" data-stage="accepted"><h3><a href="../internal/quotes.html?status=accepted&amp;from=crm-dashboard&amp;drill=Accepted%20stage" class="panel-title-link">Accepted</a> <span class="page-lead">(0)</span></h3></div>
-<div class="kanban-col" data-stage="converted"><h3><a href="../internal/quotes.html?status=converted&amp;from=crm-dashboard&amp;drill=Booked%20stage" class="panel-title-link">Booked</a> <span class="page-lead">(0)</span></h3></div>
+<div class="page-header"><div><h1>Quote layer templates</h1><p class="text-muted-sm" style="margin-top:4px">Rep-editable adjustment catalog for Step 4b in Quote Builder. Customer master discounts and tariff programs stay under <a href="customers.html">Customers</a> — they appear as read-only <strong>applied terms</strong> on each quote.</p></div></div>
+
+<div class="inline-notice info" style="margin-bottom:var(--space-lg)">
+<strong>Three discount buckets:</strong>
+<strong>Applied</strong> (customer master, snapshotted) ·
+<strong>Exception</strong> (one-off override of customer terms, needs approval) ·
+<strong>Quote discount</strong> (rep negotiation on this shipment).
 </div>
+
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin-bottom:var(--space-sm)">Quote-scope templates</h2>
+<table class="data-table" data-quote-layer-templates-table>
+<thead><tr><th>Layer</th><th>Type</th><th>Default</th><th>Approval</th><th>Hint</th></tr></thead>
+<tbody><!-- populated from session store --></tbody></table>
+
+<h2 class="panel-title" style="font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--neutral-600);margin:var(--space-xl) 0 var(--space-sm)">Computed on every quote (not editable here)</h2>
+<ul class="text-muted-sm" data-computed-layer-labels style="margin:0;padding-left:1.2em"></ul>
+
+<a href="reference.html" class="btn btn-link" style="margin-top:var(--space-md)">← Pricing Setup</a>
 
 </div>
 <footer class="mock-footer">
@@ -74,7 +82,6 @@
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
-<script src="../js/demo-crud.js"></script>
 <script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quote Detail — American West</title>
+<title>Quote Detail (Pending) — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -34,10 +34,9 @@
 <a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
-
 <div class="rail-divider"></div>
 <div class="rail-section-label">Customer self-service</div>
-<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer" title="Opens customer portal in a new tab"><span>Customer Portal</span></a>
+<a href="../portal/portal-dashboard.html" target="_blank" rel="noopener noreferrer"><span>Customer Portal</span></a>
 <div class="rail-section-label">Sales team</div>
 <a href="../crm/crm-dashboard.html"><span>Sales Pipeline</span></a>
 </nav>
@@ -46,14 +45,25 @@
 <div class="main-content">
 
 <div class="page-header">
-<div><h1 class="tabular">Q-2026-0823</h1><p style="margin-top:4px">Pacific Home Furnishings · High Point, NC → Anderson, SC</p></div>
-<span class="badge badge-approved" style="font-size:14px;padding:6px 14px">Approved</span>
+<div><h1 class="tabular">Q-2026-0847</h1><p style="margin-top:4px">Pacific Home Furnishings · High Point, NC → Anderson, SC · <span class="quote-personalized-tag" title="Uses quote-level discount beyond standard customer terms">Custom pricing</span></p></div>
+<span class="badge badge-pending" style="font-size:14px;padding:6px 14px">Pending Approval</span>
 </div>
 <div class="stepper" data-quote-lifecycle></div>
 <p class="text-muted-sm" data-quote-next-step style="margin:-var(--space-md) 0 var(--space-lg)"></p>
+<div class="governance-banner amber" hidden></div>
+<div class="card panel" data-quote-detail-approval style="margin-bottom:var(--space-lg)">
+<h3 class="panel-title">Manager decision</h3>
+<p style="font-size:13px;margin-bottom:var(--space-md)">Expand the pricing breakdown below to review line items. Managers can approve or reject from this screen — switch to a Sales Manager account using the <strong>Session</strong> menu in the demo banner if you need to test approval.</p>
+<div class="detail-approval-actions" style="display:flex;gap:var(--space-sm);flex-wrap:wrap">
+<button type="button" class="btn btn-primary" data-detail-approve>Approve &amp; release</button>
+<button type="button" class="btn btn-secondary" data-detail-reject>Reject with reason</button>
+<a href="quote-builder.html" class="btn btn-link">Edit quote</a>
+</div>
+</div>
 <div style="display:grid;grid-template-columns:1fr 360px;gap:var(--space-lg)">
 <div class="card"><h3 class="panel-title">Shipment Summary</h3>
-<p>Weight: <span class="tabular">—</span> · Cube: <span class="tabular">—</span> · Commodity: FAK · Declared value: <span class="tabular">—</span></p></div>
+<p>Weight: <span class="tabular">—</span> · Cube: <span class="tabular">—</span> · Commodity: FAK · Declared value: <span class="tabular">—</span></p>
+<p style="font-size:13px;margin-top:var(--space-sm)">Tariff: <a href="tariff-detail.html">TAR-B2B-BASE</a> · Discounts: <span class="quote-disc-badge">5% cust</span> <span class="quote-disc-badge quote">+7% quote</span></p></div>
 <div class="card"><h3 class="panel-title">Pricing Breakdown</h3>
 <div class="quote-pricing-summary">
 <div class="quote-total-line"><span>Total</span><span class="tabular" data-quote-total-summary>—</span></div>
@@ -62,25 +72,12 @@
 </div>
 <details class="disclosure-panel quote-calc-detail"><summary>Show detailed calculation</summary>
 <div class="disclosure-body">
-<div class="card" style="font-size:13px;margin-bottom:var(--space-md)" data-quote-calc-meta>
-<p><strong>Tariff:</strong> <a href="tariff-detail.html">TAR-B2B-BASE</a> (v3)</p>
-<p><strong>Fuel rate:</strong> 28.4% from EIA.gov, Jun 16 2026</p>
-<p><strong>Approved by:</strong> Morgan Reyes, Jun 18 2026</p>
-</div>
-<div data-detail-breakdown data-quote-disc="0"></div>
-<details class="disclosure-panel" style="margin-top:var(--space-md)"><summary>Expand formulas &amp; audit detail</summary>
-<div class="disclosure-body pricing-lines" style="font-size:13px">
-<!-- populated from session store -->
-</div></details>
+<div data-detail-breakdown data-quote-disc="7"></div>
+<details class="disclosure-panel" style="margin-top:var(--space-md)"><summary>Expand formulas</summary>
+<div class="disclosure-body pricing-lines" style="font-size:13px"><!-- populated from session store --></div></details>
 </div></details>
 </div></div>
 <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap">
-<a href="quote-pdf.html" class="btn btn-primary">Generate PDF</a>
-<a href="quote-esign.html" class="btn btn-primary">Send for E-Signature</a>
-<a href="quote-tms-export.html" class="btn btn-secondary">Export to AlphaTruck</a>
-<a href="quote-builder.html" class="btn btn-secondary">Edit</a>
-<a href="quote-comparison.html" class="btn btn-secondary">Compare to another quote</a>
-<a href="tariff-competitor-comparison.html" class="btn btn-secondary">Compare to competitor rate</a>
 <a href="quotes.html" class="btn btn-link">← Back to Quotes</a>
 </div>
 

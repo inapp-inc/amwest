@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html" class="active"><span>Admin Configuration</span></a>
 
@@ -45,27 +46,29 @@
 <div class="main-content">
 
 <div class="page-header"><div><h1>Users</h1></div><div><a href="admin-config.html" class="btn btn-secondary">Admin configuration</a> <a href="admin-invite.html" class="btn btn-primary">+ Invite User</a></div></div>
-<div class="tabs-wrap">
-<input type="radio" name="ut" id="u1" class="tab-radio" checked>
-<input type="radio" name="ut" id="u2" class="tab-radio">
-<div class="tabs" role="tablist"><label for="u1" class="tab-label" role="tab">Users</label><label for="u2" class="tab-label" role="tab">Role Permissions</label></div>
-<div class="tab-panels">
-<div class="tab-panel" role="tabpanel"><table class="data-table">
+<div class="detail-grid detail-grid--stack">
+<section class="detail-grid__cell card">
+<h3 class="panel-title">Users</h3>
+<table class="data-table" data-admin-users>
 <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customers</th><th>Status</th><th>Actions</th></tr></thead>
 <tbody>
-<tr><td>Jordan Ellis</td><td>jordan.ellis@americanwest.com</td><td>Sales Rep</td><td class="tabular">12</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a></td></tr>
-<tr><td>Morgan Reyes</td><td>morgan.reyes@americanwest.com</td><td>Sales Manager</td><td>—</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a></td></tr>
-<tr><td>Admin User</td><td>admin@americanwest.com</td><td>Admin</td><td>—</td><td><span class="badge badge-active">Active</span></td><td><a href="admin-user-edit.html">Edit</a> · <a href="admin-user-edit.html">Disable</a></td></tr>
-</tbody></table></div>
-<div class="tab-panel" role="tabpanel"><table class="data-table">
+<tr><td>Jordan Ellis</td><td>jordan.ellis@americanwest.com</td><td>Sales Rep</td><td class="tabular">12</td><td><span class="badge badge-active">Active</span></td><td class="actions"><a href="admin-user-edit.html">Edit</a></td></tr>
+<tr><td>Morgan Reyes</td><td>morgan.reyes@americanwest.com</td><td>Sales Manager</td><td>—</td><td><span class="badge badge-active">Active</span></td><td class="actions"><a href="admin-user-edit.html">Edit</a></td></tr>
+<tr><td>Admin User</td><td>admin@americanwest.com</td><td>Admin</td><td>—</td><td><span class="badge badge-active">Active</span></td><td class="actions"><a href="admin-user-edit.html">Edit</a><a href="admin-user-edit.html" class="action-pill--muted">Disable</a></td></tr>
+</tbody></table>
+</section>
+<section class="detail-grid__cell card">
+<h3 class="panel-title">Role Permissions</h3>
+<table class="data-table" data-admin-permissions>
 <thead><tr><th>Permission</th><th>Rep</th><th>Manager</th><th>Admin</th></tr></thead>
 <tbody>
 <tr><td>Create quotes</td><td>✓</td><td>✓</td><td>✓</td></tr>
 <tr><td>Approve quotes</td><td>—</td><td>✓</td><td>✓</td></tr>
 <tr><td>Edit tariffs</td><td>—</td><td>—</td><td>✓</td></tr>
 <tr><td>Manage users</td><td>—</td><td>—</td><td>✓</td></tr>
-</tbody></table></div>
-</div></div>
+</tbody></table>
+</section>
+</div>
 
 </div>
 <footer class="mock-footer">
@@ -75,9 +78,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

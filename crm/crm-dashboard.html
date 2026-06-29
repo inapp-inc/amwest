@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sales Dashboard — American West</title>
+<title>Sales Pipeline — American West</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,7 @@
 <a href="../internal/tariffs.html"><span>Tariffs</span></a>
 <a href="../internal/customers.html"><span>Customers</span></a>
 <a href="../internal/quotes.html"><span>Quotes</span></a>
-<a href="../internal/reference.html"><span>Reference Configuration</span></a>
+<a href="../internal/reference.html"><span>Pricing Setup</span></a>
 <a href="../internal/analytics.html"><span>Analytics</span></a>
 <a href="../internal/admin-config.html"><span>Admin Configuration</span></a>
 
@@ -44,17 +44,17 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Sales Dashboard</h1><p class="page-lead">Sales Pipeline · 7 active opportunities</p></div>
-<a href="crm-opportunities.html?from=crm-dashboard&amp;drill=Full%20Pipeline" class="btn btn-primary">View Pipeline</a></div>
+<div class="page-header"><div><h1>Sales Pipeline</h1><p class="page-lead">Quote stages, aging, and team performance · 7 active opportunities</p></div>
+<a href="crm-opportunities.html?from=crm-dashboard&amp;drill=Full%20Pipeline" class="btn btn-primary">View board</a></div>
 <div class="kpi-row">
 <a href="crm-opportunities.html?from=crm-dashboard&amp;drill=Pipeline%20Value" class="kpi-card kpi-card--drill" title="View pipeline board ($20.7K across 7 cards)">
-<div class="value tabular">$20.7K</div><div class="label">Pipeline Value</div><span class="kpi-drill-hint">7 opportunities →</span>
+<div class="value tabular">—</div><div class="label">Pipeline Value</div><span class="kpi-drill-hint">—</span>
 </a>
-<a href="../internal/analytics.html?metric=win-rate&amp;from=crm-dashboard&amp;drill=Win%20Rate" class="kpi-card kpi-card--drill" title="View team win rate (64%)">
-<div class="value tabular">64%</div><div class="label">Win Rate</div><span class="kpi-drill-hint">Team average →</span>
+<a href="../internal/analytics.html?metric=win-rate&amp;from=crm-dashboard&amp;drill=Win%20Rate" class="kpi-card kpi-card--drill">
+<div class="value tabular">—</div><div class="label">Win Rate</div><span class="kpi-drill-hint">Team average →</span>
 </a>
-<a href="crm-opportunities.html?stage=sent&amp;from=crm-dashboard&amp;drill=Avg.%20Quote%20Aging" class="kpi-card kpi-card--drill" title="View sent-stage aging (5 days avg)">
-<div class="value tabular">5.0 days</div><div class="label">Avg Quote Aging</div><span class="kpi-drill-hint">1 in Sent →</span>
+<a href="crm-opportunities.html?stage=sent&amp;from=crm-dashboard&amp;drill=Avg.%20Quote%20Aging" class="kpi-card kpi-card--drill">
+<div class="value tabular">—</div><div class="label">Avg Quote Aging</div><span class="kpi-drill-hint">1 in Sent →</span>
 </a>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg)">
@@ -63,18 +63,13 @@
 <h3 class="panel-title" style="margin:0"><a href="../internal/quotes.html?from=crm-dashboard&amp;drill=Rep%20Leaderboard" class="panel-title-link">Rep Leaderboard</a></h3>
 </div>
 <table class="data-table"><thead><tr><th>Rep</th><th>Quotes</th><th>Win Rate</th></tr></thead>
-<tbody>
-<tr data-drill-href="../internal/quotes.html?rep=Jordan%20Ellis&amp;from=crm-dashboard&amp;drill=Jordan%20Ellis%20quotes"><td>Jordan Ellis</td><td class="tabular">6</td><td class="tabular">68%</td></tr>
-<tr data-drill-href="../internal/quotes.html?rep=Alex%20Kim&amp;from=crm-dashboard&amp;drill=Alex%20Kim%20quotes"><td>Alex Kim</td><td class="tabular">1</td><td class="tabular">61%</td></tr></tbody></table></div>
+<tbody><!-- populated by session store --></tbody></table></div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
 <h3 class="panel-title" style="margin:0"><a href="crm-opportunities.html?from=crm-dashboard&amp;drill=Follow-ups%20Due%20Today" class="panel-title-link">Follow-ups Due Today</a></h3>
-<span class="page-lead">2 items</span>
+<span class="page-lead" data-followup-count>—</span>
 </div>
-<ul style="list-style:none;margin:0;padding:0">
-<li><a href="../internal/quote-detail.html" class="drill-list-item"><strong>Q-2026-0819</strong> — Cascade Furniture · Sent 5 days ago</a></li>
-<li><a href="../internal/quote-detail.html" class="drill-list-item"><strong>Q-2026-0831</strong> — Northwest Retail · Pending</a></li>
-</ul></div></div>
+<ul style="list-style:none;margin:0;padding:0" data-followup-list><!-- populated by session store --></ul></div></div>
 
 </div>
 <footer class="mock-footer">
@@ -84,9 +79,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

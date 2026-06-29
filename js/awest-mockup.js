@@ -148,10 +148,21 @@
       var tbody = table.querySelector('tbody');
       if (!tbody) return;
 
-      var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+      var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-quote-id], tr[data-status], tr[data-customer], tr[data-rep]'));
+      var isQuotesTable = table.classList.contains('quotes-table-enhanced');
+      if (isQuotesTable) {
+        rows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-quote-id]'));
+      } else if (!rows.length) {
+        rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+      }
       var countEl = bar.parentElement.querySelector('[data-filter-count]');
       var emptyEl = bar.parentElement.querySelector('[data-filter-empty]');
       var urlParams = getUrlParams();
+      var OPEN_STATUSES = ['draft', 'pending', 'approved', 'sent'];
+
+      function detailRowFor(quoteId) {
+        return tbody.querySelector('tr[data-quote-detail="' + quoteId + '"]');
+      }
 
       function getValues() {
         var values = { search: '' };
@@ -167,9 +178,22 @@
         return values;
       }
 
+      function setRowVisible(row, show) {
+        row.hidden = !show;
+        if (isQuotesTable) {
+          var quoteId = row.getAttribute('data-quote-id');
+          if (quoteId) {
+            var detailRow = detailRowFor(quoteId);
+            if (detailRow) detailRow.hidden = !show;
+          }
+        }
+      }
+
       function rowMatches(row, values) {
+        if (isQuotesTable && !row.getAttribute('data-quote-id')) return false;
         if (values._view === 'open') {
-          if (row.getAttribute('data-status') === 'lost') return false;
+          var openStatus = row.getAttribute('data-status');
+          if (OPEN_STATUSES.indexOf(openStatus) < 0) return false;
         }
         if (values._period === 'week') {
           if (row.getAttribute('data-period') !== 'week') return false;
@@ -193,7 +217,7 @@
         var visible = 0;
         rows.forEach(function (row) {
           var show = rowMatches(row, values);
-          row.hidden = !show;
+          setRowVisible(row, show);
           if (show) visible++;
         });
         if (countEl) {
@@ -215,7 +239,7 @@
         bar.querySelectorAll('input[name="search"]').forEach(function (inp) {
           inp.value = '';
         });
-        rows.forEach(function (row) { row.hidden = false; });
+        rows.forEach(function (row) { setRowVisible(row, true); });
         if (countEl) countEl.textContent = 'Showing all ' + rows.length + ' records';
         if (emptyEl) emptyEl.hidden = true;
         bar.classList.remove('is-filtered');
@@ -788,14 +812,38 @@
     });
   }
 
-  /* ── Stepped selector "Other" unlock ── */
+  /* ── Stepped selector → freeform numeric (rates / adjustments) ── */
   function initSteppedSelectors() {
-    document.querySelectorAll('[data-stepped-select]').forEach(function (sel) {
-      var custom = sel.parentElement.querySelector('[data-stepped-custom]');
-      if (!custom) return;
-      sel.addEventListener('change', function () {
-        custom.hidden = sel.value !== 'other';
+    var RATE_ADJ_PRESETS = [-15, -10, -5, 0, 5, 10, 15];
+    if (!document.getElementById('aw-rate-adj-presets')) {
+      var dl = document.createElement('datalist');
+      dl.id = 'aw-rate-adj-presets';
+      RATE_ADJ_PRESETS.forEach(function (v) {
+        var opt = document.createElement('option');
+        opt.value = String(v);
+        dl.appendChild(opt);
       });
+      document.body.appendChild(dl);
+    }
+
+    document.querySelectorAll('[data-stepped-select]').forEach(function (sel) {
+      var field = sel.closest('.field') || sel.parentElement;
+      if (!field) return;
+      var custom = field.querySelector('[data-stepped-custom]');
+      var raw = sel.value === 'other' && custom && custom.value ? custom.value : sel.value;
+      raw = String(raw || '0').replace(/^\+/, '');
+      var input = document.createElement('input');
+      input.type = 'number';
+      input.step = '0.1';
+      input.className = sel.className.replace(/\bbtn-sm\b/g, '').trim() || 'tabular';
+      if (!input.className) input.className = 'tabular';
+      input.setAttribute('list', 'aw-rate-adj-presets');
+      input.setAttribute('data-rate-adj-input', '');
+      input.title = 'Suggested steps — type any adjustment %';
+      input.value = raw;
+      sel.replaceWith(input);
+      if (custom) custom.remove();
+      field.classList.remove('stepped-select');
     });
   }
 
@@ -886,12 +934,12 @@
 
     var origins = [
       { code: 'lax', label: 'LAX', factor: 1.0, enabled: true },
-      { code: 'sfo', label: 'SFO', factor: 1.02, enabled: true },
       { code: 'dfw', label: 'DFW', factor: 0.96, enabled: true },
-      { code: 'ord', label: 'ORD', factor: 0.98, enabled: true },
+      { code: 'tmv', label: 'TMV', factor: 0.95, enabled: true },
+      { code: 'phx', label: 'PHX', factor: 0.97, enabled: true },
+      { code: 'sfo', label: 'SFO', factor: 1.02, enabled: true },
       { code: 'atl', label: 'ATL', factor: 0.94, enabled: true },
-      { code: 'ewr', label: 'EWR', factor: 1.05, enabled: false },
-      { code: 'mia', label: 'MIA', factor: 0.97, enabled: true }
+      { code: 'ewr', label: 'EWR', factor: 1.05, enabled: true }
     ];
     var services = [
       { prefix: 'b2b', label: 'B2B', zoneDigits: 3, uom: 'CWT', rateBase: 52.0, rateStep: 1.15, suffix: '' },
@@ -900,11 +948,13 @@
       { prefix: 'wgi', label: 'WG Inspection', zoneDigits: 3, uom: 'CWT', rateBase: 61.0, rateStep: 1.35, suffix: '' }
     ];
     var breaks = [
-      { label: '0–250 cf', weight: 1.0 },
-      { label: '251–500 cf', weight: 0.94 },
-      { label: '501–750 cf', weight: 0.88 },
-      { label: '751–1,000 cf', weight: 0.84 },
-      { label: '1,001+ cf', weight: 0.79 }
+      { label: '1–125 lbs', weight: 1.0 },
+      { label: '126–250 lbs', weight: 0.97 },
+      { label: '251–500 lbs', weight: 0.94 },
+      { label: '501–1,000 lbs', weight: 0.91 },
+      { label: '1,001–2,000 lbs', weight: 0.88 },
+      { label: '2,001–5,000 lbs', weight: 0.85 },
+      { label: '5,000+ CFQ', weight: 0.0 }
     ];
 
     var originZones = {
@@ -933,12 +983,18 @@
         { zone: '770', desc: 'Houston overlap lane' },
         { zone: '787', desc: 'Austin feeder' }
       ],
-      ord: [
-        { zone: '606', desc: 'Chicago loop' },
-        { zone: '607', desc: 'Chicago north side' },
-        { zone: '604', desc: 'Western suburbs' },
-        { zone: '531', desc: 'Milwaukee corridor' },
-        { zone: '463', desc: 'NW Indiana' }
+      tmv: [
+        { zone: '272', desc: 'High Point / Thomasville NC' },
+        { zone: '293', desc: 'SC upstate (293/296/297)' },
+        { zone: '296', desc: 'Greenville metro' },
+        { zone: '297', desc: 'Rock Hill corridor' },
+        { zone: '282', desc: 'Charlotte feeder' }
+      ],
+      phx: [
+        { zone: '850', desc: 'Phoenix metro' },
+        { zone: '852', desc: 'East Valley' },
+        { zone: '853', desc: 'West Valley' },
+        { zone: '857', desc: 'Tucson corridor' }
       ],
       atl: [
         { zone: '303', desc: 'Atlanta metro' },
@@ -951,12 +1007,6 @@
         { zone: '070', desc: 'Newark metro' },
         { zone: '071', desc: 'Jersey City' },
         { zone: '100', desc: 'Manhattan cross-dock' }
-      ],
-      mia: [
-        { zone: '331', desc: 'Miami core' },
-        { zone: '333', desc: 'Fort Lauderdale' },
-        { zone: '334', desc: 'West Palm corridor' },
-        { zone: '341', desc: 'Naples south' }
       ]
     };
 
@@ -1056,10 +1106,10 @@
       var statusEl = document.getElementById('rate-matrix-status');
 
       if (labelEl) {
-        labelEl.textContent = combo.id + ' · ' + combo.service.label + ' · ' + combo.origin.label;
+        labelEl.textContent = combo.service.label + ' · ' + combo.origin.label;
       }
       if (zoneEl) {
-        zoneEl.textContent = combo.service.zoneDigits + '-digit base ZIP (' + combo.service.label + ')';
+        zoneEl.textContent = combo.service.zoneDigits + '-digit ZIP (' + combo.service.label + ')';
       }
       if (tabEl) tabEl.textContent = combo.id;
       if (breakEl) {
@@ -1135,6 +1185,26 @@
     renderMatrix();
   }
 
+  /* ── Row action pills on data tables ── */
+  function initActionPills() {
+    var actionLabel = /^(Open|Edit|Compare|Clone|Disable|History|Review|Edit matrix)$/;
+    document.querySelectorAll('.data-table tbody td:last-child').forEach(function (td) {
+      var links = Array.prototype.slice.call(td.querySelectorAll('a[href]'));
+      if (!links.length) return;
+      var actionLinks = links.filter(function (a) {
+        if (a.classList.contains('btn') && !a.classList.contains('action-pill')) return false;
+        var text = (a.textContent || '').trim();
+        return actionLabel.test(text) || /^View /.test(text);
+      });
+      if (!actionLinks.length) return;
+      td.classList.add('actions');
+      actionLinks.forEach(function (a, i) {
+        if (!a.classList.contains('action-pill')) a.classList.add('action-pill');
+        if (i > 0) a.classList.add('action-pill--muted');
+      });
+    });
+  }
+
   ready(function () {
     initTabs();
     initDropdowns();
@@ -1153,7 +1223,16 @@
     initTariffTemplateToggle();
     initOriginStationToggles();
     initSteppedSelectors();
+    initActionPills();
     initHelpSearch();
     initRateMatrix();
+    if (window.AwestPricingMock) {
+      window.AwestPricingMock.initQuotesListEnhanced();
+      window.AwestPricingMock.initQuoteBuilderPricing();
+      window.AwestPricingMock.initDashboardQuickApprove();
+      window.AwestPricingMock.initQuoteDetailApproval();
+      window.AwestPricingMock.initQuoteDetailBreakdown();
+      window.AwestPricingMock.initQuoteAssistant();
+    }
   });
 })();

@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="customer-portal">
@@ -26,7 +26,7 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
-<a href="portal-quote-request.html">My Quotes</a>
+<a href="portal-quote-request.html">Get a Quote</a>
 <a href="portal-shipment-tracker.html">Shipments</a>
 <a href="portal-self-service.html">Support</a>
 <a href="portal-pricing-help.html" class="active">Pricing Guide</a>
@@ -73,7 +73,7 @@
 
 <section class="help-section" id="service-tiers">
 <h2>Service tiers explained</h2>
-<p style="font-size:14px;color:var(--neutral-700);margin-bottom:var(--space-md)">Home delivery tiers use language from American West's customer agreement template.</p>
+<p style="font-size:14px;color:var(--neutral-700);margin-bottom:var(--space-md)">Home delivery tiers match <a href="https://awest.com/" target="_blank" rel="noopener">awest.com</a> definitions. Tier 1/2/3 = distance from metro center (0–50 mi, 50–100 mi, 100+ mi). Rates use 5-digit ZIP → BPPC via MR2 grouping.</p>
 <div class="service-tier-grid">
 <div class="service-tier-card">
 <h4>Threshold</h4>
@@ -124,7 +124,7 @@
 <section class="help-section card" id="insurance">
 <h2>Declared value &amp; insurance</h2>
 <p style="font-size:14px;line-height:1.7;color:var(--neutral-700)">When you enter a declared value, your quote includes an <strong>insurance charge of 1% of declared value, with a $25 minimum</strong>. If declared value is $0, no insurance charge is added.</p>
-<p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)"><strong>Example:</strong> $18,000 declared value → 1% = $180.00 insurance (above the $25 floor).</p>
+<p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)" data-portal-insurance-sample><strong>Example:</strong> —</p>
 <p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)">Standard coverage terms still apply up to the lower of <strong>$500 per article</strong> or <strong>$1 per pound</strong> unless additional coverage is arranged.</p>
 <p style="font-size:14px;line-height:1.7;color:var(--neutral-700);margin-top:var(--space-md)"><strong>Excluded or specialty items</strong> — statuary, fine art, rare antiques, and one-of-a-kind items may not be fully covered under standard terms. Please confirm with our team before shipping high-value or specialty goods.</p>
 <p style="font-size:13px;margin-top:var(--space-lg)">Still have questions? <a href="portal-self-service.html">Contact Support</a></p>
@@ -137,9 +137,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

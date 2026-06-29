@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html" class="active"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 <div class="rail-divider"></div>
@@ -43,7 +44,7 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Tariff Configurator</h1><p class="page-lead">Guided setup based on origin-station and standard-template patterns from AW source workbooks.</p></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
+<div class="page-header"><div><h1>Tariff Configurator</h1><p class="page-lead">Step-by-step setup for a new or cloned tariff — service levels, origins, rate tables, and customer exceptions.</p></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
 
 <div data-wizard>
 <div class="wizard-steps">
@@ -57,6 +58,7 @@
 <div class="wizard-panel" data-wizard-panel>
 <div class="card">
 <h3 class="panel-title">Step 1: Basics</h3>
+<p class="tariff-inherit-note" style="margin-bottom:var(--space-md)">Service type inherits the base rate matrix from <strong>TAR-B2B-BASE</strong>. Configure exceptions only — lane overrides, customer terms, and commodity deltas.</p>
 <div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="White Glove Inspection — B2B"></div>
 <div class="field"><label for="tw-id">Tariff ID</label><input id="tw-id" class="tabular" value="TAR-NEW-001"></div>
 <label class="field" style="display:flex;align-items:center;gap:8px;cursor:pointer">
@@ -174,7 +176,7 @@
 <div class="field"><label for="tw-min-density">Minimum density</label><input id="tw-min-density" class="tabular" value="6.0"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is CWT.</p></div>
 <div class="field"><label for="tw-min-cube">Minimum $/cube</label><input id="tw-min-cube" class="tabular" placeholder="—" disabled style="background:var(--surface-100)"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is % Invoice.</p></div>
 <div class="field"><label for="tw-commodity">Commodity</label><select id="tw-commodity"><option selected>FAK</option><option>Carton</option><option>Blanketwrap</option><option>Furniture</option><option>Case Goods</option><option>Upholstery</option><option>Custom</option></select></div>
-<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value="$58.00"></div>
+<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value=""></div>
 <div class="field"><label for="tw-floor">Margin floor</label><input id="tw-floor" class="tabular" value="15%"></div>
 </div>
 </div>
@@ -185,8 +187,8 @@
 <div class="card">
 <h3 class="panel-title">Step 4: Optional Overrides</h3>
 <p class="page-lead" style="margin-bottom:var(--space-md)">Configure customer, lane, or commodity overrides — or skip and add later from Tariff Detail.</p>
-<div class="field"><label for="tw-cust">Customer override (optional)</label><select id="tw-cust"><option>None</option><option>PHF-2041 — Pacific Home Furnishings</option></select></div>
-<div class="field"><label for="tw-lane-ov">Lane override (optional)</label><select id="tw-lane-ov"><option>None</option><option>SEA-PDX-METRO</option></select></div>
+<div class="field"><label for="tw-cust">Customer override (optional)</label><select id="tw-cust"><option>None</option><option>PACI-1200 — Pacific Home Furnishings</option></select></div>
+<div class="field"><label for="tw-lane-ov">Lane override (optional)</label><select id="tw-lane-ov"><option>None</option><option>SC:293,296,297</option></select></div>
 <div class="field"><label for="tw-comm-ov">Commodity override (optional)</label><select id="tw-comm-ov"><option>None</option><option>Upholstery (+8%)</option></select></div>
 </div>
 <div class="wizard-nav">
@@ -220,7 +222,7 @@
 <table class="data-table"><tbody>
 <tr><th scope="row">Tariff ID</th><td class="tabular">TAR-NEW-001</td></tr>
 <tr><th scope="row">Service</th><td>White Glove Inspection · B2B</td></tr>
-<tr><th scope="row">Unit of measure</th><td>CWT · $58.00 base · min density 6.0</td></tr>
+<tr><th scope="row">Unit of measure</th><td data-wizard-base-summary>—</td></tr>
 <tr><th scope="row">Commodity</th><td>FAK</td></tr>
 <tr><th scope="row">Stations enabled</th><td>LAX, DFW, SFO (3 of 7)</td></tr>
 <tr><th scope="row">Effective</th><td class="tabular">Jan 1 – Dec 31, 2026</td></tr>
@@ -240,9 +242,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

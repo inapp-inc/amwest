@@ -15,7 +15,7 @@
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
   <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
-  <a class="demo-banner-link" href="../index.html">Presentation hub</a>
+  <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
 <div class="ops-layout">
@@ -30,7 +30,8 @@
 <a href="tariffs.html"><span>Tariffs</span></a>
 <a href="customers.html"><span>Customers</span></a>
 <a href="quotes.html" class="active"><span>Quotes</span></a>
-<a href="reference.html"><span>Reference Configuration</span></a>
+<a href="quote-assistant.html"><span>Quote Assistant</span></a>
+<a href="reference.html"><span>Pricing Setup</span></a>
 <a href="analytics.html"><span>Analytics</span></a>
 <a href="admin-config.html"><span>Admin Configuration</span></a>
 <div class="rail-divider"></div>
@@ -43,38 +44,74 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>New Quote</h1><p style="font-size:13px;color:var(--signal-green);margin-top:4px">Draft saved · 2 min ago</p></div>
-<p style="font-size:12px;color:var(--neutral-600)">Demo: <a href="quote-builder.html">Standard lane</a> · <a href="quote-builder.html?cfq=1">Call-for-Quote lane</a></p></div>
+<div class="page-header"><div><h1>New Quote</h1><p class="page-lead" style="margin-top:4px">Quotes within your discount authority are finalized immediately. Larger discounts or low-margin deals route to your manager for approval before release.</p><p style="font-size:13px;color:var(--signal-green);margin-top:4px">Draft saved · 2 min ago</p></div></div>
 <div class="toggle-row" data-quote-type-toggle>
 <label><input type="radio" name="qt" value="standard" checked><span>Standard</span></label>
 <label><input type="radio" name="qt" value="spot"><span>Spot Quote</span></label>
 </div>
-<div class="governance-banner amber" data-standard-quote-note><strong>Approval required:</strong> Discount of 12% exceeds rep authority (max 10%). Quote will route to Sales Manager on submit.</div>
+<div class="governance-banner amber" data-governance-banner hidden></div>
 <div class="card panel" data-spot-quote-panel hidden>
 <h3 class="panel-title">Manual Spot Rate</h3>
 <p class="page-lead">Enter rates not tied to an existing tariff hierarchy.</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
 <div class="field"><label>Spot base rate</label><input class="tabular" value="$62.00 / CWT"></div>
-<div class="field"><label>Spot fuel surcharge</label><input class="tabular" value="28.4%"></div>
+<div class="field"><label>Spot fuel surcharge</label><input class="tabular" data-spot-fuel value="—"></div>
 </div>
 </div>
-<div style="display:grid;grid-template-columns:1fr 380px;gap:var(--space-lg);align-items:start">
+<div style="display:grid;grid-template-columns:1fr 380px;gap:var(--space-lg);align-items:start" data-quote-builder-pricing>
 <div>
-<div class="card panel"><h3 class="panel-title">Customer &amp; Lane</h3>
-<div class="field"><label>Customer</label><input value="Pacific Home Furnishings (PHF-2041)"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field"><label>Origin</label><input value="Seattle Metro, WA"></div>
-<div class="field"><label>Destination</label><input value="Portland Metro, OR"></div>
+<div class="card panel quote-flow-step">
+<p class="quote-flow-step-label">Step 1 · Service type</p>
+<h3 class="panel-title">What are you quoting?</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Pick one path — pricing starts from the base rate for that service, then layers apply.</p>
+<div class="service-family-picker" data-service-family-picker>
+<label class="service-family-card">
+<input type="radio" name="service-family" value="b2b" data-service-family checked>
+<span class="service-family-card__body">
+<strong>B2B</strong>
+<span class="service-family-card__desc">Business freight · dock-to-dock · per-pound v35</span>
+</span>
+</label>
+<label class="service-family-card">
+<input type="radio" name="service-family" value="home" data-service-family>
+<span class="service-family-card__body">
+<strong>Home Transport</strong>
+<span class="service-family-card__desc">Residential delivery — threshold or white glove</span>
+</span>
+</label>
 </div>
-<p class="portal-account" data-standard-lane-note data-standard-quote-note>Resolved lane: <strong>SEA-PDX-METRO</strong> · Tariff <a href="tariff-detail.html">TAR-B2B-WG-001</a></p>
+<div class="hd-tier-picker" data-hd-tier-picker hidden>
+<p class="text-muted-sm" style="margin:var(--space-md) 0 var(--space-sm)">Home Transport level</p>
+<div class="hd-tier-options">
+<label class="hd-tier-option"><input type="radio" name="hd-tier" value="threshold" data-hd-tier checked><span>Threshold</span></label>
+<label class="hd-tier-option"><input type="radio" name="hd-tier" value="wgni" data-hd-tier><span>WG No Inspection</span></label>
+<label class="hd-tier-option"><input type="radio" name="hd-tier" value="wgi" data-hd-tier><span>White Glove Inspection</span></label>
+</div>
+</div>
+<p class="resolved-tariff-line" data-resolved-tariff>Base tariff: <strong>TAR-B2B-BASE</strong> · National B2B v35</p>
+</div>
+<div class="card panel quote-flow-step">
+<p class="quote-flow-step-label">Step 2 · Customer &amp; lane</p>
+<h3 class="panel-title">Customer &amp; Lane</h3>
+<div class="field"><label>Customer</label><input value="Pacific Home Furnishings (PACI-1200)" data-builder-customer readonly style="background:var(--surface-100)"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
+<div class="field"><label>Origin</label><input value="High Point, NC (TMV)"></div>
+<div class="field"><label>Destination</label><input value="Anderson, SC"></div>
+<div class="field"><label>Pickup ZIP</label><input class="tabular" data-pickup-zip value="27260"></div>
+<div class="field"><label>Delivery ZIP</label><input class="tabular" data-delivery-zip value="29621"></div>
+</div>
+<p class="text-muted-sm" data-lane-resolve-note style="margin-top:var(--space-sm)">Lane resolves after ZIP entry — SC:293,296,297 (B2B) or Greenville Tier 1 (Home Transport).</p>
+</div>
+<p class="portal-account" data-standard-lane-note data-standard-quote-note hidden>Resolved lane: <strong>SC:293,296,297</strong></p>
 <div class="cfq-panel" data-cfq-panel hidden>
 <p class="inline-notice cfq" style="margin-top:0"><strong>Call-for-Quote lane</strong> — pricing requires manual entry. Automatic tariff resolution is disabled for this destination.</p>
 <p style="font-size:13px;margin-top:var(--space-sm)">Zone: <strong>RURAL-MT-CFQ</strong> · <a href="reference-lanes.html">Review lane definition</a> (Admin/Manager)</p>
 </div>
-</div>
-<div class="card panel" data-auto-pricing data-standard-quote-note><h3 class="panel-title">Shipment Details</h3>
+<div class="card panel quote-flow-step" data-auto-pricing data-standard-quote-note>
+<p class="quote-flow-step-label">Step 3 · Shipment</p>
+<h3 class="panel-title">Shipment Details</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field"><label>Unit of Measure</label><select><option selected>CWT</option><option>Cube</option></select></div>
+<div class="field"><label>Unit of Measure <span class="term-hint" title="CWT = hundredweight (100 lbs). Rates are often quoted per CWT for furniture freight.">CWT</span></label><select><option selected>CWT (per 100 lbs)</option><option>Cube (per cu ft)</option></select></div>
 <div class="field"><label>Density Factor (read-only)</label><input value="8.5 lbs/cu ft" readonly style="background:var(--surface-100)"></div>
 <div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="4,200"></div>
 <div class="field">
@@ -82,7 +119,7 @@
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
 <input id="quote-cube" class="tabular" data-shipment-cube value="494">
 </div>
-<div class="field"><label>Commodity</label><select><option selected>FAK</option><option>Case Goods</option><option>Upholstery</option></select></div>
+<div class="field"><label>Commodity <span class="term-hint" title="FAK = Freight All Kinds — a general freight class when no special commodity rules apply.">FAK</span></label><select><option selected>FAK — general freight</option><option>Case Goods</option><option>Upholstery</option></select></div>
 <div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$45,000"></div>
 </div>
 <div class="inline-notice" data-cube-threshold-notice hidden><strong>Approaching truckload threshold</strong> — LTL rate may exceed truckload cost. Manual approval will be required.</div>
@@ -100,32 +137,56 @@
 </div>
 </div>
 </div>
+<details class="card panel disclosure-panel" data-adjust-pricing hidden><summary>Add adjustment layers (optional)</summary>
+<div class="disclosure-body"></div></details>
+<div class="card panel quote-flow-step" data-applied-terms-step>
+<p class="quote-flow-step-label">Step 4a · Applied terms</p>
+<h3 class="panel-title">From customer &amp; background config</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Read-only snapshot from customer master, tariff, and pricing setup. Edit master terms on the <a href="customer-detail.html?id=PACI-1200" data-applied-terms-customer-link>customer record</a>.</p>
+<div data-applied-terms-panel></div>
+</div>
+<div class="card panel quote-flow-step" data-quote-adjustments-step>
+<p class="quote-flow-step-label">Step 4b · Quote adjustments</p>
+<h3 class="panel-title">Rep adjustments on this quote</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Quote discount, customer-term exceptions (requires approval), accessorials, and custom layers — templates from <a href="quote-layer-templates.html">Quote layer templates</a>.</p>
+<div class="adjustment-layers-editor" data-quote-adjustments-editor></div>
+<div class="adjustment-layers-add">
+<label class="text-muted-sm" for="add-layer-type">Add custom layer</label>
+<div class="adjustment-layers-add-row">
+<select id="add-layer-type" data-add-layer-type>
+<option value="flat_add">Flat charge ($)</option>
+<option value="flat_sub">Flat credit ($)</option>
+<option value="pct_linehaul">Discount (% of linehaul)</option>
+</select>
+<button type="button" class="btn btn-secondary btn-sm" data-add-layer-btn>+ Add layer</button>
+</div>
+</div>
+</div>
 <details class="card panel disclosure-panel"><summary>Competitor Match (optional)</summary>
 <div class="disclosure-body">
 <div class="field"><label>Competitor Name</label><input value="Regional Freight Co."></div>
-<div class="field"><label>Quoted Rate</label><input class="tabular" value="$3,650.00"></div>
-<p style="font-size:14px">Delta vs calculated: <span class="delta-negative tabular">−$56.02 (−1.5%)</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
+<div class="field"><label>Quoted Rate</label><input class="tabular" data-competitor-rate value=""></div>
+<p style="font-size:14px">Delta vs calculated: <span data-competitor-delta class="tabular">—</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
 </div></details>
 </div>
-<div class="card" style="position:sticky;top:var(--space-md)">
-<h3 class="panel-title">Pricing Breakdown</h3>
-<div class="pricing-lines" data-auto-pricing data-standard-quote-note>
-<div class="pricing-line"><span>Linehaul charge<span class="pricing-line-formula">$0.58/lb × 4,200 lbs = $2,436.00</span></span><span class="tabular">$2,436.00</span></div>
-<div class="pricing-line"><span>Lane minimum check<span class="pricing-line-formula">max($2,436.00, $2,100.00 lane min) — calculated wins</span></span><span class="tabular">—</span></div>
-<div class="pricing-line"><span>Customer override (−5%)<span class="pricing-line-formula">Platform discount on linehaul</span></span><span class="tabular">−$121.80</span></div>
-<div class="pricing-line"><span>Lane override (SEA-PDX)<span class="pricing-line-formula">Platform adjustment</span></span><span class="tabular">+$45.00</span></div>
-<div class="pricing-line"><span>Fuel surcharge (28.4%) <small style="color:var(--neutral-600)">as of Jun 16</small><span class="pricing-line-formula">28.4% × $2,436.00 linehaul (after minimum, before discount)</span></span><span class="tabular">$691.82</span></div>
-<div class="pricing-line"><span>Insurance (1% DV, $25 min)<span class="pricing-line-formula">max(1% × $45,000, $25) = $450.00</span></span><span class="tabular">$450.00</span></div>
-<div class="pricing-line"><span>Lift gate</span><span class="tabular">$85.00</span></div>
-<div class="pricing-line"><span>Residential delivery</span><span class="tabular">$120.00</span></div>
-<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular">18.2%</span></div>
-<div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill amber" style="width:55%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
-<div class="pricing-line total"><span>Total</span><span class="tabular">$3,706.02</span></div>
-<p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)">494 cu ft → rate group 2 (251–500 cf). Source pipeline: per-pound rate × weight → lane minimum → fuel on linehaul → insurance once per shipment.</p>
+<div class="card quote-summary-panel" style="position:sticky;top:var(--space-md)">
+<div class="quote-total-hero">
+<p class="quote-total-hero__label" data-builder-service-label>B2B</p>
+<p class="quote-total-hero__amount tabular" data-builder-total>—</p>
+<p class="quote-total-hero__meta tabular" data-builder-margin-inline>— margin</p>
 </div>
+<h3 class="panel-title" style="margin-top:var(--space-md)">Cost layers</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-sm)">Built from base rate up — each layer adds to the total.</p>
+<div class="cost-layer-stack" data-cost-layers></div>
+<button type="button" class="btn btn-link" data-builder-calc-toggle style="padding:0;margin:var(--space-sm) 0">Show line-item detail</button>
+<div data-builder-calc-detail data-builder-breakdown hidden></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular" data-builder-margin>—</span></div>
+<div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill green" style="width:75%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
+<p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)" data-builder-cube-note>—</p>
 <p data-cfq-manual hidden style="font-size:13px;color:var(--neutral-600);padding:var(--space-md) 0">Enter manual rates above to see pricing breakdown.</p>
 <div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">
-<a href="quote-detail.html" class="btn btn-burgundy">Submit for Approval</a>
+<p class="text-muted-sm" data-builder-submit-hint style="margin:0">Ready to finalize — click Generate Quote to save and release within policy.</p>
+<button type="button" class="btn btn-primary" data-quote-submit-btn>Generate Quote</button>
 <a href="quotes.html" class="btn btn-secondary">Save as Draft</a>
 <a href="quotes.html" class="btn btn-link" style="text-align:center">Cancel</a>
 </div></div></div>
@@ -138,9 +199,17 @@
 <img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <p class="mock-footer-demo"><strong>Demo mockup</strong> — interactive HTML prototype for review. Not connected to production systems.</p>
-<p class="mock-footer-nav"><a href="../index.html">← Presentation hub</a></p>
+<p class="mock-footer-nav"><a href="../index.html">← Demo overview</a></p>
 </footer>
 </main>
 </div>
+<script src="../js/seed-data.js"></script>
+<script src="../js/governance.js"></script>
+<script src="../js/awest-store.js"></script>
+<script src="../js/awest-boot.js"></script>
+<script src="../js/demo-hydrate.js"></script>
+<script src="../js/demo-hydrate-pages.js"></script>
+<script src="../js/demo-crud.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>
