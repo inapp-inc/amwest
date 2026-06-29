@@ -53,7 +53,7 @@
 <div class="governance-banner amber" hidden></div>
 <div class="card panel" data-quote-detail-approval style="margin-bottom:var(--space-lg)">
 <h3 class="panel-title">Manager decision</h3>
-<p style="font-size:13px;margin-bottom:var(--space-md)">Expand the pricing breakdown below to review line items. Managers can approve or reject from this screen — switch to a Sales Manager account using the <strong>Session</strong> menu in the demo banner if you need to test approval.</p>
+<p style="font-size:13px;margin-bottom:var(--space-md)">Review the pricing breakdown below, then approve or reject.</p>
 <div class="detail-approval-actions" style="display:flex;gap:var(--space-sm);flex-wrap:wrap">
 <button type="button" class="btn btn-primary" data-detail-approve>Approve &amp; release</button>
 <button type="button" class="btn btn-secondary" data-detail-reject>Reject with reason</button>
@@ -67,15 +67,19 @@
 <div class="card"><h3 class="panel-title">Pricing Breakdown</h3>
 <div class="quote-pricing-summary">
 <div class="quote-total-line"><span>Total</span><span class="tabular" data-quote-total-summary>—</span></div>
-<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular" data-quote-margin-summary>—</span></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span data-margin-floor-label>Margin vs floor (15%)</span><span class="tabular" data-quote-margin-summary>—</span></div>
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill green" style="width:75%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
 </div>
-<details class="disclosure-panel quote-calc-detail"><summary>Show detailed calculation</summary>
+<details class="disclosure-panel quote-calc-detail" open>
+<summary>Detailed calculation</summary>
 <div class="disclosure-body">
+<div class="card" style="font-size:13px;margin-bottom:var(--space-md)" data-quote-calc-meta>
+<p><strong>Tariff:</strong> <a href="tariff-detail.html" class="tariff-drawer-trigger" data-tariff-drawer-trigger title="Hover for tariff summary">TAR-B2B-BASE</a></p>
+<p><strong>Fuel rate:</strong> 28.4% from EIA.gov, Jun 16 2026</p>
+</div>
 <div data-detail-breakdown data-quote-disc="7"></div>
-<details class="disclosure-panel" style="margin-top:var(--space-md)"><summary>Expand formulas</summary>
-<div class="disclosure-body pricing-lines" style="font-size:13px"><!-- populated from session store --></div></details>
-</div></details>
+</div>
+</details>
 </div></div>
 <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap">
 <a href="quotes.html" class="btn btn-link">← Back to Quotes</a>
@@ -93,13 +97,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

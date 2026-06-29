@@ -40,9 +40,9 @@
 </div>
 <div class="config-callout"><strong>Rarely touched:</strong> Cubic foot divisor, cube-threshold notices, and per-origin notification routing — seeded at deploy, updated only when business rules change.</div>
 <div class="card" style="max-width:640px">
-<div class="field"><label>Default cubic foot divisor (lbs/cf)</label><input class="tabular" value="8.5"></div>
-<div class="field"><label>High-cube approval threshold (cf)</label><input class="tabular" value="1500"></div>
-<div class="field"><label>Default quote validity (days)</label><input class="tabular" value="30"></div>
+<div class="field"><label>Default cubic foot divisor (lbs/cf)</label><input type="number" class="tabular" step="0.1" min="0" value="8.5"></div>
+<div class="field"><label>High-cube approval threshold (cf)</label><input type="number" class="tabular" step="1" min="0" value="1500"></div>
+<div class="field"><label>Default quote validity (days)</label><input type="number" class="tabular" step="1" min="1" value="30"></div>
 <h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Per-origin notification email routing</h4>
 <table class="data-table">
 <thead><tr><th>Origin</th><th>Pricing admin email</th><th>Ops escalation</th></tr></thead>
@@ -60,13 +60,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

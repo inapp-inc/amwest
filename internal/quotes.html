@@ -53,7 +53,7 @@
 </div>
 <div class="drill-banner" data-drill-banner hidden></div>
 <div class="filter-bar" data-filter-target="#quotes-table">
-<div class="field"><label for="q-status">Status</label><select id="q-status" name="status"><option value="All">All</option><option value="draft">Draft</option><option value="pending">Pending Approval</option><option value="approved">Approved</option><option value="sent">Sent</option><option value="accepted">Accepted</option><option value="converted">Booked as Shipment</option><option value="lost">Lost</option></select></div>
+<div class="field"><label for="q-status">Status</label><select id="q-status" name="status"><option value="All">All</option><option value="draft">Draft</option><option value="pending">Pending Approval</option><option value="approved">Approved</option><option value="sent">Sent</option><option value="expired">Expired</option><option value="converted">Converted to Shipment</option><option value="lost">Lost Opportunity</option></select></div>
 <div class="field"><label for="q-customer">Customer</label><select id="q-customer" name="customer"><option value="All">All</option><option value="Pacific Home Furnishings">Pacific Home Furnishings</option><option value="Cascade Furniture Co.">Cascade Furniture Co.</option><option value="Northwest Retail Group">Northwest Retail Group</option></select></div>
 <div class="field"><label for="q-rep">Created By</label><select id="q-rep" name="rep"><option value="All">All</option><option value="Jordan Ellis">Jordan Ellis</option><option value="Alex Kim">Alex Kim</option></select></div>
 <div class="field"><label for="q-search">Search</label><input type="search" id="q-search" name="search" placeholder="Quote #, customer..."></div>
@@ -90,13 +90,15 @@
 <div class="quote-pricing-drawer-body" data-pricing-drawer-mount></div>
 </aside>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

@@ -48,16 +48,16 @@
 <div class="portal-two-col">
 <div>
 <div class="card">
-<div class="field"><label>Origin</label><input value="High Point, NC 27260"></div>
-<div class="field"><label>Destination</label><input value="Anderson, SC 29621"></div>
-<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="2,400"></div>
+<div class="field"><label>Origin</label><input data-portal-origin value="High Point, NC 27260"></div>
+<div class="field"><label>Destination</label><input data-portal-destination value="Anderson, SC 29621"></div>
+<div class="field"><label>Weight (lbs)</label><input type="number" class="tabular" data-shipment-weight step="1" min="0" value="2400"></div>
 <div class="field">
 <div class="field-label-row"><label for="portal-cube">Cube (cu ft)</label>
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#portal-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="modal">Build from item dimensions (L × W × H ÷ 1,728)</a></div>
 <input id="portal-cube" class="tabular" data-shipment-cube value="520">
 </div>
 <p style="font-size:12px;color:var(--neutral-600);margin-top:4px" data-portal-cube-hint>—</p>
-<div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value=""></div>
+<div class="field"><label>Declared value ($)</label><input type="number" class="tabular" data-declared-value step="1" min="0" value=""></div>
 <div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance coverage. <a href="portal-pricing-help.html#insurance">Learn about declared value &amp; insurance</a></div>
 </div>
 
@@ -98,7 +98,7 @@
 <div class="card" style="background:var(--neutral-900);color:#fff;border:none;align-self:start">
 <h3 class="portal-panel-title">Your Quote — White Glove Inspection</h3>
 <p class="portal-quote-total tabular">—</p>
-<p style="font-size:13px;opacity:.85;margin-bottom:var(--space-sm)">SEA → PDX · Estimated transit 3–5 days</p>
+<p style="font-size:13px;opacity:.85;margin-bottom:var(--space-sm)" data-portal-route-note>SEA → PDX · Estimated transit 3–5 days</p>
 
 <p class="portal-compute-note">—</p>
 
@@ -107,7 +107,7 @@
 </div>
 
 <a href="#" class="btn btn-burgundy" style="width:100%;margin-top:var(--space-lg);margin-bottom:var(--space-sm)" data-portal-book>Accept &amp; Book</a>
-<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff">Save for Later</a>
+<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff" data-portal-save-later>Save for Later</a>
 </div>
 </div>
 
@@ -122,13 +122,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

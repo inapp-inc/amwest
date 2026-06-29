@@ -43,116 +43,147 @@
 </nav>
 </aside>
 <main class="main">
-<div class="main-content">
+<div class="main-content tariff-detail-page">
 
-<div class="page-header">
-<div><h1>TAR-B2B-BASE</h1><p style="margin-top:4px">National B2B — CWT v35 · <span class="badge badge-active">Active</span></p>
-<p class="page-lead" style="margin-top:var(--space-sm)">National business-to-business rate program (per-pound v35 breaks). Separate from White Glove Inspection — see TAR-WGI-BASE for WGI.</p>
-<p style="font-size:13px;color:var(--neutral-600);margin-top:4px">Effective Jan 1, 2026 — Dec 31, 2026</p></div>
-<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:flex-start">
-<a href="tariff-wizard.html" class="btn btn-secondary">Clone &amp; edit in configurator</a>
-<a href="tariff-delete-confirm.html" class="btn btn-destructive">Delete</a>
+<div class="page-header tariff-detail-header">
+<div class="tariff-detail-header__main">
+<h1 data-tariff-id>TAR-B2B-BASE</h1>
+<p class="tariff-detail-header__sub"><span data-tariff-subtitle>National B2B — CWT v35</span> · <span class="badge badge-active" data-tariff-status>Active</span> · <span data-tariff-version>v35</span></p>
 </div>
+<div class="tariff-detail-header__actions">
+<a href="tariff-rate-matrix.html" data-tariff-matrix-link class="btn btn-primary">Edit rate matrix</a>
+<a href="tariff-wizard.html" data-tariff-clone-link class="btn btn-secondary">Clone in configurator</a>
+<a href="tariff-delete-confirm.html" data-tariff-delete-link class="btn btn-destructive">Delete</a>
 </div>
-
-<div class="config-callout" style="margin-bottom:var(--space-lg)">
-<strong>How a quote uses this tariff:</strong>
-<ol style="margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.6">
-<li>Rep selects customer and lane — system matches this tariff automatically.</li>
-<li>Base rate comes from the origin × service table (or rate tables by origin).</li>
-<li>Customer discount, lane override, and commodity rules adjust the linehaul.</li>
-<li>Fuel and accessorials are added from Pricing Setup — not stored on this page.</li>
-</ol>
 </div>
 
-<div class="detail-grid">
-<section class="detail-grid__cell card detail-grid__full" id="panel-overview" data-tariff-overview>
-<h3 class="panel-title">Rate settings</h3>
-<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Choose the service level and unit of measure to preview the base rate fields reps see on quotes.</p>
-<div class="option-grid" data-service-group>
-<label><input type="radio" name="st" value="b2b" checked><span>Business/B2B</span></label>
-<label><input type="radio" name="st" value="threshold"><span>Threshold</span></label>
-<label><input type="radio" name="st" value="wg-no-insp"><span>White Glove No Insp.</span></label>
-<label><input type="radio" name="st" value="wg-insp"><span>White Glove Inspection</span></label>
+<div class="card tariff-detail-meta">
+<div class="tariff-detail-meta__grid">
+<div class="field"><label for="tariff-name">Tariff name</label><input id="tariff-name" data-tariff-name value="National B2B — CWT v35"></div>
+<div class="field"><label for="tariff-effective-start">Effective start</label><input type="date" id="tariff-effective-start" data-tariff-effective-start class="tabular" value="2026-01-01"></div>
+<div class="field"><label for="tariff-effective-end">Effective end</label><input type="date" id="tariff-effective-end" data-tariff-effective-end class="tabular" value="2026-12-31"></div>
+<div class="field tariff-detail-meta__desc"><label for="tariff-description">Description</label><textarea id="tariff-description" data-tariff-description rows="2">National business-to-business rate program (per-pound v35 breaks). Separate from White Glove Inspection — see TAR-WGI-BASE for WGI.</textarea></div>
 </div>
-<div class="option-grid" data-uom-group>
-<label><input type="radio" name="uom" value="cwt" checked><span>CWT</span></label>
-<label><input type="radio" name="uom" value="cube"><span>Cube</span></label>
-<label><input type="radio" name="uom" value="seat"><span>Seat</span></label>
-<label><input type="radio" name="uom" value="invoice"><span>% Invoice</span></label>
-<label><input type="radio" name="uom" value="flat"><span>Flat Rate</span></label>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field" data-density-field><label>Density (lbs per cu ft)</label><input class="tabular" data-density-input value="8.5"></div>
-<div class="field"><label>Base rate</label><input class="tabular" data-base-rate-field value=""></div>
-<div class="field"><label>Rate table</label><input data-lane-field value="National B2B Matrix"></div>
-<div class="field"><label>Minimum margin floor</label><input class="tabular" data-margin-field value="15%"></div>
+
+<div class="config-callout tariff-detail-callout">
+<strong>Published tariffs stay editable.</strong> Change rate settings, origin grid, baseline rules, or the matrix — then <strong>Save Changes</strong>. Version history records each publish; open quotes keep their snapshotted applied terms.
+<p style="margin:8px 0 0;font-size:13px;line-height:1.6">Baseline only on this screen (matrix, origin factors, commodity/minimum/promotion). Rep-negotiated layers stay on <a href="quote-layer-templates.html">Quote layer templates</a> and Quote Builder Step 4b.</p>
 </div>
-<h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Origin adjustments</h4>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Fine-tune density and linehaul by origin station and service level. Each cell is <strong>density / min charge adj. / linehaul adj.</strong></p>
-<table class="data-table"><thead><tr><th>Origin</th><th>B2B</th><th>Threshold</th><th>WG No Insp.</th><th>WG Insp.</th></tr></thead>
-<tbody>
-<tr><td class="tabular">LAX</td><td class="tabular">8.5 / 0% / +5%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / +3%</td><td class="tabular">8.5 / 0% / +5%</td></tr>
-<tr><td class="tabular">SFO</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td><td class="tabular">8.5 / 0% / 0%</td></tr>
-<tr><td class="tabular">DFW</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td><td class="tabular">8.0 / 0% / 0%</td></tr>
-<tr><td class="tabular">EWR</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-</tbody></table>
-<div style="display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-md)">
+
+<div class="tariff-detail-layout">
+<section class="card tariff-detail-panel" id="panel-overview" data-tariff-overview>
+<h3 class="panel-title">Pricing model</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Service level and unit of measure for this tariff — sets labels, density rules, and default base-rate fields. Zone-by-zone freight rates live in the <a href="tariff-rate-matrix.html" data-tariff-matrix-link>Rate Table Matrix</a>, not here.</p>
+<div class="tariff-detail-pricing-block">
+<div class="tariff-model-selectors tariff-model-selectors--row">
+<div class="field"><label for="tariff-service-select">Service level</label>
+<select id="tariff-service-select" data-service-select>
+<option value="b2b" selected>Business/B2B</option>
+<option value="threshold">Threshold</option>
+<option value="wg-no-insp">White Glove No Insp.</option>
+<option value="wg-insp">White Glove Inspection</option>
+</select></div>
+<div class="field"><label for="tariff-uom-select">Unit of measure</label>
+<select id="tariff-uom-select" data-uom-select>
+<option value="cwt" selected>CWT</option>
+<option value="cube">Cube</option>
+<option value="seat">Seat</option>
+<option value="invoice">% Invoice</option>
+<option value="flat">Flat Rate</option>
+</select></div>
+</div>
+<div class="tariff-detail-fields-grid">
+<div class="field" data-density-field><label for="tariff-density">Density (lbs per cu ft)</label><input id="tariff-density" type="number" class="tabular" data-density-input step="0.1" min="0" value="8.5"></div>
+<div class="field"><label for="tariff-base-rate" data-base-rate-label>Base rate ($/CWT)</label><input id="tariff-base-rate" type="number" class="tabular" data-base-rate-field step="0.01" min="0" value=""></div>
+<div class="field"><label for="tariff-rate-table">Rate table</label><input id="tariff-rate-table" data-lane-field value="National B2B Matrix"></div>
+<div class="field"><label for="tariff-margin-floor">Minimum margin floor (%)</label><input id="tariff-margin-floor" type="number" class="tabular" data-margin-field step="0.1" min="0" value="15"></div>
+<div class="field"><label for="tariff-min-charge">Minimum charge ($, baseline floor)</label><input id="tariff-min-charge" type="number" class="tabular" data-minimum-charge-field step="1" min="0" value=""></div>
+</div>
+</div>
+<h4 class="tariff-detail-subheading">Origin adjustments</h4>
+<p class="text-muted-sm" style="margin-bottom:var(--space-sm)">Fine-tune density and linehaul by origin station and service level. Each cell is <strong>density / min charge adj. / linehaul adj.</strong> Saved to session store with the tariff.</p>
+<p class="text-muted-sm" data-tariff-inherit-note style="margin-bottom:var(--space-sm)"></p>
+<div class="tariff-origin-grid-wrap">
+<table class="data-table origin-grid-table"><thead><tr><th>Origin</th><th>B2B</th><th>Threshold</th><th>WG No Insp.</th><th>WG Insp.</th></tr></thead>
+<tbody data-origin-grid><!-- session store --></tbody></table>
+</div>
+<div class="tariff-detail-inline-actions">
 <a href="tariff-wizard.html" class="btn btn-secondary btn-sm">Open configurator</a>
-<a href="tariff-rate-matrix.html" class="btn btn-primary btn-sm">Edit rate tables by origin</a>
+<a href="tariff-rate-matrix.html" data-tariff-matrix-link class="btn btn-primary btn-sm">Edit rate tables by origin</a>
 </div>
 </section>
-<section class="detail-grid__cell card" id="panel-overrides">
-<h3 class="panel-title">Price adjustments</h3>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Rules applied on top of the base rate, in order. The quote engine uses the first matching rule at each layer.</p>
-<div class="card" style="background:var(--surface-150);margin-bottom:var(--space-md);padding:var(--space-md)">
-<h4 style="font-size:14px;margin:0 0 var(--space-sm)">Active adjustments for this tariff</h4>
-<table class="data-table" style="font-size:13px"><thead><tr><th>Layer</th><th>Default</th><th>This tariff</th><th>Effect on quote</th></tr></thead>
-<tbody>
-<tr><td>Customer</td><td class="tabular">None</td><td class="tabular">PACI-1200 −5%</td><td class="tabular">−5% linehaul</td></tr>
-<tr><td>Lane</td><td class="tabular">National</td><td class="tabular" data-tariff-lane-override>—</td><td class="tabular" data-tariff-lane-flat>—</td></tr>
-<tr><td>Commodity</td><td class="tabular">General freight</td><td class="tabular">Upholstery +8%</td><td class="tabular">+8% linehaul</td></tr>
-</tbody></table>
+
+<div class="tariff-detail-stack">
+<section class="card tariff-detail-panel" id="overrides">
+<h3 class="panel-title">Baseline program rules</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Structural modifiers published with this rate schedule — commodity surcharges, minimum charge rules, and scheduled promotions.</p>
+<div class="tariff-baseline-inner">
+<h4 class="tariff-detail-subheading">Active baseline rules</h4>
+<p class="text-muted-sm" style="margin:0 0 var(--space-sm)">Edit inline, then <strong>Save Changes</strong>. Minimum charge on the pricing model panel stays synced with the Minimum charge rule row.</p>
+<table class="data-table baseline-rules-table"><thead><tr><th>Rule type</th><th>Scope</th><th>Value</th><th>Effect on linehaul</th><th></th></tr></thead>
+<tbody data-tariff-baseline-rules><!-- session store --></tbody></table>
 </div>
-<ul class="override-stack">
-<li><details open><summary>Base rate</summary><p style="margin-top:8px;font-size:13px" data-tariff-base-rate-display>—</p></details></li>
-<li><details><summary>Customer discount</summary><p style="margin-top:8px;font-size:13px"><a href="customer-detail.html">PACI-1200</a>: −5% on linehaul</p></details></li>
-<li><details><summary>Lane override</summary><p style="margin-top:8px;font-size:13px">SC:293,296,297: <span data-tariff-lane-override>—</span></p></details></li>
-<li><details><summary>Commodity rule</summary><p style="margin-top:8px;font-size:13px">Upholstery: +8%</p></details></li>
-<li><details><summary>Minimum charge</summary><p style="margin-top:8px;font-size:13px" data-tariff-min-charge>—</p></details></li>
-<li><details><summary>Promotion</summary><p style="margin-top:8px;font-size:13px;color:var(--neutral-600)">None active</p></details></li>
+<ul class="override-stack" data-baseline-summary><!-- hydrated from store --></ul>
+<div class="tariff-detail-inline-actions">
+<button type="button" class="btn btn-secondary btn-sm" data-baseline-add-row>+ Add baseline rule</button>
+<a href="tariff-add-override.html" data-tariff-add-rule-link class="btn btn-link btn-sm">Add via form</a>
+</div>
+</section>
+
+<section class="card tariff-detail-panel" id="panel-quote-layers">
+<h3 class="panel-title">Quote-time adjustments</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Rep-negotiated layers are intentionally <strong>not</strong> stored on the tariff. Configure templates once, then reps enable them per quote in Step 4b.</p>
+<ul class="text-muted-sm" style="margin:0;padding-left:1.2em;line-height:1.7">
+<li><strong>Customer discount</strong> — <a href="customer-detail.html">customer master</a> → snapshotted as applied terms (Step 4a)</li>
+<li><strong>Customer-term exception, quote discount, lane override, accessorials</strong> — <a href="quote-layer-templates.html">Quote layer templates</a> → Step 4b</li>
+<li><strong>Fuel &amp; insurance</strong> — <a href="reference.html">Pricing Setup</a> → applied terms on quote</li>
 </ul>
-<a href="tariff-add-override.html" class="btn btn-secondary btn-sm" style="margin-top:var(--space-md)">+ Add adjustment</a>
 </section>
-<section class="detail-grid__cell card detail-grid__full" id="panel-tariff-notes">
+
+<section class="card tariff-detail-panel" id="panel-tariff-notes">
 <h3 class="panel-title">Tariff notes</h3>
-<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Convert workbook notes — insurance exceptions, fixed fuel caps, pickup restrictions. Customer-specific notes live on <a href="customer-detail.html">customer profile</a>.</p>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Insurance, fuel, and MCTC reference values. Customer-specific exceptions live on the <a href="customer-detail.html">customer profile</a>.</p>
+<div class="tariff-notes-grid">
 <div class="field"><label>Insurance</label><input value="1% declared value · $25 minimum (standard AW terms)" readonly></div>
 <div class="field"><label>Fuel</label><input value="EIA National weekly index — no fixed cap on base tariff" readonly></div>
-<div class="field"><label>MCTC level (read-only)</label><input class="tabular" value="4558" readonly></div>
+<div class="field"><label>MCTC level (read-only)</label><input class="tabular" value="DEMO-9001" readonly></div>
 <div class="field"><label>Adjustment steps</label><input value="±15%, ±10%, ±5%, 0%, −5%, −10%, −15% (tariff wizard)" readonly></div>
-</section>
-<section class="detail-grid__cell card" id="panel-versions">
-<h3 class="panel-title">Version history</h3>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Published changes to this tariff. Compare versions before rolling back.</p>
-<table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
-<tbody>
-<tr><td>v3 (current)</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2026</td><td>Annual rate adjustment +2.5%</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
-<tr><td>v2</td><td>Jordan Ellis</td><td class="tabular">Jul 1, 2025</td><td>Added lane overrides</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
-<tr><td>v1</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2025</td><td>Initial publish</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
-</tbody></table>
-</section>
-<section class="detail-grid__cell card detail-grid__full" id="panel-audit">
-<h3 class="panel-title">Change log</h3>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Who changed what and when — read-only audit trail.</p>
-<table class="data-table"><thead><tr><th>Timestamp</th><th>User</th><th>Field</th><th>Old → New</th></tr></thead>
-<tbody>
-<tr><td class="tabular">2026-01-01 09:12</td><td>Morgan Reyes</td><td>base_rate</td><td class="tabular" data-tariff-audit-base>—</td></tr>
-<tr><td class="tabular">2025-12-15 14:30</td><td>Morgan Reyes</td><td>margin_floor</td><td class="tabular">12% → 15%</td></tr>
-<tr><td class="tabular">2025-07-01 11:05</td><td>Jordan Ellis</td><td>lane_override</td><td>— → SC:293,296,297 +$1.07/CWT</td></tr>
-</tbody></table>
+</div>
 </section>
 </div>
+
+<details class="disclosure-panel card tariff-detail-panel tariff-history-accordion" id="panel-history" data-tariff-history-accordion>
+<summary class="panel-title">Version history &amp; change log</summary>
+<div class="disclosure-body">
+<section id="panel-versions" class="tariff-history-section">
+<h4 class="tariff-detail-subheading">Version history</h4>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Published changes to this tariff. Compare versions before rolling back.</p>
+<div class="table-scroll">
+<table class="data-table"><thead><tr><th>Version</th><th>Author</th><th>Date</th><th>Summary</th><th>Actions</th></tr></thead>
+<tbody data-tariff-version-history>
+<tr><td>v3 (current)</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2026</td><td>Annual rate adjustment +2.5%</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+<tr><td>v2</td><td>Jordan Ellis</td><td class="tabular">Jul 1, 2025</td><td>Added upholstery commodity rule (+8%)</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+<tr><td>v1</td><td>Morgan Reyes</td><td class="tabular">Jan 1, 2025</td><td>Initial publish</td><td><a href="tariff-comparison.html">Compare to current</a> · <a href="tariff-rollback-confirm.html">Rollback</a></td></tr>
+</tbody></table>
+</div>
+</section>
+<section id="panel-audit" class="tariff-history-section">
+<h4 class="tariff-detail-subheading">Change log</h4>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Who changed what and when — read-only audit trail.</p>
+<div class="table-scroll">
+<table class="data-table"><thead><tr><th>Timestamp</th><th>User</th><th>Field</th><th>Old → New</th></tr></thead>
+<tbody data-tariff-audit-log>
+<tr><td class="tabular">2026-01-01 09:12</td><td>Morgan Reyes</td><td>base_rate</td><td class="tabular" data-tariff-audit-base>—</td></tr>
+<tr><td class="tabular">2025-12-15 14:30</td><td>Morgan Reyes</td><td>margin_floor</td><td class="tabular">12% → 15%</td></tr>
+<tr><td class="tabular">2025-07-01 11:05</td><td>Jordan Ellis</td><td>commodity_rule</td><td>— → Upholstery +8%</td></tr>
+</tbody></table>
+</div>
+</section>
+</div>
+</details>
+</div>
+
 <div class="sticky-footer"><a href="tariffs.html" class="btn btn-secondary">Cancel</a><button class="btn btn-primary">Save Changes</button></div>
 
 </div>
@@ -167,13 +198,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

@@ -45,29 +45,18 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Tariffs</h1></div><a href="tariff-wizard.html" class="btn btn-primary">+ New Tariff</a></div>
+<div class="page-header"><div><h1>Tariffs</h1><p class="text-muted-sm" style="margin-top:var(--space-xs)">Published base rate schedules by service type. Customer discounts and quote adjustments live on customer profiles and quotes — not as separate tariffs.</p></div><a href="tariff-wizard.html" class="btn btn-primary">+ New Tariff</a></div>
 <div class="filter-bar" data-filter-target="#tariffs-table">
-<div class="field"><label for="t-service">Service Type</label><select id="t-service" name="service"><option value="All">All</option><option value="B2B">B2B</option><option value="Home Delivery">Home Delivery</option></select></div>
-<div class="field"><label for="t-customer">Customer</label><select id="t-customer" name="customer"><option value="All">All</option><option value="PACI-1200">PACI-1200</option></select></div>
-<div class="field"><label for="t-status">Status</label><select id="t-status" name="status"><option value="All">All</option><option value="active">Active</option><option value="draft">Draft</option><option value="expired">Expired</option></select></div>
+<div class="field"><label for="t-service">Service Type</label><select id="t-service" name="service"><option value="All">All</option><option value="B2B">B2B</option><option value="Threshold">Threshold</option><option value="WGI">WGI</option><option value="WGNI">WGNI</option></select></div>
+<div class="field"><label for="t-status">Status</label><select id="t-status" name="status"><option value="All">All</option><option value="active">Active</option><option value="draft">Draft</option></select></div>
 <div class="field"><label for="t-search">Search</label><input type="search" id="t-search" name="search" placeholder="Tariff name, ID..."></div>
 <div class="filter-actions"><button type="button" class="btn btn-primary btn-sm" data-filter-apply>Apply</button><button type="button" class="btn btn-secondary btn-sm" data-filter-reset>Reset</button></div>
 </div>
-<p class="filter-count" data-filter-count>Showing all 4 records</p>
+<p class="filter-count" data-filter-count>Showing published base schedules</p>
 <div class="filter-empty" data-filter-empty hidden>No tariffs match your filters.</div>
 <table id="tariffs-table" class="data-table">
-<thead><tr><th>Tariff ID</th><th>Name</th><th>Type</th><th>Service Type</th><th>UOM</th><th>Customer</th><th>Effective</th><th>Status</th><th>Actions</th></tr></thead>
-<tbody>
-<tr data-service="B2B" data-customer="" data-status="active" data-search="TAR-B2B-BASE White Glove Inspection B2B"><td class="tabular"><a href="tariff-detail.html">TAR-B2B-BASE</a></td><td>White Glove Inspection — B2B</td><td><span class="badge badge-active">Base</span></td><td>White Glove Inspection</td><td>CWT</td><td>—</td><td class="tabular">2026-01-01</td><td><span class="badge badge-active">Active</span></td>
-<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-rate-matrix.html?tariff=TAR-B2B-BASE">Edit matrix</a><a href="tariff-wizard.html">Clone</a><a href="tariff-comparison.html">Compare</a></td></tr>
-<tr data-service="Home Delivery" data-customer="PACI-1200" data-status="active" data-search="TAR-HD-TH-002 Threshold Home Delivery"><td class="tabular"><a href="tariff-detail.html">TAR-HD-TH-002</a></td><td>Threshold Home Delivery</td><td><span class="badge badge-approved">Derived</span></td><td>Threshold</td><td>Cube</td><td>PACI-1200</td><td class="tabular">2025-06-01</td><td><span class="badge badge-active">Active</span></td>
-<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-rate-matrix.html?tariff=TAR-HD-TH-002">Edit matrix</a><a href="tariff-wizard.html">Clone</a></td></tr>
-<tr data-service="B2B" data-customer="PACI-1200" data-status="active" data-search="TAR-PHF-B2B Customer specific"><td class="tabular"><a href="tariff-detail.html">TAR-PHF-B2B</a></td><td>PHF Negotiated B2B</td><td><span class="badge badge-pending">Customer-specific</span></td><td>Business/B2B</td><td>CWT</td><td>PACI-1200</td><td class="tabular">2026-01-01</td><td><span class="badge badge-active">Active</span></td>
-<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-rate-matrix.html?tariff=TAR-PHF-B2B">Edit matrix</a></td></tr>
-<tr data-service="B2B" data-customer="" data-status="draft" data-search="TAR-SPOT-001 Spot Rate Template"><td class="tabular"><a href="tariff-detail.html">TAR-SPOT-001</a></td><td>Spot Rate Template</td><td><span class="badge badge-draft">Base</span></td><td>Business/B2B</td><td>Flat Rate</td><td>—</td><td class="tabular">2025-01-01</td><td><span class="badge badge-draft">Draft</span></td>
-<td class="actions"><a href="tariff-detail.html">Edit</a><a href="tariff-wizard.html">Clone</a></td></tr>
-</tbody></table>
-<p style="margin-top:var(--space-md);font-size:13px;color:var(--neutral-600)">Page 1 of 2 · <a href="tariffs-page2.html">Next page</a></p>
+<thead><tr><th>Tariff ID</th><th>Name</th><th>Service</th><th>UOM</th><th>Effective</th><th>Status</th><th>Actions</th></tr></thead>
+<tbody></tbody></table>
 
 </div>
 <footer class="mock-footer">
@@ -81,13 +70,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

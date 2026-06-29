@@ -58,7 +58,7 @@
 <div class="wizard-panel" data-wizard-panel>
 <div class="card">
 <h3 class="panel-title">Step 1: Basics</h3>
-<p class="tariff-inherit-note" style="margin-bottom:var(--space-md)">Service type inherits the base rate matrix from <strong>TAR-B2B-BASE</strong>. Configure exceptions only — lane overrides, customer terms, and commodity deltas.</p>
+<p class="tariff-inherit-note" style="margin-bottom:var(--space-md)">Service type inherits the base rate matrix from <strong>TAR-B2B-BASE</strong>. Configure baseline exceptions only — origin station factors and commodity/minimum deltas. Customer discounts and rep overrides stay on Customers and Quote layer templates.</p>
 <div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="White Glove Inspection — B2B"></div>
 <div class="field"><label for="tw-id">Tariff ID</label><input id="tw-id" class="tabular" value="TAR-NEW-001"></div>
 <label class="field" style="display:flex;align-items:center;gap:8px;cursor:pointer">
@@ -156,28 +156,33 @@
 
 <div class="wizard-panel" data-wizard-panel hidden>
 <div class="card">
-<h3 class="panel-title">Step 3: Pricing Model</h3>
-<div class="segmented" style="margin-bottom:var(--space-md)">
-<label><input type="radio" name="tw-service" checked><span>Business/B2B</span></label>
-<label><input type="radio" name="tw-service"><span>Threshold</span></label>
-<label><input type="radio" name="tw-service"><span>White Glove No Insp.</span></label>
-<label><input type="radio" name="tw-service"><span>White Glove Inspection</span></label>
-</div>
-<div class="segmented" data-uom-group style="margin-bottom:var(--space-md)">
-<label><input type="radio" name="tw-uom" value="cwt" checked><span>CWT</span></label>
-<label><input type="radio" name="tw-uom" value="cube"><span>Cube</span></label>
-<label><input type="radio" name="tw-uom" value="seat"><span>Seat</span></label>
-<label><input type="radio" name="tw-uom" value="invoice"><span>% Invoice</span></label>
-<label><input type="radio" name="tw-uom" value="flat"><span>Flat Rate</span></label>
-<label><input type="radio" name="tw-uom" value="spot"><span>Spot Quote</span></label>
+<h3 class="panel-title">Step 3: Pricing model</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Choose service level and unit of measure — these seed the draft tariff’s defaults (density, base rate, margin floor). Per-zone freight rates are configured later on the Rate Table Matrix, not in this step.</p>
+<div class="tariff-model-selectors">
+<div class="field"><label for="tw-service">Service level</label>
+<select id="tw-service">
+<option value="b2b" selected>Business/B2B</option>
+<option value="threshold">Threshold</option>
+<option value="wg-no-insp">White Glove No Insp.</option>
+<option value="wg-insp">White Glove Inspection</option>
+</select></div>
+<div class="field"><label for="tw-uom">Unit of measure</label>
+<select id="tw-uom">
+<option value="cwt" selected>CWT</option>
+<option value="cube">Cube</option>
+<option value="seat">Seat</option>
+<option value="invoice">% Invoice</option>
+<option value="flat">Flat Rate</option>
+<option value="spot">Spot Quote</option>
+</select></div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
 <div class="field" data-density-field><label for="tw-density">Density factor (lbs/cu ft)</label><input id="tw-density" class="tabular" value="8.5"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Pre-filled per enabled station; editable as global override.</p></div>
 <div class="field"><label for="tw-min-density">Minimum density</label><input id="tw-min-density" class="tabular" value="6.0"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is CWT.</p></div>
 <div class="field"><label for="tw-min-cube">Minimum $/cube</label><input id="tw-min-cube" class="tabular" placeholder="—" disabled style="background:var(--surface-100)"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is % Invoice.</p></div>
 <div class="field"><label for="tw-commodity">Commodity</label><select id="tw-commodity"><option selected>FAK</option><option>Carton</option><option>Blanketwrap</option><option>Furniture</option><option>Case Goods</option><option>Upholstery</option><option>Custom</option></select></div>
-<div class="field"><label for="tw-base">Base rate</label><input id="tw-base" class="tabular" value=""></div>
-<div class="field"><label for="tw-floor">Margin floor</label><input id="tw-floor" class="tabular" value="15%"></div>
+<div class="field"><label for="tw-base" data-tw-base-label>Base rate ($/CWT)</label><input id="tw-base" type="number" class="tabular" step="0.01" min="0" value=""></div>
+<div class="field"><label for="tw-floor">Minimum margin floor (%)</label><input id="tw-floor" type="number" class="tabular" step="0.1" min="0" max="100" value="15"></div>
 </div>
 </div>
 <div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
@@ -185,11 +190,11 @@
 
 <div class="wizard-panel" data-wizard-panel hidden>
 <div class="card">
-<h3 class="panel-title">Step 4: Optional Overrides</h3>
-<p class="page-lead" style="margin-bottom:var(--space-md)">Configure customer, lane, or commodity overrides — or skip and add later from Tariff Detail.</p>
-<div class="field"><label for="tw-cust">Customer override (optional)</label><select id="tw-cust"><option>None</option><option>PACI-1200 — Pacific Home Furnishings</option></select></div>
-<div class="field"><label for="tw-lane-ov">Lane override (optional)</label><select id="tw-lane-ov"><option>None</option><option>SC:293,296,297</option></select></div>
-<div class="field"><label for="tw-comm-ov">Commodity override (optional)</label><select id="tw-comm-ov"><option>None</option><option>Upholstery (+8%)</option></select></div>
+<h3 class="panel-title">Step 4: Baseline program rules (optional)</h3>
+<p class="page-lead" style="margin-bottom:var(--space-md)">Structural rules published with this tariff — commodity surcharges, minimum charge floors, or scheduled promotions. Skip if the inherited matrix is sufficient; reps handle per-shipment negotiation in Quote Builder Step 4b.</p>
+<div class="field"><label for="tw-comm-ov">Commodity rule (optional)</label><select id="tw-comm-ov"><option>None</option><option>Upholstery (+8%)</option><option>Case Goods (+3%)</option></select></div>
+<div class="field"><label for="tw-min-charge">Minimum charge override ($, optional)</label><input id="tw-min-charge" type="number" class="tabular" step="1" min="0" placeholder="e.g. 111"></div>
+<div class="field"><label for="tw-promo">Scheduled promotion (optional)</label><select id="tw-promo"><option>None</option><option>Q1 volume −2% linehaul (all commodities)</option></select></div>
 </div>
 <div class="wizard-nav">
 <button type="button" class="btn btn-secondary" data-wizard-back>Back</button>
@@ -227,7 +232,8 @@
 <tr><th scope="row">Stations enabled</th><td>LAX, DFW, SFO (3 of 7)</td></tr>
 <tr><th scope="row">Effective</th><td class="tabular">Jan 1 – Dec 31, 2026</td></tr>
 </tbody></table>
-<a href="tariff-detail.html" class="btn btn-primary" style="margin-top:var(--space-md)">Create Tariff</a>
+<a href="tariff-detail.html" class="btn btn-primary" style="margin-top:var(--space-md)" data-create-tariff>Create tariff &amp; continue editing</a>
+<p style="font-size:13px;color:var(--neutral-600);margin-top:var(--space-sm)">Opens Tariff Detail as a draft — you can keep editing rate settings, baseline rules, and the matrix after create.</p>
 </div>
 <div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><span></span></div>
 </div>
@@ -246,13 +252,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

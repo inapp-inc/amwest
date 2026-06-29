@@ -45,7 +45,7 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Pacific Home Furnishings</h1><p style="margin-top:4px">PACI-1200 · <span class="badge badge-active">Active</span></p></div></div>
+<div class="page-header"><div><h1>Pacific Home Furnishings</h1><p style="margin-top:4px">PACI-1200 · <span class="badge badge-active">Active</span></p></div><a href="quote-builder.html?customer=PACI-1200" class="btn btn-primary" data-customer-new-quote>+ New Quote</a></div>
 <div class="detail-grid">
 <section class="detail-grid__cell card">
 <h3 class="panel-title">Profile</h3>
@@ -56,29 +56,28 @@
 <section class="detail-grid__cell card">
 <h3 class="panel-title">Assigned Tariffs</h3>
 <table class="data-table" data-customer-tariffs><thead><tr><th>Tariff</th><th>Service</th><th>Status</th></tr></thead>
-<tbody><tr><td><a href="tariff-detail.html">TAR-HD-TH-002</a></td><td>Threshold</td><td><span class="badge badge-active">Active</span></td></tr>
-<tr><td><a href="tariff-detail.html?id=TAR-PACI-B2B">TAR-PACI-B2B</a></td><td>B2B (negotiated)</td><td><span class="badge badge-active">Active</span></td></tr></tbody></table>
+<tbody></tbody></table>
 </section>
 <section class="detail-grid__cell card detail-grid__full" data-customer-tariff-notes>
 <h3 class="panel-title">Tariff Notes</h3>
 <p class="text-muted-sm" style="margin-bottom:var(--space-md)">Customer-specific pricing exceptions from Convert workbook — insurance %, fixed fuel, pickup locations.</p>
 <div class="field"><label>Notes</label><textarea rows="3" data-tariff-notes-text>Insurance at 1% declared value (standard). Fuel: AW weekly index — no fixed cap.</textarea></div>
 <div class="field"><label>Pickup location</label><input data-pickup-location value="1200 Industrial Way, High Point NC 27260"></div>
-<div class="field"><label>Fixed fuel % (optional)</label><input class="tabular" data-fixed-fuel placeholder="Leave blank for EIA index"></div>
+<div class="field"><label>Fixed fuel surcharge (%)</label><input type="number" class="tabular" data-fixed-fuel min="0" max="100" step="0.1" placeholder="Leave blank for EIA index"></div>
 </section>
 <section class="detail-grid__cell card detail-grid__full">
 <h3 class="panel-title">Discount Structure</h3>
 <p class="text-muted-sm" style="margin-bottom:var(--space-md)">Discounts by service level for this customer — each service type can have its own negotiated rate. These feed automatically into new quotes.</p>
-<table class="data-table" data-customer-discounts><thead><tr><th>Service type</th><th>Discount %</th><th>Min density override</th><th>Notes</th></tr></thead>
+<table class="data-table" data-customer-discounts><thead><tr><th>Service type</th><th>Discount (%)</th><th>Min density override (lbs/cu ft)</th><th>Notes</th></tr></thead>
 <tbody>
-<tr><td>B2B</td><td class="tabular"><input value="5%"></td><td class="tabular"><input value="—"></td><td>National account default</td></tr>
-<tr><td>Threshold</td><td class="tabular"><input value="3%"></td><td class="tabular"><input value="—"></td><td>HD residential program</td></tr>
-<tr><td>White Glove No Insp.</td><td class="tabular"><input value="5%"></td><td class="tabular"><input value="—"></td><td>Matches B2B for this customer</td></tr>
-<tr><td>White Glove Inspection</td><td class="tabular"><input value="4%"></td><td class="tabular"><input value="7.0 lbs/cf"></td><td>Lower discount, min density floor</td></tr>
+<tr data-service-disc="B2B"><td>B2B</td><td class="tabular"><input type="number" data-cust-disc-pct min="0" max="100" step="0.1" value="5"></td><td class="tabular"><input type="number" data-cust-disc-density min="0" step="0.1" placeholder="—"></td><td>National account default</td></tr>
+<tr data-service-disc="Threshold"><td>Threshold</td><td class="tabular"><input type="number" data-cust-disc-pct min="0" max="100" step="0.1" value="3"></td><td class="tabular"><input type="number" data-cust-disc-density min="0" step="0.1" placeholder="—"></td><td>HD residential program</td></tr>
+<tr data-service-disc="White Glove No Inspection"><td>White Glove No Insp.</td><td class="tabular"><input type="number" data-cust-disc-pct min="0" max="100" step="0.1" value="5"></td><td class="tabular"><input type="number" data-cust-disc-density min="0" step="0.1" placeholder="—"></td><td>Matches B2B for this customer</td></tr>
+<tr data-service-disc="White Glove Inspection"><td>White Glove Inspection</td><td class="tabular"><input type="number" data-cust-disc-pct min="0" max="100" step="0.1" value="4"></td><td class="tabular"><input type="number" data-cust-disc-density min="0" step="0.1" value="7.0"></td><td>Lower discount, min density floor</td></tr>
 </tbody></table>
 <h4 style="font-size:14px;margin:var(--space-lg) 0 var(--space-sm)">Lane-specific overrides</h4>
-<table class="data-table" data-customer-lane-discounts><thead><tr><th>Lane</th><th>Service</th><th>Discount</th></tr></thead>
-<tbody><tr><td>SC:293,296,297</td><td>B2B</td><td class="tabular"><input value="0%"></td></tr></tbody></table>
+<table class="data-table" data-customer-lane-discounts><thead><tr><th>Lane</th><th>Service</th><th>Discount (%)</th></tr></thead>
+<tbody><tr><td>SC:293,296,297</td><td>B2B</td><td class="tabular"><input type="number" min="0" max="100" step="0.1" value="0"></td></tr></tbody></table>
 <p style="margin-top:var(--space-md)"><a href="admin-agreement-template.html" class="btn btn-link">Agreement / cover sheet template →</a></p>
 </section>
 <section class="detail-grid__cell card detail-grid__full">
@@ -101,13 +100,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

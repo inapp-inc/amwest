@@ -1555,6 +1555,150 @@ h1.wt-hero-title em {
 }
 .wt-modules-intro a:hover { text-decoration: underline; }
 
+/* ── PROPOSED VALUE-ADD ── */
+#wt-value-add {
+  background: linear-gradient(165deg, var(--wt-page) 0%, #f3f0fa 42%, var(--wt-surface) 100%);
+  border-top: 1px solid var(--wt-rule-md);
+  border-bottom: 1px solid var(--wt-rule-md);
+}
+.wt-eyebrow--proposed::before {
+  background: linear-gradient(90deg, var(--wt-accent), #9b87d9);
+}
+.wt-meta-pill--proposed {
+  color: var(--wt-accent);
+  background: var(--wt-accent-lt);
+  border: 1px solid var(--wt-accent-mid);
+}
+.wt-value-add-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 36px;
+}
+.wt-value-add-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--wt-accent-mid);
+  border-radius: 16px;
+  background: var(--wt-surface);
+  box-shadow: 0 8px 32px rgba(45, 55, 120, 0.06);
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.wt-value-add-card:hover {
+  border-color: var(--wt-accent);
+  box-shadow: 0 12px 40px rgba(45, 55, 120, 0.1);
+  transform: translateY(-2px);
+}
+.wt-value-add-card.is-open {
+  border-color: var(--wt-accent);
+  box-shadow: inset 0 0 0 2px var(--wt-accent), 0 12px 40px rgba(45, 55, 120, 0.1);
+}
+.wt-value-add-card-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 32px 28px 20px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.wt-value-add-card.is-open .wt-value-add-card-main {
+  background: linear-gradient(135deg, var(--wt-accent-lt) 0%, var(--wt-surface) 65%);
+}
+.wt-value-add-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--wt-accent);
+  background: var(--wt-accent-lt);
+  padding: 5px 11px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.wt-value-add-icon {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.wt-value-add-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--wt-ink);
+  line-height: 1.35;
+  margin-bottom: 10px;
+  max-width: 28ch;
+}
+.wt-value-add-card > p {
+  font-size: 13px;
+  color: var(--wt-ink-mid);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.wt-value-add-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  width: 100%;
+}
+.wt-value-add-points li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12px;
+  color: var(--wt-ink-soft);
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+.wt-value-add-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--wt-accent);
+}
+.wt-value-add-cta {
+  margin-top: auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wt-accent);
+}
+.wt-value-add-demo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin: 0 28px 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--wt-rule-md);
+}
+.wt-value-add-demo-links a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wt-accent);
+  text-decoration: none;
+}
+.wt-value-add-demo-links a:hover { text-decoration: underline; }
+.wt-value-add-demo-links a::after {
+  content: ' ↗';
+  font-size: 10px;
+}
+.wt-value-add-footnote {
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--wt-ink-soft);
+  line-height: 1.6;
+  max-width: 72ch;
+}
+
 .wt-drawer-flows { gap: 6px; }
 .wt-drawer-flow-jump {
   display: inline;
@@ -2345,7 +2489,8 @@ h1.wt-hero-title em {
     padding: 2px 6px;
   }
   .wt-problem-grid,
-  .wt-modules-grid { grid-template-columns: 1fr 1fr; }
+  .wt-modules-grid,
+  .wt-value-add-grid { grid-template-columns: 1fr 1fr; }
   .wt-modules-intro,
   .wt-int-intro { grid-template-columns: 1fr; gap: 24px; }
   .wt-arch-layout {
@@ -2396,7 +2541,8 @@ h1.wt-hero-title em {
 
 @media (max-width: 600px) {
   .wt-problem-grid,
-  .wt-modules-grid { grid-template-columns: 1fr; }
+  .wt-modules-grid,
+  .wt-value-add-grid { grid-template-columns: 1fr; }
   .wt-problem-cell { border-right: none !important; }
   .wt-arch-row { grid-template-columns: 1fr; }
   .wt-arch-phase {

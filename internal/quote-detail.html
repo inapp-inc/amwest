@@ -57,22 +57,20 @@
 <div class="card"><h3 class="panel-title">Pricing Breakdown</h3>
 <div class="quote-pricing-summary">
 <div class="quote-total-line"><span>Total</span><span class="tabular" data-quote-total-summary>—</span></div>
-<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular" data-quote-margin-summary>—</span></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span data-margin-floor-label>Margin vs floor (15%)</span><span class="tabular" data-quote-margin-summary>—</span></div>
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill green" style="width:75%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
 </div>
-<details class="disclosure-panel quote-calc-detail"><summary>Show detailed calculation</summary>
+<details class="disclosure-panel quote-calc-detail" open>
+<summary>Detailed calculation</summary>
 <div class="disclosure-body">
 <div class="card" style="font-size:13px;margin-bottom:var(--space-md)" data-quote-calc-meta>
-<p><strong>Tariff:</strong> <a href="tariff-detail.html">TAR-B2B-BASE</a> (v3)</p>
+<p><strong>Tariff:</strong> <a href="tariff-detail.html" class="tariff-drawer-trigger" data-tariff-drawer-trigger title="Hover for tariff summary">TAR-B2B-BASE</a> (v3)</p>
 <p><strong>Fuel rate:</strong> 28.4% from EIA.gov, Jun 16 2026</p>
 <p><strong>Approved by:</strong> Morgan Reyes, Jun 18 2026</p>
 </div>
 <div data-detail-breakdown data-quote-disc="0"></div>
-<details class="disclosure-panel" style="margin-top:var(--space-md)"><summary>Expand formulas &amp; audit detail</summary>
-<div class="disclosure-body pricing-lines" style="font-size:13px">
-<!-- populated from session store -->
-</div></details>
-</div></details>
+</div>
+</details>
 </div></div>
 <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap">
 <a href="quote-pdf.html" class="btn btn-primary">Generate PDF</a>
@@ -96,13 +94,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

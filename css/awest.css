@@ -2809,6 +2809,53 @@ a.kanban-card:hover {
   font-size: 13px;
 }
 
+/* Quote detail — tariff hover → right drawer */
+.tariff-drawer-trigger {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+.tariff-drawer-trigger:hover,
+.tariff-drawer-trigger:focus-visible {
+  color: var(--burgundy-700);
+  text-decoration-style: solid;
+}
+
+.tariff-drawer-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.tariff-drawer-section-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--neutral-800);
+}
+
+.tariff-drawer-rules {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tariff-drawer-rules li {
+  margin-bottom: 6px;
+}
+
+.tariff-drawer-effective {
+  margin: 0;
+}
+
+.tariff-drawer-open-full {
+  align-self: flex-start;
+  padding-left: 0;
+}
+
 .btn-approve-inline {
   padding: 4px 12px;
   font-size: 11px;
@@ -2952,6 +2999,42 @@ a.kanban-card:hover {
   padding: 10px 12px;
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
+}
+
+.assistant-thread-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.assistant-inline-form {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+
+.assistant-inline-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+}
+
+.assistant-chip--recommended {
+  border-color: var(--signal-green);
+  background: rgba(34, 139, 87, 0.08);
+}
+
+.assistant-preview-meta {
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.assistant-preview-meta p {
+  margin: 0 0 4px;
+  font-size: 13px;
 }
 
 .tariff-inherit-note {

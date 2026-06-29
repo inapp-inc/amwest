@@ -40,18 +40,18 @@
 <div>
 <p style="font-size:13px;margin-bottom:4px"><a href="reference.html">Pricing Setup</a></p>
 <h1>AlphaTruck Rate-Key Mapping</h1>
-<p class="text-muted-sm" style="margin-top:4px">Maps platform service types to AlphaTruck tariff codes (D7/D8 B2B v35, DM/DN HD), MCTC level codes, and BW/BX/BY service keys. CSV exports upload via FileZilla to AlphaTruck.</p>
+<p class="text-muted-sm" style="margin-top:4px">Maps platform service types to AlphaTruck tariff codes (demo XX1/XX2 B2B, YY1/YY2 HD), MCTC level codes, and BW/BX/BY service keys. CSV exports upload via FileZilla to AlphaTruck.</p>
 </div>
 <button type="button" class="btn btn-primary">Save Mapping</button>
 </div>
-<div class="config-callout"><strong>AlphaTruck codes:</strong> B2B uses <code>D7</code> (rate) + <code>D8</code> (minimum). Home delivery uses <code>DM</code> + <code>DN</code>. Service types: <code>BW</code> (B2B), <code>BX</code> (Threshold), <code>BY</code> (White Glove). MCTC level (e.g. 4558) is read-only from tariff.</div>
+<div class="config-callout"><strong>AlphaTruck codes (demo):</strong> B2B uses <code>XX1</code> (rate) + <code>XX2</code> (minimum). Home delivery uses <code>YY1</code> + <code>YY2</code>. Service types: <code>BW</code> (B2B), <code>BX</code> (Threshold), <code>BY</code> (White Glove). MCTC level (e.g. DEMO-9001) is read-only from tariff.</div>
 <div class="detail-grid detail-grid--stack">
 <section class="detail-grid__cell card">
 <h3 class="panel-title">B2B (v35 per-pound)</h3>
 <table class="data-table" data-tms-section="b2b">
 <thead><tr><th>Platform service</th><th>TMS type</th><th>Rate code</th><th>Min code</th><th>Level</th><th>Discount level</th><th>Fuel index</th><th>Export sheet</th></tr></thead>
 <tbody>
-<tr><td>B2B · TMV</td><td class="tabular">BW</td><td class="tabular"><input value="D7"></td><td class="tabular"><input value="D8"></td><td class="tabular"><input value="4558" readonly></td><td class="tabular"><input value="4558"></td><td><select><option selected>EIA National</option></select></td><td>b2b_tmv_export</td></tr>
+<tr><td>B2B · TMV</td><td class="tabular">BW</td><td class="tabular"><input value="XX1"></td><td class="tabular"><input value="XX2"></td><td class="tabular"><input value="DEMO-9001" readonly></td><td class="tabular"><input value="DEMO-9001"></td><td><select><option selected>EIA National</option></select></td><td>b2b_tmv_export</td></tr>
 </tbody>
 </table>
 </section>
@@ -60,8 +60,8 @@
 <table class="data-table" data-tms-section="threshold">
 <thead><tr><th>Platform service</th><th>TMS type</th><th>Rate code</th><th>Min code</th><th>BPPC</th><th>Level</th><th>Fuel index</th><th>Export sheet</th></tr></thead>
 <tbody>
-<tr><td>Threshold · TMV</td><td class="tabular">BX</td><td class="tabular"><input value="DM"></td><td class="tabular"><input value="DN"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="4558" readonly></td><td><select><option selected>EIA National</option></select></td><td>thr_tmv_export</td></tr>
-<tr><td>White Glove · TMV</td><td class="tabular">BY</td><td class="tabular"><input value="DM"></td><td class="tabular"><input value="DN"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="4558" readonly></td><td><select><option selected>EIA National</option></select></td><td>wgi_tmv_export</td></tr>
+<tr><td>Threshold · TMV</td><td class="tabular">BX</td><td class="tabular"><input value="YY1"></td><td class="tabular"><input value="YY2"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="DEMO-9001" readonly></td><td><select><option selected>EIA National</option></select></td><td>thr_tmv_export</td></tr>
+<tr><td>White Glove · TMV</td><td class="tabular">BY</td><td class="tabular"><input value="YY1"></td><td class="tabular"><input value="YY2"></td><td class="tabular"><input value="29601"></td><td class="tabular"><input value="DEMO-9001" readonly></td><td><select><option selected>EIA National</option></select></td><td>wgi_tmv_export</td></tr>
 </tbody>
 </table>
 </section>
@@ -90,13 +90,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

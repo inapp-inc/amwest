@@ -93,6 +93,12 @@
 
   ready(function () {
     if (!global.AwestStore) return;
+    document.querySelectorAll('.demo-banner-text').forEach(function (el) {
+      var note = (global.AwestDummyTariff && global.AwestDummyTariff.disclaimer) || 'Tariff rates are fictional sample data.';
+      if (el.textContent.indexOf('fictional') < 0) {
+        el.textContent = el.textContent.replace(/\s*$/, '') + ' ' + note;
+      }
+    });
     global.AwestStore.load();
     handlePendingRedirect();
     injectDemoControls();

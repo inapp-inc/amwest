@@ -61,7 +61,7 @@
 
   function applyQuoteGovernance(q, s) {
     if (!q || q.pricingMode === 'override') return;
-    var terminal = ['sent', 'accepted', 'converted', 'lost'];
+    var terminal = ['sent', 'expired', 'converted', 'lost', 'accepted'];
     if (terminal.indexOf(q.status) >= 0) return;
     var gov = getGov().needsApproval(s, q);
     if (gov) {
@@ -105,6 +105,8 @@
 
   function recomputeAllQuotes(s) {
     ensureAllQuoteModels(s);
+    var P = getPricing();
+    if (!P || !P.enginePricing) return;
     s.quotes.forEach(function (q) { recomputeQuote(q, s); });
   }
 
@@ -145,6 +147,51 @@
     return state;
   }
 
+  function dummyTariff() {
+    return global.AwestDummyTariff || {
+      baseRateCwt: 77.77,
+      priorBaseRateCwt: 75,
+      minimumChargeTariff: 111,
+      minimumChargeLane: 88,
+      mctcLevel: 'DEMO-9001'
+    };
+  }
+
+  function defaultTariffConfig(tariff, settings) {
+    var td = (settings && settings.tariffDisplay) || {};
+    var D = dummyTariff();
+    return {
+      baseRateCwt: td.baseRateCwt || D.baseRateCwt,
+      priorBaseRateCwt: td.priorBaseRateCwt || D.priorBaseRateCwt,
+      minimumCharge: td.minimumCharge || D.minimumChargeTariff,
+      marginFloorPct: 15,
+      density: 8.5,
+      rateTableLabel: 'National B2B Matrix',
+      description: tariff.name || '',
+      effectiveEnd: '2026-12-31',
+      baselineRules: tariff.id === 'TAR-B2B-BASE' ? [
+        { type: 'Commodity', scope: 'Upholstery', value: '+8%', effect: '+8% on base rate' },
+        { type: 'Minimum charge', scope: 'All lanes', value: '$' + D.minimumChargeLane, effect: 'Floor after rate × weight' },
+        { type: 'Promotion', scope: '—', value: 'None active', effect: '—' }
+      ] : [
+        { type: 'Promotion', scope: '—', value: 'None active', effect: '—' }
+      ]
+    };
+  }
+
+  function ensureTariffConfigs(s) {
+    (s.tariffs || []).forEach(function (t) {
+      if (!t.config) t.config = defaultTariffConfig(t, s.settings);
+    });
+  }
+
+  function bootstrapTariffData(s) {
+    var TE = global.AwestTariffEngine;
+    if (!TE) return;
+    TE.ensureTariffOriginGrid(s);
+    TE.buildSeedRateMatrices(s);
+  }
+
   function migrateStore(s) {
     if (!s.settings.quoteLayerTemplates || !s.settings.quoteLayerTemplates.length) {
       var seed = global.AwestSeed.build();
@@ -154,10 +201,73 @@
     if (!s.meta.version || s.meta.version < 3) {
       s.meta.version = 3;
     }
+    if (!s.meta.version || s.meta.version < 4) {
+      ensureTariffConfigs(s);
+      s.meta.version = 4;
+    }
+    if (!s.meta.version || s.meta.version < 5) {
+      ensureTariffConfigs(s);
+      bootstrapTariffData(s);
+      s.meta.version = 5;
+    }
+    if (!s.meta.version || s.meta.version < 6) {
+      var seed6 = global.AwestSeed.build();
+      s.tariffs = seed6.tariffs;
+      (s.customers || []).forEach(function (c) {
+        var sc = seed6.customers.find(function (x) { return x.id === c.id; });
+        if (sc) c.tariffIds = (sc.tariffIds || []).slice();
+      });
+      var retiredTariffs = { 'TAR-PACI-B2B': 'TAR-B2B-BASE', 'TAR-SARI-V35': 'TAR-B2B-BASE' };
+      (s.quotes || []).forEach(function (q) {
+        if (retiredTariffs[q.tariffId]) q.tariffId = retiredTariffs[q.tariffId];
+      });
+      if (s.rateMatrices) {
+        Object.keys(s.rateMatrices).forEach(function (key) {
+          if (key.indexOf('TAR-PACI-B2B') === 0 || key.indexOf('TAR-SARI-V35') === 0) {
+            delete s.rateMatrices[key];
+          }
+        });
+      }
+      ensureTariffConfigs(s);
+      bootstrapTariffData(s);
+      s.meta.version = 6;
+    }
+    if (!s.meta.version || s.meta.version < 7) {
+      (s.quotes || []).forEach(function (q) {
+        if (q.status === 'accepted') {
+          q.status = 'converted';
+          q.convertedAt = q.convertedAt || q.acceptedAt || q.updatedAt;
+        }
+      });
+      s.meta.version = 7;
+    }
+    if (!s.meta.version || s.meta.version < 8) {
+      (s.customers || []).forEach(function (c) {
+        (c.serviceDiscounts || []).forEach(function (sd) {
+          if (sd.density == null || sd.density === '') return;
+          if (typeof sd.density === 'number') return;
+          var NF = global.AwestNumericFields;
+          sd.density = NF ? NF.parseDensity(sd.density, null) : parseFloat(String(sd.density).replace(/[^\d.-]/g, '')) || null;
+        });
+      });
+      s.meta.version = 8;
+    }
+    if (!s.meta.version || s.meta.version < 9) {
+      var seed9 = global.AwestSeed.build();
+      s.settings.tariffDisplay = seed9.settings.tariffDisplay;
+      s.tariffs = seed9.tariffs;
+      s.reference = seed9.reference;
+      s.rateMatrices = {};
+      ensureTariffConfigs(s);
+      bootstrapTariffData(s);
+      s.meta.version = 9;
+    }
   }
 
   function resetToSeed() {
     state = global.AwestSeed.build();
+    ensureTariffConfigs(state);
+    bootstrapTariffData(state);
     recomputeAllQuotes(state);
     persist();
     return state;
@@ -206,6 +316,16 @@
       var q = s.quotes.find(function (x) { return x.id === id; });
       if (!q) return;
       Object.keys(partial).forEach(function (k) { q[k] = partial[k]; });
+      if (q.pricingMode !== 'override') {
+        if ('tariffId' in partial) {
+          if (partial.tariffId == null || !getTariff(partial.tariffId)) {
+            q.tariffId = resolveQuoteBaseTariff(s, q.customerId, q.primaryService);
+          }
+        } else if ('primaryService' in partial || 'customerId' in partial) {
+          q.tariffId = resolveQuoteBaseTariff(s, q.customerId, q.primaryService);
+        }
+        syncAppliedTermsTariff(q, s);
+      }
       if (partial.quoteDiscPct != null && q.quoteAdjustments && q.quoteAdjustments.length) {
         var ql = q.quoteAdjustments.find(function (l) { return l.presetId === 'quote-discount'; });
         if (ql) {
@@ -261,10 +381,28 @@
     return 'Q-2026-' + String(max + 1).padStart(4, '0');
   }
 
+  function resolveQuoteBaseTariff(s, customerId, serviceType) {
+    var cid = customerId || 'PACI-1200';
+    var svc = serviceType || 'b2b';
+    if (global.AwestTariffEngine) {
+      var t = global.AwestTariffEngine.resolveAutoTariff(s, cid, svc);
+      if (t) return t.id;
+    }
+    return 'TAR-B2B-BASE';
+  }
+
+  function syncAppliedTermsTariff(q, s) {
+    if (!q.appliedTerms) return;
+    var t = getTariff(q.tariffId);
+    q.appliedTerms.tariffId = q.tariffId;
+    q.appliedTerms.tariffLabel = t ? t.name : q.tariffId;
+  }
+
   function createQuote(partial) {
     var id = partial.id || nextQuoteId();
     commit(function (s) {
       var cust = getCustomer(partial.customerId);
+      var serviceType = partial.primaryService || 'b2b';
       var q = Object.assign({
         id: id,
         customerId: partial.customerId || 'PACI-1200',
@@ -278,8 +416,8 @@
         originStation: partial.originStation || s.settings.demoLane.originStation || 'TMV',
         laneCode: partial.laneCode || 'SC:293,296,297',
         hdPoi: partial.hdPoi || 'Greenville Tier 1',
-        tariffId: partial.tariffId || 'TAR-B2B-BASE',
-        primaryService: partial.primaryService || 'b2b',
+        tariffId: 'TAR-B2B-BASE',
+        primaryService: serviceType,
         serviceFamily: partial.serviceFamily || 'b2b',
         appliedTerms: partial.appliedTerms || null,
         quoteAdjustments: partial.quoteAdjustments || null,
@@ -298,8 +436,16 @@
         rejectionReason: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        approvedBy: null, approvedAt: null, sentAt: null, acceptedAt: null
+        approvedBy: null, approvedAt: null, sentAt: null, acceptedAt: null, convertedAt: null, expiredAt: null
       }, partial);
+      if (q.pricingMode !== 'override') {
+        if (partial.tariffId != null && getTariff(partial.tariffId)) {
+          q.tariffId = partial.tariffId;
+        } else {
+          q.tariffId = resolveQuoteBaseTariff(s, q.customerId, q.primaryService);
+        }
+        syncAppliedTermsTariff(q, s);
+      }
       var P = getPricing();
       if (P && P.ensureQuotePricingModel) {
         P.ensureQuotePricingModel(q, storePricingAdapter(s));
@@ -352,27 +498,59 @@
     });
   }
 
+  function createShipmentFromQuote(s, q) {
+    var shId = 'SH-' + String(8800 + s.shipments.length + 1);
+    s.shipments.unshift({
+      id: shId,
+      customerId: q.customerId,
+      quoteId: q.id,
+      origin: q.origin,
+      destination: q.destination,
+      status: 'booked',
+      eta: new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
+      podAvailable: false,
+      milestones: ['Booked'],
+      podUrl: 'portal-pod.html?id=' + shId
+    });
+    return shId;
+  }
+
+  function convertQuoteToShipment(quoteId) {
+    return commit(function (s) {
+      var q = s.quotes.find(function (x) { return x.id === quoteId; });
+      if (!q || q.status === 'converted') return;
+      q.status = 'converted';
+      var now = new Date().toISOString();
+      q.convertedAt = now;
+      q.acceptedAt = q.acceptedAt || now;
+      q.updatedAt = now;
+      var shId = createShipmentFromQuote(s, q);
+      audit(s, 'quote', quoteId, 'convert', 'Converted to shipment ' + shId);
+    });
+  }
+
   function acceptQuote(quoteId) {
+    return convertQuoteToShipment(quoteId);
+  }
+
+  function expireQuote(quoteId) {
     return commit(function (s) {
       var q = s.quotes.find(function (x) { return x.id === quoteId; });
       if (!q) return;
-      q.status = 'accepted';
-      q.acceptedAt = new Date().toISOString();
-      q.updatedAt = q.acceptedAt;
-      var shId = 'SH-' + String(8800 + s.shipments.length + 1);
-      s.shipments.unshift({
-        id: shId,
-        customerId: q.customerId,
-        quoteId: q.id,
-        origin: q.origin,
-        destination: q.destination,
-        status: 'booked',
-        eta: new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
-        podAvailable: false,
-        milestones: ['Booked'],
-        podUrl: 'portal-pod.html?id=' + shId
-      });
-      audit(s, 'quote', quoteId, 'accept', 'Quote accepted; shipment ' + shId + ' created');
+      q.status = 'expired';
+      q.expiredAt = new Date().toISOString();
+      q.updatedAt = q.expiredAt;
+      audit(s, 'quote', quoteId, 'expire', 'Quote expired');
+    });
+  }
+
+  function markQuoteLost(quoteId) {
+    return commit(function (s) {
+      var q = s.quotes.find(function (x) { return x.id === quoteId; });
+      if (!q) return;
+      q.status = 'lost';
+      q.updatedAt = new Date().toISOString();
+      audit(s, 'quote', quoteId, 'status', 'Status → lost');
     });
   }
 
@@ -380,10 +558,31 @@
     return commit(function (s) {
       var q = s.quotes.find(function (x) { return x.id === id; });
       if (!q) return;
+      var now = new Date().toISOString();
+      if (status === 'converted') {
+        if (q.status === 'converted') return;
+        q.status = 'converted';
+        q.convertedAt = now;
+        q.acceptedAt = q.acceptedAt || now;
+        q.updatedAt = now;
+        if (!s.shipments.some(function (sh) { return sh.quoteId === q.id; })) {
+          createShipmentFromQuote(s, q);
+        }
+        audit(s, 'quote', id, 'convert', 'Converted to shipment');
+        return;
+      }
       q.status = status;
-      q.updatedAt = new Date().toISOString();
-      if (status === 'sent') q.sentAt = q.updatedAt;
-      if (status === 'accepted') q.acceptedAt = q.updatedAt;
+      q.updatedAt = now;
+      if (status === 'sent') q.sentAt = now;
+      if (status === 'expired') q.expiredAt = now;
+      if (status === 'accepted') {
+        q.status = 'converted';
+        q.convertedAt = now;
+        q.acceptedAt = now;
+        createShipmentFromQuote(s, q);
+        audit(s, 'quote', id, 'convert', 'Converted to shipment (legacy accepted)');
+        return;
+      }
       audit(s, 'quote', id, 'status', 'Status → ' + status);
     });
   }
@@ -436,8 +635,17 @@
       id: newId,
       name: src.name + ' (copy)',
       version: 1,
-      status: 'draft'
+      status: 'draft',
+      parentTariffId: src.parentTariffId || null
     }));
+    var prefix = id + '::';
+    Object.keys(getState().rateMatrices || {}).forEach(function (key) {
+      if (key.indexOf(prefix) !== 0) return;
+      var combo = key.slice(prefix.length);
+      var data = deepClone(getState().rateMatrices[key]);
+      data.tariffId = newId;
+      saveRateMatrix(newId + '::' + combo, data);
+    });
     return getTariff(newId);
   }
 
@@ -462,10 +670,21 @@
     });
   }
 
+  function getRateMatrix(tariffId, comboId) {
+    var key = tariffId + '::' + comboId;
+    return getState().rateMatrices[key] || null;
+  }
+
+  function listRateMatrixKeys(tariffId) {
+    var prefix = tariffId + '::';
+    return Object.keys(getState().rateMatrices).filter(function (k) { return k.indexOf(prefix) === 0; });
+  }
+
   function saveRateMatrix(key, data) {
     commit(function (s) {
       s.rateMatrices[key] = data;
-      audit(s, 'tariff', key.split('_')[0], 'matrix', 'Rate matrix saved');
+      var tariffId = String(key).split('::')[0];
+      audit(s, 'tariff', tariffId, 'matrix', 'Rate matrix saved');
     });
   }
 
@@ -543,6 +762,7 @@
       if (!q.repId) return;
       if (!reps[q.repId]) reps[q.repId] = { quotes: 0, won: 0, lost: 0 };
       reps[q.repId].quotes++;
+      if (q.status === 'converted') reps[q.repId].won++;
       if (q.status === 'accepted') reps[q.repId].won++;
       if (q.status === 'lost') reps[q.repId].lost++;
     });
@@ -562,7 +782,8 @@
       var lane = q.laneCode || 'UNKNOWN';
       if (!lanes[lane]) lanes[lane] = { count: 0, marginSum: 0 };
       lanes[lane].count++;
-      lanes[lane].marginSum += (q.pricing && q.pricing.margin) || 0;
+      var p = computeQuotePricing(q, s);
+      lanes[lane].marginSum += p.margin || 0;
       lanes[lane].customer = (s.customers.find(function (c) { return c.id === q.customerId; }) || {}).name || q.customerId;
     });
     return Object.keys(lanes).map(function (lane) {
@@ -634,9 +855,22 @@
   /* ── Tariffs ── */
   function saveTariff(tariff) {
     commit(function (s) {
+      ensureTariffConfigs(s);
       var i = s.tariffs.findIndex(function (t) { return t.id === tariff.id; });
-      if (i >= 0) s.tariffs[i] = Object.assign({}, s.tariffs[i], tariff);
-      else s.tariffs.push(tariff);
+      if (i >= 0) {
+        var prev = s.tariffs[i];
+        s.tariffs[i] = Object.assign({}, prev, tariff);
+        if (tariff.config) {
+          s.tariffs[i].config = Object.assign({}, prev.config || {}, tariff.config);
+          if (tariff.config.baselineRules) {
+            s.tariffs[i].config.baselineRules = tariff.config.baselineRules.slice();
+          }
+        }
+      } else {
+        var next = Object.assign({}, tariff);
+        if (!next.config) next.config = defaultTariffConfig(next, s.settings);
+        s.tariffs.push(next);
+      }
       audit(s, 'tariff', tariff.id, 'save', 'Tariff saved');
     });
   }
@@ -644,6 +878,11 @@
   function deleteTariff(id) {
     commit(function (s) {
       s.tariffs = s.tariffs.filter(function (t) { return t.id !== id; });
+      Object.keys(s.rateMatrices).forEach(function (key) {
+        if (key.indexOf(id + '::') === 0) delete s.rateMatrices[key];
+      });
+      s.tariffOverrides = (s.tariffOverrides || []).filter(function (o) { return o.tariffId !== id; });
+      audit(s, 'tariff', id, 'delete', 'Tariff deleted');
     });
   }
 
@@ -756,13 +995,15 @@
     var sentWeek = quotes.filter(function (q) {
       return q.status === 'sent' && q.sentAt && (Date.now() - new Date(q.sentAt).getTime()) < 7 * 86400000;
     });
-    var accepted = quotes.filter(function (q) { return q.status === 'accepted'; });
+    var converted = quotes.filter(function (q) {
+      return q.status === 'converted' || q.status === 'accepted';
+    });
     var lost = quotes.filter(function (q) { return q.status === 'lost'; });
-    var winRate = accepted.length + lost.length > 0
-      ? Math.round((accepted.length / (accepted.length + lost.length)) * 100)
+    var winRate = converted.length + lost.length > 0
+      ? Math.round((converted.length / (converted.length + lost.length)) * 100)
       : 68;
     var pipelineTotal = quotes.reduce(function (sum, q) {
-      return sum + (q.pricing && q.pricing.total ? q.pricing.total : 0);
+      return sum + (computeQuotePricing(q, getState()).total || 0);
     }, 0);
     return {
       openCount: open.length,
@@ -803,6 +1044,9 @@
     sendEsign: sendEsign,
     exportTms: exportTms,
     acceptQuote: acceptQuote,
+    convertQuoteToShipment: convertQuoteToShipment,
+    expireQuote: expireQuote,
+    markQuoteLost: markQuoteLost,
     setQuoteStatus: setQuoteStatus,
     sendQuote: sendQuote,
     signEsign: signEsign,
@@ -811,6 +1055,8 @@
     cloneTariff: cloneTariff,
     rollbackTariff: rollbackTariff,
     saveTariffOverride: saveTariffOverride,
+    getRateMatrix: getRateMatrix,
+    listRateMatrixKeys: listRateMatrixKeys,
     saveRateMatrix: saveRateMatrix,
     saveFollowUp: saveFollowUp,
     deleteFollowUp: deleteFollowUp,
@@ -842,7 +1088,16 @@
     saveValidationLists: saveValidationLists,
     getMetrics: getMetrics,
     computeQuotePricing: function (q) { return computeQuotePricing(q, getState()); },
-    recomputeAllQuotes: function () { commit(function (s) { recomputeAllQuotes(s); }); },
+    getQuotePricing: function (quoteOrId) {
+      var q = typeof quoteOrId === 'string' ? getQuote(quoteOrId) : quoteOrId;
+      if (!q) return null;
+      return computeQuotePricing(q, getState());
+    },
+    recomputeAllQuotes: function () {
+      if (!state) load();
+      recomputeAllQuotes(state);
+      persist();
+    },
     exportState: exportState,
     importState: importState,
     uid: uid

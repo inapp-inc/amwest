@@ -54,8 +54,8 @@
 <h3 class="panel-title">Manual Spot Rate</h3>
 <p class="page-lead">Enter rates not tied to an existing tariff hierarchy.</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field"><label>Spot base rate</label><input class="tabular" value="$62.00 / CWT"></div>
-<div class="field"><label>Spot fuel surcharge</label><input class="tabular" data-spot-fuel value="—"></div>
+<div class="field"><label for="qb-spot-base">Spot base rate ($/CWT)</label><input id="qb-spot-base" type="number" class="tabular" data-spot-base step="0.01" min="0" value="77"></div>
+<div class="field"><label for="qb-spot-fuel">Spot fuel surcharge (%)</label><input id="qb-spot-fuel" type="number" class="tabular" data-spot-fuel step="0.1" min="0" value=""></div>
 </div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 380px;gap:var(--space-lg);align-items:start" data-quote-builder-pricing>
@@ -63,7 +63,7 @@
 <div class="card panel quote-flow-step">
 <p class="quote-flow-step-label">Step 1 · Service type</p>
 <h3 class="panel-title">What are you quoting?</h3>
-<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Pick one path — pricing starts from the base rate for that service, then layers apply.</p>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Pick one path — auto-selects the customer’s assigned base tariff for that service, then cost layers apply.</p>
 <div class="service-family-picker" data-service-family-picker>
 <label class="service-family-card">
 <input type="radio" name="service-family" value="b2b" data-service-family checked>
@@ -112,24 +112,24 @@
 <h3 class="panel-title">Shipment Details</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
 <div class="field"><label>Unit of Measure <span class="term-hint" title="CWT = hundredweight (100 lbs). Rates are often quoted per CWT for furniture freight.">CWT</span></label><select><option selected>CWT (per 100 lbs)</option><option>Cube (per cu ft)</option></select></div>
-<div class="field"><label>Density Factor (read-only)</label><input value="8.5 lbs/cu ft" readonly style="background:var(--surface-100)"></div>
-<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="4,200"></div>
+<div class="field"><label>Density factor (lbs/cu ft, read-only)</label><input type="number" class="tabular" data-builder-density readonly style="background:var(--surface-100)"></div>
+<div class="field"><label>Weight (lbs)</label><input type="number" class="tabular" data-shipment-weight step="1" min="0" value="4200"></div>
 <div class="field">
 <div class="field-label-row"><label for="quote-cube">Cube</label>
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
 <input id="quote-cube" class="tabular" data-shipment-cube value="494">
 </div>
 <div class="field"><label>Commodity <span class="term-hint" title="FAK = Freight All Kinds — a general freight class when no special commodity rules apply.">FAK</span></label><select><option selected>FAK — general freight</option><option>Case Goods</option><option>Upholstery</option></select></div>
-<div class="field"><label>Declared Value</label><input class="tabular" data-declared-value value="$45,000"></div>
+<div class="field"><label>Declared value ($)</label><input type="number" class="tabular" data-declared-value step="1" min="0" value="45000"></div>
 </div>
 <div class="inline-notice" data-cube-threshold-notice hidden><strong>Approaching truckload threshold</strong> — LTL rate may exceed truckload cost. Manual approval will be required.</div>
 <div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance ($500/article or $1/lb). Confirm exclusions (statuary, art, rare antiques, one-of-a-kind items) with the customer.</div>
 </div>
 <div class="card panel" data-cfq-manual hidden><h3 class="panel-title">Manual Rate Entry (Call-for-Quote)</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field"><label>Manual base rate</label><input class="tabular" placeholder="Enter rate"></div>
-<div class="field"><label>Manual fuel surcharge %</label><input class="tabular" placeholder="Enter %"></div>
-<div class="field"><label>Weight (lbs)</label><input class="tabular" data-shipment-weight value="4,200"></div>
+<div class="field"><label>Manual base rate ($/CWT)</label><input type="number" class="tabular" data-cfq-base step="0.01" min="0" placeholder="Enter rate"></div>
+<div class="field"><label>Manual fuel surcharge (%)</label><input type="number" class="tabular" data-cfq-fuel step="0.1" min="0" placeholder="Enter %"></div>
+<div class="field"><label>Weight (lbs)</label><input type="number" class="tabular" data-shipment-weight step="1" min="0" value="4200"></div>
 <div class="field">
 <div class="field-label-row"><label for="quote-cube-cfq">Cube</label>
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#quote-cube-cfq" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="drawer">Calculate from item dimensions</a></div>
@@ -148,7 +148,7 @@
 <div class="card panel quote-flow-step" data-quote-adjustments-step>
 <p class="quote-flow-step-label">Step 4b · Quote adjustments</p>
 <h3 class="panel-title">Rep adjustments on this quote</h3>
-<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Quote discount, customer-term exceptions (requires approval), accessorials, and custom layers — templates from <a href="quote-layer-templates.html">Quote layer templates</a>.</p>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Rep-negotiated layers on this shipment only. Tariff and customer master set the baseline in Step 4a — enable templates below to adjust this quote. Templates from <a href="quote-layer-templates.html">Quote layer templates</a>.</p>
 <div class="adjustment-layers-editor" data-quote-adjustments-editor></div>
 <div class="adjustment-layers-add">
 <label class="text-muted-sm" for="add-layer-type">Add custom layer</label>
@@ -164,7 +164,7 @@
 </div>
 <details class="card panel disclosure-panel"><summary>Competitor Match (optional)</summary>
 <div class="disclosure-body">
-<div class="field"><label>Competitor Name</label><input value="Regional Freight Co."></div>
+<div class="field"><label>Competitor Name</label><input data-competitor-name value="Regional Freight Co."></div>
 <div class="field"><label>Quoted Rate</label><input class="tabular" data-competitor-rate value=""></div>
 <p style="font-size:14px">Delta vs calculated: <span data-competitor-delta class="tabular">—</span> · <a href="tariff-competitor-comparison.html">Open full comparison</a></p>
 </div></details>
@@ -180,14 +180,14 @@
 <div class="cost-layer-stack" data-cost-layers></div>
 <button type="button" class="btn btn-link" data-builder-calc-toggle style="padding:0;margin:var(--space-sm) 0">Show line-item detail</button>
 <div data-builder-calc-detail data-builder-breakdown hidden></div>
-<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span>Margin vs floor (15%)</span><span class="tabular" data-builder-margin>—</span></div>
+<div style="margin:var(--space-md) 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--space-xs)"><span data-margin-floor-label>Margin vs floor (15%)</span><span class="tabular" data-builder-margin>—</span></div>
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill green" style="width:75%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
 <p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)" data-builder-cube-note>—</p>
 <p data-cfq-manual hidden style="font-size:13px;color:var(--neutral-600);padding:var(--space-md) 0">Enter manual rates above to see pricing breakdown.</p>
 <div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">
 <p class="text-muted-sm" data-builder-submit-hint style="margin:0">Ready to finalize — click Generate Quote to save and release within policy.</p>
 <button type="button" class="btn btn-primary" data-quote-submit-btn>Generate Quote</button>
-<a href="quotes.html" class="btn btn-secondary">Save as Draft</a>
+<a href="quotes.html" class="btn btn-secondary" data-quote-draft>Save as Draft</a>
 <a href="quotes.html" class="btn btn-link" style="text-align:center">Cancel</a>
 </div></div></div>
 
@@ -203,13 +203,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

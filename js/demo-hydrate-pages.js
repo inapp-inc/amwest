@@ -11,6 +11,12 @@
   var S = function () { return global.AwestStore; };
   var G = function () { return global.AwestGovernance; };
 
+  function dummyTariff() {
+    return global.AwestDummyTariff || {
+      baseRateCwt: 77.77, priorBaseRateCwt: 75, minimumChargeTariff: 111
+    };
+  }
+
   function pageName() {
     return (location.pathname.split('/').pop() || '').replace('.html', '');
   }
@@ -45,6 +51,21 @@
     return new URLSearchParams(location.search).get(key);
   }
 
+  function setBuilderField(selector, val) {
+    if (val == null || val === '') return;
+    document.querySelectorAll(selector).forEach(function (el) {
+      el.value = String(val);
+    });
+  }
+
+  function parsePortalLocation(text) {
+    var raw = String(text || '').trim();
+    var zipMatch = raw.match(/\b(\d{5})\b/);
+    var zip = zipMatch ? zipMatch[1] : '';
+    var cityState = raw.replace(/\b\d{5}\b/, '').replace(/,\s*$/, '').trim();
+    return { label: raw, zip: zip, cityState: cityState || raw };
+  }
+
   function wireSaveLink(selector, handler) {
     var el = document.querySelector(selector);
     if (!el || el._storeWired) return;
@@ -77,7 +98,7 @@
     function renderSide(id, cardIdx) {
       var q = S().getQuote(id);
       if (!q) return;
-      var p = q.pricing || {};
+      var p = S().computeQuotePricing(q);
       var cards = document.querySelectorAll('.compare-grid .card');
       var card = cards[cardIdx];
       if (!card) return;
@@ -92,11 +113,13 @@
       renderSide(leftSel.value, 0);
       renderSide(rightSel.value, 1);
       var diffEl = document.querySelector('.card ul');
-      if (diffEl && l && r && l.pricing && r.pricing) {
-        var delta = r.pricing.total - l.pricing.total;
-        var pct = l.pricing.total ? Math.round((delta / l.pricing.total) * 1000) / 10 : 0;
+      if (diffEl && l && r) {
+        var lp = S().computeQuotePricing(l);
+        var rp = S().computeQuotePricing(r);
+        var delta = rp.total - lp.total;
+        var pct = lp.total ? Math.round((delta / lp.total) * 1000) / 10 : 0;
         diffEl.innerHTML = '<li>Total ' + (delta >= 0 ? 'increased' : 'decreased') + ' by ' + fmtMoney(Math.abs(delta)) + ' (' + (delta >= 0 ? '+' : '−') + Math.abs(pct) + '%)</li>' +
-          '<li>Margin: ' + l.pricing.margin + '% → ' + r.pricing.margin + '%</li>' +
+          '<li>Margin: ' + lp.margin + '% → ' + rp.margin + '%</li>' +
           '<li>Left: ' + custName(l.customerId) + ' · Right: ' + custName(r.customerId) + '</li>';
       }
     }
@@ -111,7 +134,10 @@
     var editId = getQuery('id');
     var prefill = S().getAssistantPrefill();
     var q = editId ? S().getQuote(editId) : prefill;
-    var customerId = q && q.customerId ? q.customerId : 'PACI-1200';
+    var queryCid = getQuery('customer') || getQuery('customerId');
+    var customerId = (q && q.customerId)
+      || (queryCid && S().getCustomer(queryCid) ? queryCid : null)
+      || 'PACI-1200';
     var customer = S().getCustomer(customerId);
     var customerInput = document.querySelector('[data-builder-customer]');
     if (customerInput && customer) {
@@ -127,7 +153,26 @@
         var lane = document.querySelector('[data-builder-lane-override]');
         if (disc) disc.value = q.quoteDiscPct || 0;
         if (lane) lane.value = q.laneOverride != null ? q.laneOverride : 45;
+        setBuilderField('[data-pickup-zip]', q.pickupZip);
+        setBuilderField('[data-delivery-zip]', q.deliveryZip);
+        setBuilderField('[data-shipment-weight]', q.weight);
+        setBuilderField('[data-shipment-cube]', q.cube);
+        setBuilderField('[data-declared-value]', q.declaredValue);
+        setBuilderField('[data-competitor-name]', q.competitorName);
+        setBuilderField('[data-competitor-rate]', q.competitorRate);
+        setBuilderField('[data-spot-base]', q.spotBaseCwt);
+        setBuilderField('[data-spot-fuel]', q.spotFuelPct);
+        if (q.pricingMode === 'spot') {
+          var spotRadio = document.querySelector('[data-quote-type-toggle] input[value="spot"]');
+          if (spotRadio) spotRadio.checked = true;
+        }
       }
+    } else if (prefill) {
+      setBuilderField('[data-pickup-zip]', prefill.pickupZip);
+      setBuilderField('[data-delivery-zip]', prefill.deliveryZip);
+      setBuilderField('[data-shipment-weight]', prefill.weight);
+      setBuilderField('[data-shipment-cube]', prefill.cube);
+      setBuilderField('[data-declared-value]', prefill.declaredValue);
     }
     if (prefill) {
       var note = document.querySelector('[data-assistant-prefill]');
@@ -149,41 +194,18 @@
     if (!id) return;
     var q = S().getQuote(id);
     if (!q) return;
-    var p = q.pricing || {};
+    var p = S().computeQuotePricing(q);
     var state = S().getState();
 
-    var lifecycleLabels = {
-      draft: 'Draft', pending: 'Pending Approval', approved: 'Approved',
-      sent: 'Sent', accepted: 'Accepted', converted: 'Booked', lost: 'Lost'
-    };
-    var nextStepText = {
-      draft: 'Next step: finalize the quote or submit for manager approval if discounts exceed your authority.',
-      pending: 'Next step: a Sales Manager approves or rejects this quote.',
-      approved: 'Next step: generate a PDF and send the quote to the customer.',
-      sent: 'Next step: customer accepts the quote, or mark as lost if they decline.',
-      accepted: 'Next step: send to dispatch to book the shipment.',
-      converted: 'This quote is booked — the shipment can be tracked in the customer portal.',
-      lost: 'This opportunity was marked lost. Create a new quote if the customer returns.'
-    };
+    var G = window.AwestGovernance;
 
     var stepper = document.querySelector('[data-quote-lifecycle]') || document.querySelector('.stepper');
-    if (stepper) {
-      var steps = q.status === 'lost'
-        ? ['draft', 'pending', 'lost']
-        : ['draft', 'pending', 'approved', 'sent', 'accepted', 'converted'];
-      var idx = steps.indexOf(q.status);
-      if (q.status === 'converted') idx = 5;
-      stepper.innerHTML = steps.map(function (st, i) {
-        var cls = 'step';
-        if (i < idx) cls += ' done';
-        if (st === q.status || i === idx) cls += ' active';
-        return '<span class="' + cls + '">' + (lifecycleLabels[st] || st) + '</span>' +
-          (i < steps.length - 1 ? '<span class="arrow">→</span>' : '');
-      }).join('');
+    if (stepper && G) {
+      stepper.innerHTML = G.renderQuoteStepperHtml(q.status);
     }
 
     var nextEl = document.querySelector('[data-quote-next-step]');
-    if (nextEl) nextEl.textContent = nextStepText[q.status] || '';
+    if (nextEl && G) nextEl.textContent = G.quoteNextStep(q.status) || '';
 
     var gov = G().needsApproval(state, q);
     var existingGov = document.querySelector('.governance-banner');
@@ -228,6 +250,8 @@
       approvalPanel.remove();
     }
 
+    if (P()) P().hydrateMarginFloorUI(state.settings.marginFloor);
+
     var pdfLink = document.querySelector('a[href*="quote-pdf"]');
     var esignLink = document.querySelector('a[href*="quote-esign"]');
     var tmsLink = document.querySelector('a[href*="quote-tms-export"]');
@@ -258,6 +282,28 @@
       }
     }
 
+    if (q.status === 'sent') {
+      var actionRow = document.querySelector('.main-content > div[style*="flex-wrap"]')
+        || document.querySelector('[data-quote-detail-actions]');
+      if (actionRow && !document.querySelector('[data-quote-action="convert"]')) {
+        [
+          { action: 'convert', label: 'Convert to Shipment', cls: 'btn-primary', fn: function () { S().convertQuoteToShipment(id); location.reload(); } },
+          { action: 'expire', label: 'Mark Expired', cls: 'btn-secondary', fn: function () { S().expireQuote(id); location.reload(); } },
+          { action: 'lost', label: 'Mark Lost', cls: 'btn-secondary', fn: function () {
+            if (window.confirm('Mark ' + id + ' as lost opportunity?')) { S().markQuoteLost(id); location.reload(); }
+          } }
+        ].forEach(function (def) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn ' + def.cls;
+          btn.setAttribute('data-quote-action', def.action);
+          btn.textContent = def.label;
+          btn.addEventListener('click', def.fn);
+          actionRow.appendChild(btn);
+        });
+      }
+    }
+
     var art = document.querySelector('[data-artifacts-status]');
     if (!art) {
       art = document.createElement('p');
@@ -278,32 +324,7 @@
     if (!q) return;
     var statusEl = document.querySelector('.card p, [data-esign-status]');
     if (statusEl) statusEl.textContent = 'Status: ' + q.artifacts.esign.status;
-
-    wireSaveLink('.btn-primary', function () {
-      if (!q.artifacts.pdf.generatedAt) {
-        alert('Generate PDF before sending for e-signature.');
-        return;
-      }
-      S().sendEsign(id);
-      alert('Sent for e-signature (simulated).');
-      location.reload();
-    });
-
-    document.querySelectorAll('.btn-secondary').forEach(function (btn) {
-      if (btn._wired || btn.textContent.indexOf('Sign') < 0 && btn.textContent.indexOf('Decline') < 0) return;
-      btn._wired = true;
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (btn.textContent.indexOf('Sign') >= 0) {
-          S().signEsign(id);
-          alert('Signed (simulated).');
-        } else {
-          S().declineEsign(id);
-          alert('Declined (simulated).');
-        }
-        location.reload();
-      });
-    });
+    /* save: demo-crud.js */
   }
 
   function hydrateQuotePdfFull() {
@@ -311,7 +332,7 @@
     var id = getQuery('id') || 'Q-2026-0823';
     var q = S().getQuote(id);
     if (!q) return;
-    var p = q.pricing || {};
+    var p = S().computeQuotePricing(q);
     var cust = custName(q.customerId);
     document.querySelectorAll('.page-header p').forEach(function (el) {
       el.textContent = q.id + ' · ' + cust;
@@ -331,16 +352,7 @@
     }
     var close = document.querySelector('.page-header a.btn-secondary');
     if (close) close.href = 'quote-detail.html?id=' + encodeURIComponent(id);
-    var dl = document.querySelector('.btn-primary');
-    if (dl && !dl._wired) {
-      dl._wired = true;
-      dl.addEventListener('click', function (e) {
-        e.preventDefault();
-        S().generatePdf(id);
-        alert('PDF generated for ' + id + ' (simulated).');
-        location.href = 'quote-detail.html?id=' + encodeURIComponent(id);
-      });
-    }
+    /* PDF generate: demo-crud.js */
   }
 
   function hydrateQuoteTmsPage() {
@@ -348,6 +360,7 @@
     var id = getQuery('id') || 'Q-2026-0823';
     var q = S().getQuote(id);
     if (!q) return;
+    var p = S().computeQuotePricing(q);
     var card = document.querySelector('.card');
     if (q.artifacts.tmsExport.status === 'success') {
       if (card) {
@@ -355,13 +368,8 @@
       }
     } else {
       if (card) {
-        card.innerHTML = '<h2 class="panel-heading">Export to TMS</h2><p style="margin:var(--space-md) 0">Quote ' + q.id + ' · Total ' + fmtMoney((q.pricing && q.pricing.total) || 0) + '</p>' +
+        card.innerHTML = '<h2 class="panel-heading">Export to TMS</h2><p style="margin:var(--space-md) 0">Quote ' + q.id + ' · Total ' + fmtMoney(p.total || 0) + '</p>' +
           '<button type="button" class="btn btn-primary" data-tms-run>Run export</button>';
-        var btn = card.querySelector('[data-tms-run]');
-        if (btn) btn.addEventListener('click', function () {
-          S().exportTms(id);
-          location.reload();
-        });
       }
     }
     document.querySelectorAll('a[href="quote-detail.html"]').forEach(function (a) {
@@ -373,59 +381,82 @@
   function hydrateTariffWizard() {
     if (pageName() !== 'tariff-wizard') return;
     var td = S().getState().settings.tariffDisplay || {};
+    var cloneId = getQuery('clone');
+    var src = cloneId ? S().getTariff(cloneId) : null;
     var baseInput = document.getElementById('tw-base');
-    if (baseInput) baseInput.value = fmtMoney(td.baseRateCwt || 58);
+    if (baseInput) {
+      var baseRate = (src && src.config && src.config.baseRateCwt) || td.baseRateCwt || 58;
+      baseInput.value = String(baseRate);
+    }
+    if (src) {
+      var nameEl = document.getElementById('tw-name');
+      var idEl = document.getElementById('tw-id');
+      if (nameEl) nameEl.value = src.name + ' (copy)';
+      if (idEl) idEl.value = '';
+    }
     document.querySelectorAll('[data-wizard-base-summary]').forEach(function (el) {
-      el.textContent = 'CWT · ' + fmtMoney(td.baseRateCwt || 58) + ' base · min density 6.0';
-    });
-      wireSaveLink('.btn-primary, a.btn-primary', function () {
-      var nameInput = document.querySelector('.wizard-step.active input, .field input, input[type="text"]');
-      var name = nameInput ? nameInput.value : 'New Tariff';
-      var id = 'TAR-' + Date.now().toString(36).slice(-6).toUpperCase();
-      S().saveTariff({
-        id: id, name: name || 'New Tariff', type: 'Base', service: 'B2B', uom: 'CWT',
-        customerId: null, status: 'draft', effectiveDate: new Date().toISOString().slice(0, 10), version: 1, parentTariffId: null
-      });
-      location.href = 'tariff-detail.html?id=' + encodeURIComponent(id);
+      el.textContent = 'CWT · ' + fmtMoney((src && src.config && src.config.baseRateCwt) || td.baseRateCwt || 58) + ' base · min density 6.0';
     });
   }
 
   function hydrateTariffConfirm() {
-    var name = pageName();
-    if (name === 'tariff-delete-confirm') {
-      wireSaveLink('.btn-burgundy, .btn-primary', function () {
-        var id = getQuery('id') || 'TAR-SPOT-001';
-        S().deleteTariff(id);
-        location.href = 'tariffs.html';
-      });
-    }
-    if (name === 'tariff-rollback-confirm') {
-      wireSaveLink('.btn-primary', function () {
-        S().rollbackTariff(getQuery('id') || 'TAR-B2B-BASE');
-        location.href = 'tariff-detail.html?id=' + encodeURIComponent(getQuery('id') || 'TAR-B2B-BASE');
-      });
-    }
-    if (name === 'tariff-add-override') {
-      wireSaveLink('.btn-primary', function () {
-        S().saveTariffOverride({
-          tariffId: getQuery('id') || 'TAR-B2B-BASE',
-          level: 'customer',
-          customerId: getQuery('customer') || 'PACI-1200',
-          adjustments: { pct: -2 }
-        });
-        location.href = 'tariff-detail.html?id=' + encodeURIComponent(getQuery('id') || 'TAR-B2B-BASE');
-      });
-    }
+    /* rollback save: demo-crud.js */
   }
 
   function hydrateTariffComparison() {
     if (pageName() !== 'tariff-comparison' && pageName() !== 'tariff-competitor-comparison') return;
     var tariffs = S().getState().tariffs;
-    document.querySelectorAll('select').forEach(function (sel, i) {
-      sel.innerHTML = tariffs.map(function (t) {
-        return '<option value="' + t.id + '">' + t.name + '</option>';
-      }).join('');
-    });
+    var leftSel = document.getElementById('tc-left');
+    var rightSel = document.getElementById('tc-right');
+    if (!leftSel || !rightSel) return;
+
+    leftSel.innerHTML = tariffs.map(function (t, i) {
+      return '<option value="' + t.id + '"' + (i === 0 ? ' selected' : '') + '>' + t.id + ' · ' + t.name + '</option>';
+    }).join('');
+    rightSel.innerHTML = tariffs.map(function (t, i) {
+      return '<option value="' + t.id + '"' + (i === 1 ? ' selected' : '') + '>' + t.id + ' · ' + t.name + '</option>';
+    }).join('');
+
+    function renderTariffCard(id, cardIdx) {
+      var t = S().getTariff(id);
+      if (!t) return;
+      var cfg = t.config || {};
+      var cards = document.querySelectorAll('.compare-grid > div');
+      var card = cards[cardIdx];
+      if (!card) return;
+      var rateEl = card.querySelector('[data-tariff-rate-new], [data-tariff-rate-old]');
+      if (rateEl) rateEl.textContent = fmtMoney(cfg.baseRateCwt || 58) + '/CWT';
+      var statusEl = card.querySelector('.badge');
+      if (statusEl) {
+        statusEl.textContent = t.status.charAt(0).toUpperCase() + t.status.slice(1);
+        statusEl.className = 'badge badge-' + (t.status === 'active' ? 'active' : 'draft');
+      }
+    }
+
+    function refreshTariffDiff() {
+      var leftId = leftSel.value;
+      var rightId = rightSel.value;
+      renderTariffCard(leftId, 0);
+      renderTariffCard(rightId, 1);
+      var lt = S().getTariff(leftId);
+      var rt = S().getTariff(rightId);
+      var diffEl = document.querySelector('[data-tariff-rate-change]');
+      if (diffEl && lt && rt) {
+        var lb = (lt.config || {}).baseRateCwt || 0;
+        var rb = (rt.config || {}).baseRateCwt || 0;
+        var delta = rb - lb;
+        var pct = lb ? Math.round((delta / lb) * 1000) / 10 : 0;
+        diffEl.textContent = 'Base rate ' + (delta >= 0 ? 'increased' : 'decreased') + ' from ' +
+          fmtMoney(lb) + ' to ' + fmtMoney(rb) + ' (' + (delta >= 0 ? '+' : '−') + Math.abs(pct) + '%)';
+      }
+    }
+
+    if (!leftSel._tariffCmpWired) {
+      leftSel._tariffCmpWired = true;
+      leftSel.addEventListener('change', refreshTariffDiff);
+      rightSel.addEventListener('change', refreshTariffDiff);
+    }
+    refreshTariffDiff();
   }
 
   function hydrateCustomerDetailFull() {
@@ -474,23 +505,7 @@
       }).join('');
     });
 
-    wireSaveLink('.btn-primary', function () {
-      tabs.forEach(function (tab) {
-        var tbody = document.querySelector('[data-tms-section="' + tab + '"] tbody');
-        if (!tbody) return;
-        var rows = [];
-        tbody.querySelectorAll('tr').forEach(function (tr, ri) {
-          var cells = tr.querySelectorAll('td input, td select');
-          var orig = (mapping[tab] || [])[ri] || { id: S().uid('tms') };
-          rows.push(Object.assign({}, orig, {
-            tariffCode: cells[0] ? cells[0].value : orig.tariffCode,
-            levelCode: cells[1] ? cells[1].value : orig.levelCode
-          }));
-        });
-        if (rows.length) S().saveTmsMapping(tab, rows);
-      });
-      location.href = 'reference.html';
-    });
+    /* save: demo-crud.js */
   }
 
   function hydrateAnalyticsFull() {
@@ -521,13 +536,39 @@
     var comms = S().getState().portal.commodities.filter(function (c) { return c.customerId === cid; });
     var tickets = S().getState().portal.supportTickets.filter(function (t) { return t.customerId === cid; });
 
-    document.querySelectorAll('.card ul, .portal-list').forEach(function (ul, i) {
-      if (i === 0) {
-        ul.innerHTML = addrs.map(function (a) {
-          return '<li>' + a.label + ' — ' + a.lines + (a.default ? ' <span class="badge badge-active">Default</span>' : '') + '</li>';
-        }).join('') || '<li>No addresses — <a href="portal-add-address.html">Add one</a></li>';
-      }
-    });
+    var addrUl = document.querySelector('[data-portal-addresses]');
+    if (addrUl) {
+      addrUl.innerHTML = addrs.map(function (a) {
+        return '<li>' + a.label + ' — ' + a.lines + (a.default ? ' <span class="badge badge-active">Default</span>' : '') + '</li>';
+      }).join('') || '<li>No addresses — <a href="portal-add-address.html">Add one</a></li>';
+    } else {
+      document.querySelectorAll('.card ul, .portal-list').forEach(function (ul, i) {
+        if (i === 0) {
+          ul.innerHTML = addrs.map(function (a) {
+            return '<li>' + a.label + ' — ' + a.lines + (a.default ? ' <span class="badge badge-active">Default</span>' : '') + '</li>';
+          }).join('') || '<li>No addresses — <a href="portal-add-address.html">Add one</a></li>';
+        }
+      });
+    }
+
+    var commUl = document.querySelector('[data-portal-commodities]');
+    if (commUl) {
+      commUl.innerHTML = comms.map(function (c) {
+        return '<li>' + c.name + ' — ' + (c.classCode || 'FAK') + (c.nmfc ? ' · NMFC ' + c.nmfc : '') + '</li>';
+      }).join('') || '<li>No saved commodities — <a href="portal-add-commodity.html">Add one</a></li>';
+    } else {
+      document.querySelectorAll('.card').forEach(function (card) {
+        var h = card.querySelector('h3, h2, .panel-title');
+        if (h && /commodit/i.test(h.textContent)) {
+          var ul = card.querySelector('ul');
+          if (ul) {
+            ul.innerHTML = comms.map(function (c) {
+              return '<li>' + c.name + ' — ' + (c.classCode || 'FAK') + '</li>';
+            }).join('') || '<li>No saved commodities — <a href="portal-add-commodity.html">Add one</a></li>';
+          }
+        }
+      });
+    }
 
     var tables = document.querySelectorAll('.data-table tbody');
     if (tables[0]) {
@@ -540,31 +581,11 @@
   }
 
   function hydratePortalAddAddress() {
-    if (pageName() !== 'portal-add-address') return;
-    wireSaveLink('.btn-primary', function () {
-      var fields = document.querySelectorAll('.field input');
-      S().savePortalAddress({
-        customerId: S().getState().portal.activeCustomerId,
-        label: fields[0] ? fields[0].value : 'Address',
-        lines: (fields[1] ? fields[1].value : '') + ', ' + (fields[2] ? fields[2].value : ''),
-        default: false
-      });
-      location.href = 'portal-self-service.html';
-    });
+    /* save: demo-crud.js */
   }
 
   function hydratePortalAddCommodity() {
-    if (pageName() !== 'portal-add-commodity') return;
-    wireSaveLink('.btn-primary', function () {
-      var fields = document.querySelectorAll('.field input');
-      S().savePortalCommodity({
-        customerId: S().getState().portal.activeCustomerId,
-        name: fields[0] ? fields[0].value : 'Commodity',
-        nmfc: fields[1] ? fields[1].value : '',
-        dims: fields[2] ? fields[2].value : ''
-      });
-      location.href = 'portal-self-service.html';
-    });
+    /* save: demo-crud.js */
   }
 
   function hydratePortalPod() {
@@ -613,6 +634,9 @@
     var weightEl = document.querySelector('[data-shipment-weight]');
     var cubeEl = document.querySelector('[data-shipment-cube]');
     var dvEl = document.querySelector('[data-declared-value]');
+    var originEl = document.querySelector('[data-portal-origin]');
+    var destEl = document.querySelector('[data-portal-destination]');
+    var routeNote = document.querySelector('[data-portal-route-note]');
     var tierCards = document.querySelectorAll('.service-tier-card');
     var totalEl = document.querySelector('.portal-quote-total');
     var breakdown = document.querySelector('.portal-breakdown');
@@ -643,6 +667,13 @@
       var weight = parseVal(weightEl, cfg.weight || 2400);
       var cube = parseVal(cubeEl, cfg.cube || 520);
       var dv = parseVal(dvEl, cfg.declaredValue || 18000);
+      var origin = parsePortalLocation(originEl ? originEl.value : 'High Point, NC 27260');
+      var dest = parsePortalLocation(destEl ? destEl.value : 'Anderson, SC 29621');
+      if (routeNote) {
+        var oCode = origin.zip ? origin.zip.slice(0, 3) : '272';
+        var dCode = dest.zip ? dest.zip.slice(0, 3) : '296';
+        routeNote.textContent = oCode + ' → ' + dCode + ' · Estimated transit 3–5 days';
+      }
       if (cubeHint) cubeHint.textContent = cube + ' cu ft → rate group 2 (251–500 cf bracket). Group 6 requires a custom quote.';
       if (computeNote) {
         computeNote.textContent = 'How this price was calculated: we look up your delivery ZIP to a home-delivery tier, find the per-pound rate for your cube bracket (' + cube + ' cf = group 2), multiply by weight, apply the lane minimum if needed, then add fuel (' + fuelPct + '% of linehaul) and insurance (1% of declared value, $25 minimum).';
@@ -673,48 +704,68 @@
       if (tiers[selIdx]) renderSelected(tiers[selIdx]);
     }
 
-    [weightEl, cubeEl, dvEl].forEach(function (el) {
+    [weightEl, cubeEl, dvEl, originEl, destEl].forEach(function (el) {
       if (!el || el._portalPricingWired) return;
       el._portalPricingWired = true;
       el.addEventListener('input', refresh);
       el.addEventListener('change', refresh);
     });
 
+    function bookPortalQuote(status) {
+      var weight = parseVal(weightEl, cfg.weight);
+      var cube = parseVal(cubeEl, cfg.cube);
+      var dv = parseVal(dvEl, cfg.declaredValue);
+      var origin = parsePortalLocation(originEl ? originEl.value : '');
+      var dest = parsePortalLocation(destEl ? destEl.value : '');
+      var tierDef = (cfg.tiers || []).find(function (t) { return t.id === selectedTier; }) || (cfg.tiers || [])[2];
+      var pricing = P().computePortalTier({
+        weight: weight,
+        declaredValue: dv,
+        ratePerLb: tierDef.ratePerLb,
+        fuelPct: fuelPct,
+        residential: residential
+      });
+      var q = S().createPortalQuote({
+        customerId: state.portal.activeCustomerId,
+        origin: origin.label || origin.cityState,
+        destination: dest.label || dest.cityState,
+        pickupZip: origin.zip || '27260',
+        deliveryZip: dest.zip || '29621',
+        weight: weight,
+        cube: cube,
+        declaredValue: dv,
+        primaryService: selectedTier,
+        status: status,
+        sentAt: status === 'sent' ? new Date().toISOString() : null,
+        pricingMode: 'override',
+        pricingOverride: { total: pricing.total, margin: 18 }
+      });
+      return q;
+    }
+
     if (acceptBtn && !acceptBtn._wired) {
       acceptBtn._wired = true;
       acceptBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        var weight = parseVal(weightEl, cfg.weight);
-        var cube = parseVal(cubeEl, cfg.cube);
-        var dv = parseVal(dvEl, cfg.declaredValue);
-        var tierDef = (cfg.tiers || []).find(function (t) { return t.id === selectedTier; }) || (cfg.tiers || [])[2];
-        var pricing = P().computePortalTier({
-          weight: weight,
-          declaredValue: dv,
-          ratePerLb: tierDef.ratePerLb,
-          fuelPct: fuelPct,
-          residential: residential
-        });
-        var q = S().createPortalQuote({
-          customerId: state.portal.activeCustomerId,
-          origin: 'Seattle',
-          destination: 'Portland',
-          weight: weight,
-          cube: cube,
-          declaredValue: dv,
-          status: 'sent',
-          sentAt: new Date().toISOString(),
-          pricingMode: 'override',
-          pricingOverride: { total: pricing.total, margin: 18 }
-        });
+        var q = bookPortalQuote('sent');
         location.href = 'portal-quote-confirmation.html?id=' + encodeURIComponent(q.id);
+      });
+    }
+
+    var saveLaterBtn = document.querySelector('[data-portal-save-later]');
+    if (saveLaterBtn && !saveLaterBtn._wired) {
+      saveLaterBtn._wired = true;
+      saveLaterBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        bookPortalQuote('draft');
+        location.href = 'portal-dashboard.html';
       });
     }
 
     wirePortalAccountLabel();
     if (weightEl && !weightEl.value) weightEl.value = String(cfg.weight || 2400);
     if (cubeEl && !cubeEl.value) cubeEl.value = String(cfg.cube || 520);
-    if (dvEl && !dvEl.value && P()) dvEl.value = P().formatMoney(cfg.declaredValue || 18000).replace('−', '');
+    if (dvEl && !dvEl.value) dvEl.value = String(cfg.declaredValue || 18000);
     refresh();
   }
 
@@ -723,7 +774,7 @@
     var id = getQuery('id') || getQuery('quote') || 'Q-2026-0823';
     var q = S().getQuote(id);
     if (!q || !P()) return;
-    var p = q.pricing || {};
+    var p = S().computeQuotePricing(q);
     var meta = P().pricingMetaFromQuote(q);
     var awMount = document.querySelector('[data-competitor-aw]');
     if (awMount) awMount.innerHTML = P().renderPricingBreakdown(p, false, meta);
@@ -754,48 +805,131 @@
     var id = getQuery('id') || 'TAR-B2B-BASE';
     var t = S().getTariff(id);
     if (!t) return;
-    var td = S().getState().settings.tariffDisplay || {};
-    var fuelPct = S().getState().reference.fuel.slice(-1)[0];
+    var cfg = t.config || {};
+    var D = dummyTariff();
+    var statusClass = t.status === 'active' ? 'badge-active' : (t.status === 'draft' ? 'badge-draft' : 'badge-pending');
+    var detailUrl = 'tariff-detail.html?id=' + encodeURIComponent(id);
+    var matrixUrl = 'tariff-rate-matrix.html?id=' + encodeURIComponent(id);
+
+    document.title = t.id + ' — Tariff Detail — American West';
+    var h1 = document.querySelector('[data-tariff-id]');
+    if (h1) h1.textContent = t.id;
+    var nameInput = document.querySelector('[data-tariff-name]');
+    if (nameInput) nameInput.value = t.name;
+    var subtitle = document.querySelector('[data-tariff-subtitle]');
+    if (subtitle) subtitle.textContent = t.name;
+    var statusEl = document.querySelector('[data-tariff-status]');
+    if (statusEl) {
+      statusEl.textContent = t.status.charAt(0).toUpperCase() + t.status.slice(1);
+      statusEl.className = 'badge ' + statusClass;
+    }
+    var versionEl = document.querySelector('[data-tariff-version]');
+    if (versionEl) versionEl.textContent = 'v' + (t.version || 1);
+    var inheritEl = document.querySelector('[data-tariff-inherit-note]');
+    if (inheritEl) {
+      if (t.parentTariffId) {
+        inheritEl.innerHTML = '<strong>Inherits from:</strong> <a href="tariff-detail.html?id=' +
+          encodeURIComponent(t.parentTariffId) + '">' + t.parentTariffId +
+          '</a> — rate matrix merges from parent; cells saved here override at quote time.';
+      } else if (t.type === 'Base') {
+        inheritEl.textContent = 'Base tariff — published rate schedule for this service type. Customer discounts and quote adjustments apply at quote time.';
+      } else {
+        inheritEl.hidden = true;
+      }
+    }
+    var descInput = document.querySelector('[data-tariff-description]');
+    if (descInput) descInput.value = cfg.description || t.name;
+    var startInput = document.querySelector('[data-tariff-effective-start]');
+    if (startInput) startInput.value = t.effectiveDate || '';
+    var endInput = document.querySelector('[data-tariff-effective-end]');
+    if (endInput) endInput.value = cfg.effectiveEnd || '';
+
+    document.querySelectorAll('[data-tariff-matrix-link]').forEach(function (a) {
+      a.href = matrixUrl;
+    });
+    document.querySelectorAll('[data-tariff-clone-link]').forEach(function (a) {
+      a.href = 'tariff-wizard.html?clone=' + encodeURIComponent(id);
+    });
+    document.querySelectorAll('[data-tariff-delete-link]').forEach(function (a) {
+      a.href = 'tariff-delete-confirm.html?id=' + encodeURIComponent(id);
+    });
+    document.querySelectorAll('[data-tariff-add-rule-link]').forEach(function (a) {
+      a.href = 'tariff-add-override.html?id=' + encodeURIComponent(id);
+    });
+
     document.querySelectorAll('[data-base-rate-field]').forEach(function (el) {
-      var val = fmtMoney(td.baseRateCwt || 58) + ' / CWT';
-      if (el.tagName === 'INPUT') el.value = val;
-      else el.textContent = val + ' — national default';
+      var n = cfg.baseRateCwt != null ? cfg.baseRateCwt : D.baseRateCwt;
+      el.value = String(n);
     });
     document.querySelectorAll('[data-tariff-base-rate-display]').forEach(function (el) {
-      el.textContent = fmtMoney(td.baseRateCwt || 58) + ' / CWT — national default';
+      el.textContent = fmtMoney(cfg.baseRateCwt || D.baseRateCwt) + ' / CWT — national default';
     });
-    document.querySelectorAll('[data-tariff-lane-override]').forEach(function (el) {
-      el.textContent = 'TMV-SC +$' + (td.laneOverrideCwt || 1.07) + '/CWT';
-    });
-    document.querySelectorAll('[data-tariff-lane-flat]').forEach(function (el) {
-      el.textContent = '+' + fmtMoney(td.laneOverrideFlat || 45) + '/shipment';
+    document.querySelectorAll('[data-minimum-charge-field]').forEach(function (el) {
+      el.value = String(cfg.minimumCharge != null ? cfg.minimumCharge : D.minimumChargeTariff);
     });
     document.querySelectorAll('[data-tariff-min-charge]').forEach(function (el) {
-      el.textContent = fmtMoney(td.minimumCharge || 285) + ' minimum charge';
+      var text = fmtMoney(cfg.minimumCharge || D.minimumChargeTariff) + ' minimum charge';
+      if (el.tagName === 'TD') el.textContent = text;
+      else el.textContent = text;
+    });
+    document.querySelectorAll('[data-margin-field]').forEach(function (el) {
+      el.value = String(cfg.marginFloorPct != null ? cfg.marginFloorPct : 15);
+    });
+    document.querySelectorAll('[data-density-input]').forEach(function (el) {
+      el.value = String(cfg.density != null ? cfg.density : 8.5);
+    });
+    document.querySelectorAll('[data-lane-field]').forEach(function (el) {
+      el.value = cfg.rateTableLabel || 'National B2B Matrix';
     });
     document.querySelectorAll('[data-tariff-audit-base]').forEach(function (el) {
-      el.textContent = fmtMoney(td.priorBaseRateCwt || 56.55) + ' → ' + fmtMoney(td.baseRateCwt || 58);
+      el.textContent = fmtMoney(cfg.priorBaseRateCwt || D.priorBaseRateCwt) + ' → ' + fmtMoney(cfg.baseRateCwt || D.baseRateCwt);
     });
-    document.querySelectorAll('details summary + p').forEach(function (p) {
-      if (p.textContent.indexOf('SC:293,296,297') >= 0 && p.querySelector('[data-tariff-lane-override]')) {
-        p.querySelector('[data-tariff-lane-override]').textContent = '+$' + (td.laneOverrideCwt || 1.07) + '/CWT';
+
+    var serviceSelect = document.querySelector('[data-service-select]');
+    var uomSelect = document.querySelector('[data-uom-select]');
+    var overviewRoot = document.querySelector('[data-tariff-overview]');
+    if (serviceSelect) {
+      var svcVal = 'b2b';
+      var svc = String(t.service || '').toLowerCase();
+      if (svc.indexOf('threshold') >= 0) svcVal = 'threshold';
+      else if (svc.indexOf('no insp') >= 0 || svc.indexOf('wgni') >= 0) svcVal = 'wg-no-insp';
+      else if (svc.indexOf('inspection') >= 0 || svc.indexOf('wgi') >= 0) svcVal = 'wg-insp';
+      serviceSelect.value = svcVal;
+    }
+    if (uomSelect) {
+      uomSelect.value = String(t.uom || 'CWT').toLowerCase();
+    }
+    if (overviewRoot) overviewRoot.setAttribute('data-tariff-store-hydrated', '1');
+
+    /* baseline rules table: demo-crud.js hydrateTariffBaselineCrud */
+
+    var historyAcc = document.querySelector('[data-tariff-history-accordion]');
+    if (historyAcc) {
+      var hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+      if (hash === 'panel-history' || hash === 'versions' || hash === 'audit' ||
+          hash === 'panel-versions' || hash === 'panel-audit') {
+        historyAcc.open = true;
+        requestAnimationFrame(function () {
+          var target = hash === 'versions' || hash === 'panel-versions'
+            ? document.getElementById('panel-versions')
+            : (hash === 'audit' || hash === 'panel-audit'
+              ? document.getElementById('panel-audit')
+              : historyAcc);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       }
-    });
-    if (fuelPct) {
-      document.querySelectorAll('[data-tariff-fuel]').forEach(function (el) {
-        el.textContent = fuelPct.pct + '%';
-      });
     }
   }
 
   function hydrateTariffComparisonFull() {
     if (pageName() !== 'tariff-comparison') return;
     var td = S().getState().settings.tariffDisplay || {};
+    var D = dummyTariff();
     document.querySelectorAll('[data-tariff-rate-new]').forEach(function (el) {
-      el.textContent = fmtMoney(td.baseRateCwt || 58) + '/CWT';
+      el.textContent = fmtMoney(td.baseRateCwt || D.baseRateCwt) + '/CWT';
     });
     document.querySelectorAll('[data-tariff-rate-old]').forEach(function (el) {
-      el.textContent = fmtMoney(td.priorBaseRateCwt || 56.55) + '/CWT';
+      el.textContent = fmtMoney(td.priorBaseRateCwt || D.priorBaseRateCwt) + '/CWT';
     });
     var delta = td.baseRateCwt && td.priorBaseRateCwt
       ? Math.round(((td.baseRateCwt - td.priorBaseRateCwt) / td.priorBaseRateCwt) * 1000) / 10
@@ -832,7 +966,7 @@
     var lead = document.querySelector('.page-lead');
     if (lead) {
       var active = S().getState().quotes.filter(function (q) {
-        return q.status !== 'lost' && q.status !== 'accepted';
+        return q.status !== 'lost' && q.status !== 'expired' && q.status !== 'converted' && q.status !== 'accepted';
       }).length;
       lead.textContent = 'Sales Pipeline · ' + active + ' active opportunities';
     }
@@ -885,16 +1019,7 @@
 
   /* ── Phase 7: Admin + auth ── */
   function hydrateAdminInvite() {
-    if (pageName() !== 'admin-invite') return;
-    var form = document.querySelector('form, .card');
-    wireSaveLink('.btn-primary', function () {
-      var inputs = document.querySelectorAll('.field input, .field select');
-      var email = inputs[0] ? inputs[0].value : 'new@americanwest.com';
-      var name = inputs[1] ? inputs[1].value : 'New User';
-      var role = inputs[2] ? inputs[2].value : 'Sales Rep';
-      S().inviteUser({ email: email, name: name, role: role });
-      location.href = 'admin-users.html';
-    });
+    /* save: demo-crud.js */
   }
 
   function hydrateAdminUserEdit() {
@@ -910,20 +1035,7 @@
       if (t.indexOf('email') >= 0) input.value = u.email;
       if (t.indexOf('role') >= 0) input.value = u.role;
     });
-    wireSaveLink('.btn-primary', function () {
-      var partial = { id: u.id, name: u.name, email: u.email, role: u.role, status: u.status };
-      document.querySelectorAll('.field').forEach(function (field) {
-        var label = (field.querySelector('label') || {}).textContent || '';
-        var input = field.querySelector('input, select');
-        if (!input) return;
-        if (label.toLowerCase().indexOf('name') >= 0) partial.name = input.value;
-        if (label.toLowerCase().indexOf('email') >= 0) partial.email = input.value;
-        if (label.toLowerCase().indexOf('role') >= 0) partial.role = input.value;
-        if (label.toLowerCase().indexOf('status') >= 0) partial.status = input.value;
-      });
-      S().saveUser(partial);
-      location.href = 'admin-users.html';
-    });
+    /* save: demo-crud.js */
   }
 
   function hydrateAdminLists() {
@@ -940,25 +1052,7 @@
         tbody.innerHTML = rows.join('');
       }
     }
-    if (pageName() === 'admin-list-edit') {
-      wireSaveLink('.btn-primary', function () {
-        var list = getQuery('list') || 'origins';
-        var input = document.querySelector('.field input');
-        var val = input ? input.value : '';
-        var lists = S().getState().validationLists;
-        if (val && lists[list].indexOf(val) < 0) lists[list].push(val);
-        S().saveValidationLists(lists);
-        location.href = 'admin-list-management.html';
-      });
-    }
-    if (pageName() === 'admin-agreement-template') {
-      var ta = document.querySelector('textarea');
-      if (ta) ta.value = S().getState().settings.agreementTemplate || ta.value;
-      wireSaveLink('.btn-primary', function () {
-        S().saveSettings({ agreementTemplate: ta ? ta.value : '' });
-        location.href = 'admin-config.html';
-      });
-    }
+    /* admin-list-edit + agreement template save: demo-crud.js */
   }
 
   function hydrateForgotPassword() {

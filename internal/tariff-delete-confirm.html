@@ -46,10 +46,10 @@
 
 <div class="page-header"><div><h1>Delete Tariff</h1></div></div>
 <div class="card" style="max-width:520px">
-<div class="governance-banner red"><strong>Confirm deletion:</strong> TAR-B2B-BASE — White Glove Inspection — B2B. This action cannot be undone.</div>
-<p style="font-size:14px;margin-bottom:var(--space-lg)">All version history and override rules for this tariff will be permanently removed.</p>
-<a href="tariffs.html" class="btn btn-destructive">Delete tariff</a>
-<a href="tariff-detail.html" class="btn btn-secondary" style="margin-left:var(--space-sm)">Cancel</a>
+<div class="governance-banner red" data-tariff-delete-banner><strong>Confirm deletion:</strong> TAR-B2B-BASE — White Glove Inspection — B2B. This action cannot be undone.</div>
+<p style="font-size:14px;margin-bottom:var(--space-lg)">All version history, baseline rules, and saved rate matrices for this tariff will be permanently removed from the session store.</p>
+<button type="button" class="btn btn-destructive" data-tariff-delete-confirm>Delete tariff</button>
+<a href="tariff-detail.html" class="btn btn-secondary" style="margin-left:var(--space-sm)" data-tariff-delete-cancel>Cancel</a>
 </div>
 </div>
 <footer class="mock-footer">
@@ -63,13 +63,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

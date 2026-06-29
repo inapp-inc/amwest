@@ -45,7 +45,7 @@
 <div class="main-content">
 
 <div class="page-header">
-<div><h1>Quote Assistant</h1><p class="text-muted-sm" style="margin-top:4px">Guided quote setup — describe the shipment or pick a common task. The assistant pre-fills the quote builder for you.</p></div>
+<div><h1>Quote Assistant</h1><p class="text-muted-sm" style="margin-top:4px">Guided quote creation — customer, base tariff, shipment details, and rep adjustments. The quote is priced live and saved when you finish.</p></div>
 <a href="quote-builder.html" class="btn btn-secondary">Open Quote Builder</a>
 </div>
 
@@ -59,7 +59,7 @@
 </div>
 <div class="card assistant-preview-wrap">
 <h3 class="panel-title">Live quote preview</h3>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Pricing updates as the assistant gathers shipment details.</p>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Pricing updates as you confirm each step — same engine as Quote Builder.</p>
 <div data-assistant-preview class="assistant-preview">
 <p style="font-size:13px;color:var(--neutral-600)">Start a flow to see the breakdown here.</p>
 </div>
@@ -78,13 +78,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

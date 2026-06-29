@@ -84,7 +84,10 @@
     if (view === 'open') return 'Open Quotes';
     if (status === 'pending') return 'Pending Approval';
     if (status === 'sent') return 'Quotes Sent';
-    if (status === 'accepted') return 'Accepted Quotes';
+    if (status === 'converted') return 'Converted to Shipment';
+    if (status === 'expired') return 'Expired Quotes';
+    if (status === 'lost') return 'Lost Opportunity';
+    if (status === 'accepted') return 'Converted to Shipment';
     if (status === 'approved') return 'Approved Quotes';
     if (status === 'draft') return 'Draft Quotes';
     if (rep) return rep + "'s Quotes";
@@ -94,7 +97,9 @@
         pending: 'Pending Approval stage',
         approved: 'Approved stage',
         sent: 'Sent stage',
-        accepted: 'Accepted stage'
+        converted: 'Converted to Shipment stage',
+        expired: 'Expired stage',
+        lost: 'Lost Opportunity stage'
       };
       return stageLabels[stage] || stage;
     }
@@ -379,91 +384,102 @@
     }
 
     toggle.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-      radio.addEventListener('change', sync);
+      radio.addEventListener('change', function () {
+        sync();
+        document.dispatchEvent(new CustomEvent('awest:quote-type-change'));
+      });
     });
     sync();
   }
 
-  /* ── Tariff Detail — Overview segmented controls (service type + UOM) ── */
+  /* ── Tariff Detail — pricing model dropdowns (service + UOM) ── */
   function initTariffOverview() {
     document.querySelectorAll('[data-tariff-overview]').forEach(function (root) {
-      var serviceGroup = root.querySelector('[data-service-group]');
-      var uomGroup = root.querySelector('[data-uom-group]');
+      var serviceSelect = root.querySelector('[data-service-select]');
+      var uomSelect = root.querySelector('[data-uom-select]');
       var densityField = root.querySelector('[data-density-field]');
       var baseRateField = root.querySelector('[data-base-rate-field]');
       var laneField = root.querySelector('[data-lane-field]');
       var marginField = root.querySelector('[data-margin-field]');
-      if (!serviceGroup || !uomGroup) return;
+      if (!serviceSelect || !uomSelect) return;
 
-      var servicePresets = {
-        b2b: { amount: 52, lane: 'National B2B Matrix', margin: '15%', density: '8.5' },
-        threshold: { amount: 44, lane: 'Home Delivery Threshold Matrix', margin: '12%', density: '7.0' },
-        'wg-no-insp': { amount: 54, lane: 'White Glove — No Inspection', margin: '15%', density: '8.5' },
-        'wg-insp': { amount: 58, lane: 'National B2B Matrix', margin: '15%', density: '8.5' }
-      };
+      var servicePresets = (function () {
+        var D = global.AwestDummyTariff;
+        return D && D.overviewPresets ? D.overviewPresets : {
+          b2b: { amount: 44, lane: 'National B2B Matrix', margin: 15, density: 8.5 },
+          threshold: { amount: 40, lane: 'Home Delivery Threshold Matrix', margin: 12, density: 7.0 },
+          'wg-no-insp': { amount: 48, lane: 'White Glove — No Inspection', margin: 15, density: 8.5 },
+          'wg-insp': { amount: 52, lane: 'National B2B Matrix', margin: 15, density: 8.5 }
+        };
+      })();
 
-      function syncSegmentedVisual(group) {
-        group.querySelectorAll('label').forEach(function (label) {
-          var input = label.querySelector('input[type="radio"]');
-          label.classList.toggle('is-selected', !!(input && input.checked));
-        });
+      var baseRateLabel = root.querySelector('[data-base-rate-label]');
+
+      function syncBaseRateLabel() {
+        if (!baseRateLabel) return;
+        var NF = global.AwestNumericFields;
+        var uom = uomSelect.value;
+        baseRateLabel.textContent = NF ? NF.baseRateLabelForUom(uom) : ('Base rate (' + uom + ')');
       }
 
-      function selectedValue(group) {
-        var checked = group.querySelector('input[type="radio"]:checked');
-        return checked ? checked.value : '';
-      }
-
-      function formatBaseRate(amount, uom) {
-        if (uom === 'invoice') return amount.toFixed(1) + '% of invoice';
-        if (uom === 'flat') return '$' + amount.toFixed(2) + ' flat';
-        if (uom === 'cube') return '$' + amount.toFixed(2) + ' / cu ft';
-        if (uom === 'seat') return '$' + amount.toFixed(2) + ' / seat';
-        return '$' + amount.toFixed(2) + ' / CWT';
-      }
-
-      function syncOverview() {
-        var service = selectedValue(serviceGroup);
-        var uom = selectedValue(uomGroup);
-        var preset = servicePresets[service] || servicePresets['wg-insp'];
+      function syncDensityVisibility() {
+        var uom = uomSelect.value;
         var showDensity = uom === 'cwt' || uom === 'cube';
-
-        syncSegmentedVisual(serviceGroup);
-        syncSegmentedVisual(uomGroup);
-
         if (densityField) densityField.hidden = !showDensity;
-        if (baseRateField) baseRateField.value = formatBaseRate(preset.amount, uom);
-        if (laneField) laneField.value = preset.lane;
-        if (marginField) marginField.value = preset.margin;
-
-        var densityInput = root.querySelector('[data-density-input]');
-        if (densityInput && showDensity) densityInput.value = preset.density;
+        syncBaseRateLabel();
       }
 
-      serviceGroup.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-        radio.addEventListener('change', syncOverview);
-      });
-      uomGroup.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-        radio.addEventListener('change', syncOverview);
-      });
+      function applyServicePreset() {
+        if (root.getAttribute('data-tariff-store-hydrated') === '1') return;
+        var service = serviceSelect.value;
+        var uom = uomSelect.value;
+        var preset = servicePresets[service] || servicePresets['wg-insp'];
+        syncDensityVisibility();
+        if (baseRateField) baseRateField.value = String(preset.amount);
+        if (laneField) laneField.value = preset.lane;
+        if (marginField) marginField.value = String(preset.margin);
+        var densityInput = root.querySelector('[data-density-input]');
+        if (densityInput && (uom === 'cwt' || uom === 'cube')) {
+          densityInput.value = String(preset.density);
+        }
+      }
 
-      serviceGroup.querySelectorAll('label').forEach(function (label) {
-        label.addEventListener('click', function () {
-          window.requestAnimationFrame(syncOverview);
-        });
-      });
-      uomGroup.querySelectorAll('label').forEach(function (label) {
-        label.addEventListener('click', function () {
-          window.requestAnimationFrame(syncOverview);
-        });
-      });
+      function commitTariffOverview() {
+        document.dispatchEvent(new CustomEvent('awest:tariff-overview-change'));
+      }
 
-      syncOverview();
+      serviceSelect.addEventListener('change', function () {
+        root.removeAttribute('data-tariff-store-hydrated');
+        applyServicePreset();
+        commitTariffOverview();
+      });
+      uomSelect.addEventListener('change', function () {
+        syncDensityVisibility();
+        commitTariffOverview();
+      });
+      syncDensityVisibility();
     });
   }
 
-  /* ── UOM → density field visibility ── */
+  /* ── UOM → density field visibility (wizard + other forms) ── */
   function initUomDensity() {
+    var uomSelect = document.getElementById('tw-uom');
+    if (uomSelect && !uomSelect._uomWired) {
+      uomSelect._uomWired = true;
+      var wizardPanel = uomSelect.closest('.wizard-panel');
+      var densityField = wizardPanel && wizardPanel.querySelector('[data-density-field]');
+      var baseLabel = document.querySelector('[data-tw-base-label]');
+      function syncWizard() {
+        var val = uomSelect.value;
+        if (densityField) densityField.hidden = val !== 'cwt' && val !== 'cube';
+        if (baseLabel && global.AwestNumericFields) {
+          baseLabel.textContent = global.AwestNumericFields.baseRateLabelForUom(val);
+        }
+      }
+      uomSelect.addEventListener('change', syncWizard);
+      syncWizard();
+    }
+
     document.querySelectorAll('[data-uom-group]').forEach(function (group) {
       if (group.closest('[data-tariff-overview]')) return;
       var densityField = group.parentElement.querySelector('[data-density-field]')
@@ -847,6 +863,32 @@
     });
   }
 
+  /* ── Tariff detail — version history accordion hash deep-links ── */
+  function initTariffHistoryAccordion() {
+    var accordion = document.querySelector('[data-tariff-history-accordion]');
+    if (!accordion) return;
+
+    function openForHash(rawHash) {
+      var hash = (rawHash || '').replace(/^#/, '').toLowerCase();
+      if (!hash) return;
+      if (hash === 'panel-history' || hash === 'versions' || hash === 'audit' ||
+          hash === 'panel-versions' || hash === 'panel-audit') {
+        accordion.open = true;
+        var target = hash === 'versions' || hash === 'panel-versions'
+          ? document.getElementById('panel-versions')
+          : (hash === 'audit' || hash === 'panel-audit'
+            ? document.getElementById('panel-audit')
+            : accordion);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    openForHash(window.location.hash);
+    window.addEventListener('hashchange', function () {
+      openForHash(window.location.hash);
+    });
+  }
+
   /* ── CSS tabs: hash deep-linking (e.g. tariff-detail.html#versions) ── */
   function initTabs() {
     document.querySelectorAll('.tabs-wrap').forEach(function (wrap) {
@@ -941,11 +983,12 @@
       { code: 'atl', label: 'ATL', factor: 0.94, enabled: true },
       { code: 'ewr', label: 'EWR', factor: 1.05, enabled: true }
     ];
+    var rmUi = (global.AwestDummyTariff && global.AwestDummyTariff.rateMatrixUi) || {};
     var services = [
-      { prefix: 'b2b', label: 'B2B', zoneDigits: 3, uom: 'CWT', rateBase: 52.0, rateStep: 1.15, suffix: '' },
-      { prefix: 'thr', label: 'Threshold', zoneDigits: 5, uom: '$/cf', rateBase: 5.15, rateStep: 0.12, suffix: '/cf' },
-      { prefix: 'wgni', label: 'WG No Insp.', zoneDigits: 3, uom: 'CWT', rateBase: 56.5, rateStep: 1.25, suffix: '' },
-      { prefix: 'wgi', label: 'WG Inspection', zoneDigits: 3, uom: 'CWT', rateBase: 61.0, rateStep: 1.35, suffix: '' }
+      { prefix: 'b2b', label: 'B2B', zoneDigits: 3, uom: 'CWT', rateBase: (rmUi.b2b && rmUi.b2b.rateBase) || 44, rateStep: (rmUi.b2b && rmUi.b2b.rateStep) || 1.1, suffix: '' },
+      { prefix: 'thr', label: 'Threshold', zoneDigits: 5, uom: '$/cf', rateBase: (rmUi.threshold && rmUi.threshold.rateBase) || 7.7, rateStep: (rmUi.threshold && rmUi.threshold.rateStep) || 0.11, suffix: '/cf' },
+      { prefix: 'wgni', label: 'WG No Insp.', zoneDigits: 3, uom: 'CWT', rateBase: (rmUi.wgni && rmUi.wgni.rateBase) || 48, rateStep: (rmUi.wgni && rmUi.wgni.rateStep) || 1.1, suffix: '' },
+      { prefix: 'wgi', label: 'WG Inspection', zoneDigits: 3, uom: 'CWT', rateBase: (rmUi.wgi && rmUi.wgi.rateBase) || 52, rateStep: (rmUi.wgi && rmUi.wgi.rateStep) || 1.1, suffix: '' }
     ];
     var breaks = [
       { label: '1–125 lbs', weight: 1.0 },
@@ -1027,6 +1070,21 @@
     });
 
     var activeId = 'wgi_lax';
+    var tariffId = (function () {
+      try {
+        var q = new URLSearchParams(location.search);
+        return q.get('id') || q.get('tariff') || 'TAR-B2B-BASE';
+      } catch (e) {
+        return 'TAR-B2B-BASE';
+      }
+    })();
+
+    combinations.forEach(function (combo) {
+      var store = global.AwestStore;
+      if (!store) return;
+      var saved = store.getRateMatrix(tariffId, combo.id);
+      if (saved && saved.rows && saved.rows.length) combo.configured = true;
+    });
 
     function hashCode(str) {
       var h = 0;
@@ -1057,6 +1115,20 @@
 
     function getMatrixRows(combo) {
       if (!combo.enabled) return [];
+      var store = global.AwestStore;
+      if (store) {
+        var saved = store.getRateMatrix(tariffId, combo.id);
+        if (saved && saved.rows && saved.rows.length) {
+          combo.configured = true;
+          return saved.rows.map(function (row) {
+            return {
+              zone: row.zone,
+              desc: row.description,
+              rates: row.rates.slice()
+            };
+          });
+        }
+      }
       var zones = originZones[combo.origin.code] || [];
       if (!combo.configured) return [];
       return zones.map(function (z, ri) {
@@ -1073,25 +1145,52 @@
       });
     }
 
+    function comboIdFromParts(servicePrefix, originCode) {
+      return servicePrefix + '_' + originCode;
+    }
+
+    function setActiveFromDropdowns() {
+      var originSel = document.getElementById('rate-matrix-origin');
+      var serviceSel = document.getElementById('rate-matrix-service');
+      if (!originSel || !serviceSel) return;
+      activeId = comboIdFromParts(serviceSel.value, originSel.value);
+    }
+
     function renderPicker() {
-      picker.innerHTML = '';
-      combinations.forEach(function (combo) {
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        var stateLabel = !combo.enabled ? ' · station off' : (combo.configured ? ' · configured' : ' · empty');
-        btn.className = 'config-picker-btn' + (combo.id === activeId ? ' is-active' : '');
-        btn.setAttribute('role', 'option');
-        btn.setAttribute('aria-selected', combo.id === activeId ? 'true' : 'false');
-        btn.dataset.comboId = combo.id;
-        btn.innerHTML = combo.service.label + ' · ' + combo.origin.label +
-          '<span class="config-picker-meta">' + combo.id + stateLabel + '</span>';
-        btn.addEventListener('click', function () {
-          activeId = btn.dataset.comboId;
-          renderPicker();
+      var originSel = document.getElementById('rate-matrix-origin');
+      var serviceSel = document.getElementById('rate-matrix-service');
+      if (!originSel || !serviceSel) return;
+
+      if (!originSel.options.length) {
+        combinations.forEach(function (combo) {
+          if (originSel.querySelector('option[value="' + combo.origin.code + '"]')) return;
+          var opt = document.createElement('option');
+          opt.value = combo.origin.code;
+          opt.textContent = combo.origin.label;
+          originSel.appendChild(opt);
+        });
+        combinations.forEach(function (combo) {
+          if (serviceSel.querySelector('option[value="' + combo.service.prefix + '"]')) return;
+          var opt = document.createElement('option');
+          opt.value = combo.service.prefix;
+          opt.textContent = combo.service.label;
+          serviceSel.appendChild(opt);
+        });
+        originSel.addEventListener('change', function () {
+          setActiveFromDropdowns();
           renderMatrix();
         });
-        picker.appendChild(btn);
-      });
+        serviceSel.addEventListener('change', function () {
+          setActiveFromDropdowns();
+          renderMatrix();
+        });
+      }
+
+      var parts = activeId.split('_');
+      var originCode = parts[parts.length - 1];
+      var servicePrefix = parts.slice(0, -1).join('_');
+      originSel.value = originCode;
+      serviceSel.value = servicePrefix;
     }
 
     function renderMatrix() {
@@ -1207,6 +1306,7 @@
 
   ready(function () {
     initTabs();
+    initTariffHistoryAccordion();
     initDropdowns();
     initFilterBars();
     initDrillBanner();

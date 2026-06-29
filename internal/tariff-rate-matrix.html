@@ -57,7 +57,7 @@
 </div>
 
 <div class="config-callout">
-<strong>How quotes use these tables:</strong> When you build a quote, the system looks up the origin station and service type, finds the matching rate table below, and applies any customer or lane adjustments on top.
+<strong>How quotes use these tables:</strong> Lookup resolves origin station × service level × lane zone × weight group to a per-pound rate and lane minimum. That baseline linehaul feeds Quote Builder Step 4a; customer discounts and rep adjustment layers apply in Step 4b — not on this matrix.
 </div>
 
 <dl class="config-meta-row" id="rate-matrix-meta">
@@ -69,7 +69,11 @@
 </dl>
 
 <h3 class="panel-title" style="font-size:14px;margin-bottom:var(--space-sm)">Choose origin &amp; service level</h3>
-<div class="config-picker-grid" id="rate-matrix-picker" role="listbox" aria-label="Origin and service type combinations"></div>
+<div class="tariff-model-selectors" style="max-width:520px;margin-bottom:var(--space-md)">
+<div class="field"><label for="rate-matrix-origin">Origin station</label><select id="rate-matrix-origin" aria-label="Origin station"></select></div>
+<div class="field"><label for="rate-matrix-service">Service level</label><select id="rate-matrix-service" aria-label="Service level"></select></div>
+</div>
+<div id="rate-matrix-picker" hidden aria-hidden="true"></div>
 
 <div class="card" style="margin-top:var(--space-lg)">
 <div style="display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:center;margin-bottom:var(--space-md)">
@@ -109,13 +113,15 @@
 </footer>
 </main>
 </div>
+<script src="../js/dummy-tariff-data.js"></script>
 <script src="../js/seed-data.js"></script>
 <script src="../js/governance.js"></script>
 <script src="../js/awest-store.js"></script>
+<script src="../js/tariff-engine.js"></script>
+<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-boot.js"></script>
 <script src="../js/demo-hydrate.js"></script>
 <script src="../js/demo-hydrate-pages.js"></script>
 <script src="../js/demo-crud.js"></script>
-<script src="../js/pricing-mock.js"></script>
 <script src="../js/awest-mockup.js"></script>
 </body></html>

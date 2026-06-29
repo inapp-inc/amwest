@@ -38,12 +38,11 @@
   }
 
   function statusBadge(status) {
-    var labels = {
-      draft: 'Draft', pending: 'Pending Approval', approved: 'Approved',
-      sent: 'Sent', accepted: 'Accepted', lost: 'Lost', converted: 'Booked'
-    };
-    var cls = 'badge badge-' + (status === 'pending' ? 'pending' : status);
-    return '<span class="' + cls + '">' + (labels[status] || status) + '</span>';
+    var G = typeof window !== 'undefined' && window.AwestGovernance;
+    var label = G ? G.quoteStatusLabel(status) : status;
+    var norm = G ? G.normalizeQuoteStatus(status) : status;
+    var cls = 'badge badge-' + (norm === 'pending' ? 'pending' : norm);
+    return '<span class="' + cls + '">' + label + '</span>';
   }
 
   function quoteDetailHref(id) {
@@ -59,9 +58,14 @@
   }
 
   function marginGauge(margin) {
-    var cls = margin < 15 ? 'red' : margin < 18 ? 'amber' : 'green';
+    var floor = S().getState().settings.marginFloor || 15;
+    var cls = margin < floor ? 'red' : margin < floor + 3 ? 'amber' : 'green';
     var w = Math.min(Math.max(margin * 3, 20), 100);
-    return '<div class="margin-gauge"><div class="margin-gauge-track"><div class="margin-gauge-fill ' + cls + '" style="width:' + w + '%"></div><div class="margin-gauge-tick" style="left:40%"></div></div><span class="margin-gauge-label tabular">' + margin + '%</span></div>';
+    return '<div class="margin-gauge"><div class="margin-gauge-track"><div class="margin-gauge-fill ' + cls + '" style="width:' + w + '%"></div><div class="margin-gauge-tick" style="left:' + Math.min(floor * 3, 95) + '%"></div></div><span class="margin-gauge-label tabular">' + margin + '%</span></div>';
+  }
+
+  function quotePricing(q) {
+    return S().computeQuotePricing(q);
   }
 
   function getQueryQuoteId() {
@@ -79,12 +83,19 @@
     if (!table) return;
     var tbody = table.querySelector('tbody');
     if (!tbody) return;
+
+    var expandedIds = [];
+    tbody.querySelectorAll('tr.quote-detail-row:not(.is-collapsed)').forEach(function (row) {
+      var detailId = row.getAttribute('data-quote-detail');
+      if (detailId) expandedIds.push(detailId);
+    });
+
     var state = S().getState();
     var quotes = state.quotes.filter(function (q) { return q.channel !== 'portal'; });
     var html = '';
     quotes.forEach(function (q) {
       var cust = custName(q.customerId);
-      var p = q.pricing || {};
+      var p = quotePricing(q);
       var discTotal = (q.customerDiscPct || 0) + (q.quoteDiscPct || 0);
       var href = quoteDetailHref(q.id);
       var canApprove = q.status === 'pending' && G().canApprove(state);
@@ -111,6 +122,23 @@
         '<div data-breakdown-mount></div></div></td></tr>';
     });
     tbody.innerHTML = html;
+
+    expandedIds.forEach(function (id) {
+      var detailRow = table.querySelector('tr[data-quote-detail="' + id + '"]');
+      var mainRow = table.querySelector('tr[data-quote-id="' + id + '"]');
+      if (detailRow) {
+        detailRow.classList.remove('is-collapsed');
+        detailRow.hidden = false;
+      }
+      if (mainRow) {
+        var toggle = mainRow.querySelector('[data-calc-toggle]');
+        if (toggle) {
+          toggle.textContent = 'Hide calculation';
+          toggle.classList.add('action-pill--active');
+        }
+      }
+    });
+
     var count = document.querySelector('[data-filter-count]');
     if (count) count.textContent = 'Showing all ' + quotes.length + ' records';
     hydrateFilterOptions('#q-customer', state.customers.map(function (c) { return c.name; }));
@@ -231,7 +259,7 @@
     if (pendingTb) {
       var rows = pending.length ? pending : state.quotes.filter(function (q) { return q.status === 'pending'; });
       pendingTb.innerHTML = rows.slice(0, 5).map(function (q) {
-        var p = q.pricing || {};
+        var p = quotePricing(q);
         var applied = q.appliedTerms ? q.appliedTerms.customerDiscPctMaster : (q.customerDiscPct || 0);
         var disc = applied + '% applied';
         if (P() && P().hasCustomerDiscException && P().hasCustomerDiscException(q)) {
@@ -290,10 +318,10 @@
       document.querySelector('.main-content').innerHTML = '<p class="inline-notice">Quote not found: ' + id + '. <a href="quotes.html">Back to quotes</a></p>';
       return;
     }
-    var p = q.pricing || {};
+    var p = quotePricing(q);
     var cust = custName(q.customerId);
     var state = S().getState();
-    var meta = P() ? P().pricingMetaFromQuote(q) : { weight: q.weight, ratePerLb: state.settings.demoLane.ratePerLb };
+    var meta = P() ? P().pricingMetaFromQuote(q) : { weight: q.weight, ratePerLb: p.ratePerLb };
     var h1 = document.querySelector('.page-header h1');
     if (h1) h1.textContent = q.id;
     var sub = document.querySelector('.page-header p');
@@ -324,10 +352,6 @@
       el.textContent = (p.margin || 0) + '%';
     });
 
-    document.querySelectorAll('.disclosure-body.pricing-lines').forEach(function (el) {
-      if (P()) el.innerHTML = P().renderPricingBreakdown(p, false, meta);
-    });
-
     var cards = document.querySelectorAll('.card');
     cards.forEach(function (card) {
       if (card.textContent.indexOf('Shipment Summary') >= 0) {
@@ -336,13 +360,12 @@
     });
 
     document.querySelectorAll('.margin-gauge-fill').forEach(function (fill) {
-      var m = p.margin || 0;
-      fill.className = 'margin-gauge-fill ' + (m < 15 ? 'red' : m < 18 ? 'amber' : 'green');
-      fill.style.width = Math.min(m * 3, 100) + '%';
+      if (P()) P().applyMarginGauge(fill, p.margin);
     });
     document.querySelectorAll('.margin-gauge-label').forEach(function (el) {
       el.textContent = (p.margin || 0) + '%';
     });
+    if (P()) P().hydrateMarginFloorUI(state.settings.marginFloor);
 
     document.querySelectorAll('[data-quote-calc-meta] p').forEach(function (el) {
       if (el.textContent.indexOf('Fuel rate') >= 0) {
@@ -352,7 +375,10 @@
         }
       }
       if (el.textContent.indexOf('Tariff:') >= 0 && q.tariffId) {
-        el.innerHTML = '<strong>Tariff:</strong> <a href="tariff-detail.html?id=' + encodeURIComponent(q.tariffId) + '">' + q.tariffId + '</a>';
+        var tariff = S().getTariff(q.tariffId);
+        var version = tariff && tariff.version ? tariff.version : '';
+        var versionSuffix = version ? ' (v' + version + ')' : '';
+        el.innerHTML = '<strong>Tariff:</strong> <a href="tariff-detail.html?id=' + encodeURIComponent(q.tariffId) + '" class="tariff-drawer-trigger" data-tariff-drawer-trigger data-tariff-id="' + q.tariffId + '" title="Hover for tariff summary">' + q.tariffId + '</a>' + versionSuffix;
       }
       if (el.textContent.indexOf('Approved by') >= 0 && q.approvedBy) {
         el.innerHTML = '<strong>Approved by:</strong> ' + repName(q.approvedBy) + ', ' + fmtDate(q.approvedAt);
@@ -390,7 +416,8 @@
   }
 
   function hydrateCustomerDetail() {
-    var id = getQueryCustomerId() || new URLSearchParams(location.search).get('id') || 'PACI-1200';
+    var id = getQueryCustomerId() || new URLSearchParams(location.search).get('id');
+    if (!id) return;
     var c = S().getCustomer(id);
     if (!c) return;
     var h1 = document.querySelector('h1');
@@ -398,17 +425,19 @@
     document.title = c.name + ' — American West';
     var sub = document.querySelector('.page-header p');
     if (sub) sub.innerHTML = c.code + ' · <span class="badge badge-active">Active</span>';
+    var newQuoteBtn = document.querySelector('[data-customer-new-quote]');
+    if (newQuoteBtn) newQuoteBtn.href = 'quote-builder.html?customer=' + encodeURIComponent(c.id);
     var notesEl = document.querySelector('[data-tariff-notes-text]');
     if (notesEl && c.tariffNotes) notesEl.value = c.tariffNotes;
     var pickupEl = document.querySelector('[data-pickup-location]');
     if (pickupEl && c.pickupLocation) pickupEl.value = c.pickupLocation;
     var fuelEl = document.querySelector('[data-fixed-fuel]');
-    if (fuelEl && c.fixedFuelPct != null) fuelEl.value = c.fixedFuelPct + '%';
+    if (fuelEl && c.fixedFuelPct != null) fuelEl.value = String(c.fixedFuelPct);
     var quotes = S().getState().quotes.filter(function (q) { return q.customerId === c.id; });
     var qt = document.querySelector('[data-customer-quotes] tbody');
     if (qt) {
       qt.innerHTML = quotes.map(function (q) {
-        var p = q.pricing || {};
+        var p = quotePricing(q);
         return '<tr><td class="tabular"><a href="' + quoteDetailHref(q.id) + '">' + q.id + '</a></td><td class="tabular">' + fmtMoney(p.total || 0) + '</td><td>' + statusBadge(q.status) + '</td><td class="actions"><a href="' + quoteDetailHref(q.id) + '">Open</a></td></tr>';
       }).join('');
     }
@@ -419,40 +448,45 @@
     var tbody = document.querySelector('#tariffs-table tbody, .data-table tbody');
     if (!tbody || !document.querySelector('h1') || document.querySelector('h1').textContent.indexOf('Tariff') < 0) return;
     if (pageName() !== 'tariffs' && pageName() !== 'tariffs-page2') return;
-    var tariffs = S().getState().tariffs;
+    var tariffs = S().getState().tariffs.filter(function (t) { return t.type === 'Base'; });
     tbody.innerHTML = tariffs.map(function (t) {
-      var cust = t.customerId ? custName(t.customerId) : '—';
-      return '<tr data-status="' + t.status + '" data-search="' + t.id + ' ' + t.name + '">' +
+      var statusBadge = t.status === 'active' ? 'badge-active' : 'badge-draft';
+      return '<tr data-service="' + t.service + '" data-status="' + t.status + '" data-search="' + t.id + ' ' + t.name + ' ' + t.service + '">' +
         '<td class="tabular"><a href="tariff-detail.html?id=' + encodeURIComponent(t.id) + '">' + t.id + '</a></td>' +
-        '<td>' + t.name + '</td><td>' + t.type + '</td><td>' + t.service + '</td>' +
-        '<td>' + cust + '</td><td><span class="badge badge-' + (t.status === 'active' ? 'active' : 'draft') + '">' + t.status + '</span></td>' +
-        '<td class="tabular">v' + t.version + '</td>' +
-        '<td class="actions"><a href="tariff-detail.html?id=' + encodeURIComponent(t.id) + '">Open</a><a href="tariff-rate-matrix.html?id=' + encodeURIComponent(t.id) + '">Edit matrix</a></td></tr>';
+        '<td>' + t.name + '</td>' +
+        '<td>' + t.service + '</td>' +
+        '<td>' + (t.uom || '—') + '</td>' +
+        '<td class="tabular">' + (t.effectiveDate || '—') + '</td>' +
+        '<td><span class="badge ' + statusBadge + '">' + t.status + '</span></td>' +
+        '<td class="actions">' +
+        '<a href="tariff-detail.html?id=' + encodeURIComponent(t.id) + '">Edit</a>' +
+        '<a href="tariff-rate-matrix.html?id=' + encodeURIComponent(t.id) + '">Edit matrix</a>' +
+        (t.status === 'draft' ? '<a href="tariff-wizard.html?clone=' + encodeURIComponent(t.id) + '">Clone</a>' : '<a href="tariff-comparison.html">Compare</a>') +
+        '</td></tr>';
     }).join('');
+    var countEl = document.querySelector('[data-filter-count]');
+    if (countEl) countEl.textContent = 'Showing ' + tariffs.length + ' published base schedule' + (tariffs.length === 1 ? '' : 's');
   }
 
-  function hydrateTariffDetail() {
-    var id = new URLSearchParams(location.search).get('id') || 'TAR-B2B-BASE';
-    var t = S().getTariff(id);
-    if (!t) return;
-    var h1 = document.querySelector('h1');
-    if (h1) h1.textContent = t.id;
-    document.title = t.name + ' — American West';
-    var sub = document.querySelector('.page-header > div > p');
-    if (sub) sub.innerHTML = t.service + ' · UOM ' + t.uom + ' · v' + t.version + ' · <span class="badge badge-' + (t.status === 'active' ? 'active' : 'draft') + '">' + t.status + '</span>';
-    var lead = document.querySelector('.page-header .page-lead');
-    if (lead) lead.textContent = t.name + (t.mctcLevel ? ' · MCTC ' + t.mctcLevel : '');
-  }
+  /* tariff-detail hydration: demo-hydrate-pages.js hydrateTariffDetailFull */
 
   /* ── Reference tables ── */
   function hydrateReferenceTable(collection, cols) {
     var tbody = document.querySelector('.data-table tbody');
     if (!tbody) return;
+    var editPaths = {
+      fuel: 'reference-fuel-edit.html?id=',
+      b2bLanes: 'reference-lane-b2b-edit.html?id='
+    };
+    var editPrefix = editPaths[collection] || '#';
     var items = S().getState().reference[collection] || [];
     tbody.innerHTML = items.map(function (item) {
       return '<tr>' + cols.map(function (col) {
         if (col === 'actions') {
-          return '<td class="actions"><a href="#" data-ref-edit="' + item.id + '">Edit</a></td>';
+          var href = editPrefix === '#'
+            ? '#'
+            : editPrefix + encodeURIComponent(item.id);
+          return '<td class="actions"><a href="' + href + '">Edit</a></td>';
         }
         return '<td' + (typeof item[col] === 'number' ? ' class="tabular"' : '') + '>' + (item[col] != null ? item[col] : '—') + '</td>';
       }).join('') + '</tr>';
@@ -578,7 +612,7 @@
     document.querySelectorAll('h1, .page-header h1').forEach(function (h) {
       if (/PDF|Quote/.test(h.textContent)) h.textContent = 'Quote PDF — ' + q.id;
     });
-    var p = q.pricing || {};
+    var p = quotePricing(q);
     var cust = custName(q.customerId);
     document.querySelectorAll('[data-pdf-summary]').forEach(function (el) {
       el.innerHTML = '<strong>Customer:</strong> ' + cust + '<br><strong>Lane:</strong> ' + q.origin + ' → ' + q.destination +
@@ -632,7 +666,7 @@
     var q = S().getQuote(id);
     if (!q || !P()) return;
     document.querySelectorAll('[data-compare-total]').forEach(function (el, i) {
-      if (i === 0 && q.pricing) el.textContent = fmtMoney(q.pricing.total);
+      if (i === 0) el.textContent = fmtMoney(quotePricing(q).total);
     });
   }
 
@@ -641,16 +675,19 @@
     var kanban = document.querySelector('.kanban');
     if (!kanban) return;
     var state = S().getState();
-    var quotes = state.quotes.filter(function (q) { return q.channel !== 'portal' && q.status !== 'lost'; });
-    var stages = ['draft', 'pending', 'approved', 'sent', 'accepted', 'converted'];
-    var total = quotes.reduce(function (s, q) { return s + ((q.pricing && q.pricing.total) || 0); }, 0);
+    var quotes = state.quotes.filter(function (q) { return q.channel !== 'portal'; });
+    var stages = ['draft', 'pending', 'approved', 'sent', 'converted', 'expired', 'lost'];
+    var total = quotes.reduce(function (s, q) { return s + (quotePricing(q).total || 0); }, 0);
     var lead = document.querySelector('.page-lead');
     if (lead) lead.innerHTML = 'Quote stages by status · <span class="tabular">' + fmtMoney(total) + '</span> total value · ' + quotes.length + ' active quotes';
 
     stages.forEach(function (stage) {
       var col = kanban.querySelector('[data-stage="' + stage + '"]');
       if (!col) return;
-      var stageQuotes = quotes.filter(function (q) { return q.status === stage; });
+      var stageQuotes = quotes.filter(function (q) {
+        if (q.status === stage) return true;
+        return stage === 'converted' && q.status === 'accepted';
+      });
       var h3 = col.querySelector('h3');
       if (h3) {
         var span = h3.querySelector('.page-lead');
@@ -661,7 +698,7 @@
         var a = document.createElement('a');
         a.className = 'kanban-card';
         a.href = '../internal/' + quoteDetailHref(q.id);
-        a.innerHTML = '<strong>' + q.id + '</strong><br><span class="tabular">' + fmtMoney((q.pricing && q.pricing.total) || 0) + '</span><br><small>' + fmtDate(q.updatedAt) + '</small>';
+        a.innerHTML = '<strong>' + q.id + '</strong><br><span class="tabular">' + fmtMoney(quotePricing(q).total || 0) + '</span><br><small>' + fmtDate(q.updatedAt) + '</small>';
         col.appendChild(a);
       });
     });
@@ -676,7 +713,7 @@
     var state = S().getState();
     var cid = state.portal.activeCustomerId;
     var quotes = state.quotes.filter(function (q) {
-      return q.customerId === cid && (q.channel === 'portal' || q.status === 'sent' || q.status === 'accepted');
+      return q.customerId === cid && (q.channel === 'portal' || q.status === 'sent' || q.status === 'converted' || q.status === 'accepted');
     });
     var shipments = state.shipments.filter(function (sh) { return sh.customerId === cid; });
     document.querySelectorAll('.kpi-card .value, .stat-value').forEach(function (el, i) {
@@ -703,28 +740,7 @@
 
   /* ── Wire forms (reference edits, admin) ── */
   function hydrateReferenceFuelEdit() {
-    if (pageName() !== 'reference-fuel-edit') return;
-    var fuel = S().getState().reference.fuel.slice(-1)[0];
-    if (!fuel) return;
-    var inputs = document.querySelectorAll('.card input.tabular');
-    if (inputs[0]) inputs[0].value = fuel.effectiveDate;
-    if (inputs[1]) inputs[1].value = fuel.pct;
-    var save = document.querySelector('.btn-primary, a.btn-primary, button.btn-primary');
-    if (save && !save._wired) {
-      save._wired = true;
-      save.addEventListener('click', function (e) {
-        e.preventDefault();
-        var pct = parseFloat(inputs[1].value) || fuel.pct;
-        S().saveReferenceCollection('fuel', {
-          id: fuel.id,
-          effectiveDate: inputs[0].value,
-          pct: pct,
-          source: inputs[2] ? inputs[2].value : fuel.source,
-          authorId: S().getState().meta.currentUserId
-        });
-        location.href = 'reference-fuel.html';
-      });
-    }
+    /* populate + save: demo-crud.js */
   }
 
   function hydratePortalConfirmation() {
@@ -732,7 +748,7 @@
     var id = getQueryQuoteId();
     var q = id ? S().getQuote(id) : null;
     if (!q) return;
-    var p = q.pricing || {};
+    var p = quotePricing(q);
     document.querySelectorAll('[data-portal-confirm-ref]').forEach(function (el) {
       var sh = S().getState().shipments.find(function (s) { return s.quoteId === q.id; });
       el.textContent = sh ? sh.id : q.id;
@@ -792,7 +808,6 @@
     'customer-detail': hydrateCustomerDetail,
     tariffs: hydrateTariffs,
     'tariffs-page2': hydrateTariffs,
-    'tariff-detail': hydrateTariffDetail,
     'reference-fuel': hydrateReferenceFuel,
     'reference-fuel-edit': hydrateReferenceFuelEdit,
     'reference-accessorials': hydrateReferenceAccessorials,
@@ -840,13 +855,22 @@
     });
   }
 
+  var rerunning = false;
+
   function rerun() {
-    run();
-    if (P()) {
-      P().initQuotesListEnhanced();
-      P().initDashboardQuickApprove();
-      P().initQuoteDetailApproval();
-      P().initQuoteDetailBreakdown();
+    if (rerunning) return;
+    rerunning = true;
+    try {
+      run();
+      if (P()) {
+        P().initQuotesListEnhanced();
+        P().initDashboardQuickApprove();
+        P().initQuoteDetailApproval();
+        P().initQuoteDetailBreakdown();
+        P().initTariffDetailDrawer();
+      }
+    } finally {
+      rerunning = false;
     }
   }
 
