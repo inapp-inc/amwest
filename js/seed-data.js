@@ -208,30 +208,34 @@
           createdAt: iso(new Date('2026-06-16')), updatedAt: iso(new Date('2026-06-18'))
         })),
         Object.assign(quoteBase({
-          id: 'Q-2026-0819', customerId: 'CASA-1102', destination: 'Greenville, SC', deliveryZip: '29601',
-          status: 'sent', pricingMode: 'override', pricingOverride: { total: 2340, margin: 20.8 },
+          id: 'Q-2026-0819', customerId: 'CASA-1102', destination: 'Greenville, SC', deliveryZip: '29621',
+          status: 'sent', pricingMode: 'override',
+          pricingOverride: { total: 2340, margin: 27.5, engineTotal: 2176.24, engineMargin: 22 },
           sentAt: iso(new Date('2026-06-15')), createdAt: iso(new Date('2026-06-10')), updatedAt: iso(new Date('2026-06-15'))
         })),
         Object.assign(quoteBase({
-          id: 'Q-2026-0770', status: 'converted', pricingMode: 'override', pricingOverride: { total: 1890, margin: 24.1 },
+          id: 'Q-2026-0770', status: 'converted', pricingMode: 'override',
+          pricingOverride: { total: 1890, margin: 11.6, engineTotal: 2140.64, engineMargin: 21.9 },
           convertedAt: iso(new Date('2026-06-22')), acceptedAt: iso(new Date('2026-06-22')),
           createdAt: iso(new Date('2026-06-01')), updatedAt: iso(new Date('2026-06-22'))
         })),
         Object.assign(quoteBase({
           id: 'Q-2026-0788', customerId: 'CASA-1102', destination: 'Raleigh, NC', deliveryZip: '27601',
-          status: 'expired', pricingMode: 'override', pricingOverride: { total: 1920, margin: 19.5 },
+          status: 'expired', pricingMode: 'override',
+          pricingOverride: { total: 1920, margin: 11.6, engineTotal: 2176.24, engineMargin: 22 },
           sentAt: iso(new Date('2026-05-18')), expiredAt: iso(new Date('2026-06-01')),
           createdAt: iso(new Date('2026-05-10')), updatedAt: iso(new Date('2026-06-01'))
         })),
         Object.assign(quoteBase({
           id: 'Q-2026-0801', status: 'draft', destination: 'Charlotte, NC', deliveryZip: '28202',
-          pricingMode: 'override', pricingOverride: { total: 1980, margin: 18.2 },
+          pricingMode: 'override',
+          pricingOverride: { total: 1980, margin: 15.6, engineTotal: 2140.64, engineMargin: 21.9 },
           createdAt: iso(new Date('2026-06-12')), updatedAt: iso(new Date('2026-06-12'))
         })),
         Object.assign(quoteBase({
           id: 'Q-2026-0798', customerId: 'CASA-1102', deliveryZip: '59801', destination: 'Missoula, MT',
           laneCode: 'CFQ', hdPoi: null, status: 'lost', pricingMode: 'override',
-          pricingOverride: { total: 2150, margin: 25.1 },
+          pricingOverride: { total: 2150, margin: 72.6, engineTotal: 655, engineMargin: 10 },
           createdAt: iso(new Date('2026-06-08')), updatedAt: iso(new Date('2026-06-10'))
         }))
       ],
@@ -258,7 +262,9 @@
           { id: 'lane-596', baseZip: '596', description: 'Montana rural', originStation: null, cfq: true, tariffGroup: 0, zoneKey: null }
         ],
         b2bZipExceptions: [
-          { zip: '29621', zoneKey: 'SC:293,296,297', note: '5-digit override — Anderson SC' }
+          { zip: '29621', zoneKey: 'SC:293,296,297', note: '5-digit override — Anderson SC' },
+          { zip: '27601', zoneKey: 'SC:293,296,297', note: 'Demo — Raleigh NC via SC matrix' },
+          { zip: '28202', zoneKey: 'SC:293,296,297', note: 'Demo — Charlotte NC via SC matrix' }
         ],
         hdTiers: D ? D.referenceHdTiers() : [],
         mr2ZipMap: [

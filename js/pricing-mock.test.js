@@ -157,5 +157,20 @@ var p823Engine = global.AwestPricingMock.pricingWithLayers(
 );
 assert(p823Store.margin === p823Engine.margin, 'Q-0823 margin consistent across paths');
 
+var q770 = global.AwestStore.getQuote('Q-2026-0770');
+assert(q770 && q770.pricingMode === 'override', 'Q-2026-0770 override seed');
+var p770 = global.AwestStore.computeQuotePricing(q770);
+var engine770 = global.AwestPricingMock.quotePricingCompute(
+  Object.assign({}, q770, { pricingMode: 'engine', pricingOverride: null }),
+  q770.primaryService || 'b2b'
+);
+var expected770 = global.AwestPricingMock.marginFromManualTotal(engine770, q770.pricingOverride.total);
+assert(p770.total === q770.pricingOverride.total, 'override total on display');
+assert(p770.margin === expected770, 'override margin recomputed from live engine');
+q770.pricingOverride.margin = 99;
+var p770Stale = global.AwestPricingMock.quotePricingCompute(q770, q770.primaryService || 'b2b');
+assert(p770Stale.margin === expected770, 'stale stored override margin ignored on display');
+assert(p770Stale.margin !== 99, 'display does not use stale override margin');
+
 console.log('Results:', passed, 'passed,', failed, 'failed');
 process.exit(failed > 0 ? 1 : 0);

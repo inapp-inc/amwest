@@ -692,12 +692,13 @@
   }
 
   function applyManualOverrideDisplay(engine, po) {
-    var engineTotal = po.engineTotal != null ? po.engineTotal : engine.total;
-    var engineMargin = po.engineMargin != null ? po.engineMargin : engine.margin;
+    if (!po || !(po.total > 0)) return engine;
+    var engineTotal = engine.total;
+    var engineMargin = engine.margin;
     var delta = Math.round((po.total - engineTotal) * 100) / 100;
     var merged = JSON.parse(JSON.stringify(engine));
     merged.total = po.total;
-    merged.margin = po.margin;
+    merged.margin = marginFromManualTotal(engine, po.total);
     merged.manualOverrideDelta = delta;
     merged.engineTotal = engineTotal;
     merged.engineMargin = engineMargin;
