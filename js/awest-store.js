@@ -79,27 +79,12 @@
   }
 
   function computeQuotePricing(quote, s) {
-    if (quote.pricingMode === 'override' && quote.pricingOverride) {
-      var po = quote.pricingOverride;
-      return {
-        linehaul: 0, custDiscPct: quote.customerDiscPct, custDiscAmt: 0,
-        quoteDiscPct: quote.quoteDiscPct || 0, quoteDiscAmt: 0,
-        lane: quote.laneOverride || 0, fuel: 0, fuelPct: latestFuelPct(s),
-        insurance: 0, lift: 0, residential: 0,
-        total: po.total, margin: po.margin,
-        stack: { linehaul: po.total * 0.6, fuel: po.total * 0.25, access: po.total * 0.15, disc: 0 },
-        personalized: (quote.quoteDiscPct || 0) > 0
-      };
-    }
     var P = getPricing();
-    if (!P || !P.enginePricing) return { total: 0, margin: 0, stack: { linehaul: 0, fuel: 0, access: 0, disc: 0 } };
+    if (!P) return { total: 0, margin: 0, stack: { linehaul: 0, fuel: 0, access: 0, disc: 0 } };
     if (P.ensureQuotePricingModel) P.ensureQuotePricingModel(quote, storePricingAdapter(s));
-    var p;
-    if (P.pricingWithLayers) {
-      p = P.pricingWithLayers(quote, quote.primaryService || 'b2b', quote.quoteAdjustments);
-    } else {
-      p = P.enginePricing(quote, quote.primaryService || 'b2b');
-    }
+    var p = P.quotePricingCompute
+      ? P.quotePricingCompute(quote, quote.primaryService || 'b2b')
+      : (P.enginePricing ? P.enginePricing(quote, quote.primaryService || 'b2b') : { total: 0, margin: 0 });
     p.personalized = (quote.quoteDiscPct || 0) > 0 ||
       (P.hasCustomerDiscException && P.hasCustomerDiscException(quote));
     return p;

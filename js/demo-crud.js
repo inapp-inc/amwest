@@ -863,13 +863,6 @@
     createBtn.addEventListener('click', function (e) {
       e.preventDefault();
       var cloneId = getQuery('clone');
-      if (cloneId) {
-        var cloned = S().cloneTariff(cloneId);
-        if (cloned) {
-          location.href = 'tariff-detail.html?id=' + encodeURIComponent(cloned.id);
-          return;
-        }
-      }
       var td = S().getState().settings.tariffDisplay || {};
       var nameEl = document.getElementById('tw-name');
       var idEl = document.getElementById('tw-id');
@@ -890,7 +883,7 @@
       var minCubeEl = document.getElementById('tw-min-cube');
       var commodityEl = document.getElementById('tw-commodity');
       var originGrid = readWizardOriginGridFromDom();
-      var parentId = getQuery('parent') || 'TAR-B2B-BASE';
+      var parentId = cloneId || getQuery('parent') || 'TAR-B2B-BASE';
       var isBase = getQuery('base') === '1';
       S().saveTariff({
         id: id,

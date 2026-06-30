@@ -970,13 +970,7 @@
 
     global.addEventListener('awest:change', refreshTariffConfiguratorPick);
 
-    try {
-      var cloneId = new URLSearchParams(location.search).get('clone');
-      if (cloneId && global.AwestStore) {
-        var src = global.AwestStore.getTariff(cloneId);
-        if (src && src.config && src.config.originGrid) seedOrigins(src.config.originGrid);
-      }
-    } catch (e) { /* ignore */ }
+    /* Origin stations are chosen fresh in the wizard — template prefill handled in hydrateTariffWizard */
   }
 
   /* ── Origin station include toggles ── */

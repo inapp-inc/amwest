@@ -680,26 +680,37 @@
     return quotePricingCompute(q, serviceType);
   }
 
-  function quotePricingCompute(q, serviceType) {
-    if (q.pricingMode === 'override' && q.pricingOverride) {
-      var po = q.pricingOverride;
-      return {
-        linehaul: 0, custDiscPct: q.customerDiscPct, custDiscAmt: 0,
-        quoteDiscPct: q.quoteDiscPct || 0, quoteDiscAmt: 0,
-        lane: q.laneOverride || 0, fuel: 0, fuelPct: latestFuelPct(),
-        insurance: 0, lift: 0, residential: 0,
-        total: po.total, margin: po.margin,
-        stack: { linehaul: po.total * 0.6, fuel: po.total * 0.25, access: po.total * 0.15, disc: 0 },
-        personalized: (q.quoteDiscPct || 0) > 0
-      };
-    }
+  function computeEngineForQuote(q, serviceType) {
+    serviceType = serviceType || q.primaryService || 'b2b';
     if (q.quoteAdjustments && q.quoteAdjustments.length) {
-      return pricingWithLayers(q, serviceType || q.primaryService || 'b2b', q.quoteAdjustments);
+      return pricingWithLayers(q, serviceType, q.quoteAdjustments);
     }
     if (q.adjustmentLayers && q.adjustmentLayers.length) {
-      return pricingWithLayers(q, serviceType || q.primaryService || 'b2b', q.adjustmentLayers);
+      return pricingWithLayers(q, serviceType, q.adjustmentLayers);
     }
-    return enginePricing(q, serviceType || q.primaryService || 'b2b');
+    return enginePricing(q, serviceType);
+  }
+
+  function applyManualOverrideDisplay(engine, po) {
+    var engineTotal = po.engineTotal != null ? po.engineTotal : engine.total;
+    var engineMargin = po.engineMargin != null ? po.engineMargin : engine.margin;
+    var delta = Math.round((po.total - engineTotal) * 100) / 100;
+    var merged = JSON.parse(JSON.stringify(engine));
+    merged.total = po.total;
+    merged.margin = po.margin;
+    merged.manualOverrideDelta = delta;
+    merged.engineTotal = engineTotal;
+    merged.engineMargin = engineMargin;
+    merged.overrideApplied = true;
+    return merged;
+  }
+
+  function quotePricingCompute(q, serviceType) {
+    var engine = computeEngineForQuote(q, serviceType);
+    if (q.pricingMode === 'override' && q.pricingOverride) {
+      return applyManualOverrideDisplay(engine, q.pricingOverride);
+    }
+    return engine;
   }
 
   function quotePricing(q, serviceType) {
@@ -741,6 +752,11 @@
       }
       html += '<div class="pricing-line"><span>Fuel surcharge (' + p.fuelPct + '%)</span><span class="tabular">' + formatMoney(p.fuel) + '</span></div>';
       html += '<div class="pricing-line"><span>Insurance (1% DV, $25 min) + accessorials</span><span class="tabular">' + formatMoney(p.insurance + p.lift + p.residential) + '</span></div>';
+      if (p.overrideApplied && p.manualOverrideDelta != null && Math.abs(p.manualOverrideDelta) >= 0.01) {
+        html += '<div class="pricing-line pricing-line--override"><span>Manual price adjustment' +
+          '<span class="pricing-line-formula">Rep override · engine total was ' + formatMoney(p.engineTotal) + '</span></span>' +
+          '<span class="tabular">' + (p.manualOverrideDelta >= 0 ? '+' : '−') + formatMoney(Math.abs(p.manualOverrideDelta)) + '</span></div>';
+      }
     } else {
       html += '<div class="pricing-line"><span>Linehaul (net)</span><span class="tabular">' + formatMoney(p.stack.linehaul) + '</span></div>';
       html += '<div class="pricing-line"><span>Fuel</span><span class="tabular">' + formatMoney(p.fuel) + '</span></div>';
@@ -759,6 +775,9 @@
       { cls: 'fuel', w: (p.fuel / t) * 100 },
       { cls: 'access', w: (p.stack.access / t) * 100 }
     ];
+    if (p.overrideApplied && p.manualOverrideDelta != null && Math.abs(p.manualOverrideDelta) >= 0.01) {
+      segs.push({ cls: 'override', w: (Math.abs(p.manualOverrideDelta) / t) * 100 });
+    }
     var html = '<div class="quote-stack-bar" role="img" aria-label="Price composition">';
     segs.forEach(function (s) {
       html += '<span class="quote-stack-seg quote-stack-seg--' + s.cls + '" style="width:' + Math.max(s.w, 2) + '%"></span>';
@@ -2239,7 +2258,8 @@
         customerDiscOverride: null,
         liftGate: false,
         residential: false,
-        extraMan: false
+        extraMan: false,
+        manualOverrideTotal: null
       };
     }
 
@@ -2505,6 +2525,14 @@
       }
       var data = buildDraftQuotePayload();
       var p = data.pricing;
+      if (draft.manualOverrideTotal != null && draft.manualOverrideTotal > 0) {
+        p = applyManualOverrideDisplay(p, {
+          total: draft.manualOverrideTotal,
+          margin: marginFromManualTotal(p, draft.manualOverrideTotal),
+          engineTotal: data.pricing.total,
+          engineMargin: data.pricing.margin
+        });
+      }
       var store = getStore();
       var govQuote = Object.assign({}, data.q, {
         appliedTerms: data.applied,
@@ -2516,22 +2544,67 @@
       var gov = needsApproval(data.fields.custDiscPct, data.fields.quoteDiscPct, p.margin, govQuote);
       var cust = resolveDraftCustomer();
       var tariff = store ? store.getTariff(draft.tariffId) : null;
+      var marginNote = '<p style="font-size:13px;margin-top:var(--space-sm)"><strong>Margin:</strong> <span class="tabular">' + p.margin + '%</span>';
+      if (p.overrideApplied) {
+        marginNote += ' <span class="text-muted-sm">(engine ' + p.engineMargin + '%)</span>';
+      }
+      marginNote += '</p>';
       preview.innerHTML =
         '<div class="assistant-preview-meta">' +
         '<p><strong>' + (cust ? cust.name : draft.customerName || draft.customerId) + '</strong> · ' +
         (SERVICE_LABELS[draft.primaryService] || draft.primaryService) + '</p>' +
         '<p class="text-muted-sm">' + draft.tariffId + (tariff ? ' · ' + tariff.name : '') + '</p>' +
+        (p.overrideApplied ? '<p class="inline-notice info" style="margin-top:var(--space-sm)"><strong>Manual override active</strong> — engine total ' + formatMoney(p.engineTotal) + ' → ' + formatMoney(p.total) + '</p>' : '') +
         '</div>' +
         renderStackedBar(p) +
         renderPricingBreakdown(p, false, { weight: draft.weight, ratePerLb: p.ratePerLb }) +
-        '<p style="font-size:13px;margin-top:var(--space-sm)"><strong>Margin:</strong> <span class="tabular">' + p.margin + '%</span></p>' +
+        marginNote +
         (gov ? '<p class="inline-notice amber" style="margin-top:var(--space-sm)"><strong>Approval required</strong> — ' + gov.msg + '</p>' : '');
     }
 
-    function saveDraftQuote() {
+    function marginFromManualTotal(pricing, manualTotal) {
+      if (!pricing || !(manualTotal > 0)) return 0;
+      var netLh = pricing.stack && pricing.stack.linehaul != null ? pricing.stack.linehaul : pricing.linehaul;
+      var access = (pricing.insurance || 0) + (pricing.lift || 0) + (pricing.residential || 0);
+      return computeMargin(netLh, pricing.fuel || 0, access, manualTotal, pricing.quoteDiscPct || 0);
+    }
+
+    function finishAssistantSave(result, options) {
+      options = options || {};
+      if (!result) return false;
+      flow = null;
+      step = 'done';
+      var detailPage = result.gov ? 'quote-detail-pending.html' : 'quote-detail.html';
+      var msg =
+        'Quote <strong><a href="' + detailPage + '?id=' + encodeURIComponent(result.quote.id) + '">' + result.quote.id + '</a></strong> saved';
+      if (options.overrideTotal != null) {
+        var ovMargin = result.quote.pricingOverride ? result.quote.pricingOverride.margin : result.quote.pricing.margin;
+        msg += ' with manual total <strong class="tabular">' + formatMoney(options.overrideTotal) + '</strong>';
+        msg += ' @ <strong class="tabular">' + ovMargin + '%</strong> margin';
+        if (options.engineMargin != null) {
+          msg += ' (adjusted from ' + options.engineMargin + '%)';
+        }
+      }
+      msg += result.gov ? ' — submitted for manager approval.' : ' — approved and ready to send.';
+      addMsg(msg, 'bot');
+      addChips(['View quote', 'Create another quote'], function (label) {
+        addMsg(label, 'user');
+        if (label.indexOf('View') === 0) {
+          location.href = detailPage + '?id=' + encodeURIComponent(result.quote.id);
+        } else {
+          draft = defaultDraft();
+          flow = 'create';
+          advance('customer');
+        }
+      });
+      return true;
+    }
+
+    function saveDraftQuote(overrideTotal) {
       var store = getStore();
       if (!store || !draft.customerId || !draft.tariffId) return null;
       var data = buildDraftQuotePayload();
+      var engineMargin = data.pricing.margin;
       var govQuote = Object.assign({}, data.q, {
         appliedTerms: data.applied,
         quoteAdjustments: data.adjustments,
@@ -2539,7 +2612,6 @@
         quoteDiscPct: data.fields.quoteDiscPct,
         pricing: { margin: data.pricing.margin }
       });
-      var gov = needsApproval(data.fields.custDiscPct, data.fields.quoteDiscPct, data.pricing.margin, govQuote);
       var payload = Object.assign({}, data.q, {
         tariffId: draft.tariffId,
         appliedTerms: JSON.parse(JSON.stringify(data.applied)),
@@ -2547,9 +2619,23 @@
         customerDiscPct: data.fields.custDiscPct,
         quoteDiscPct: data.fields.quoteDiscPct,
         laneOverride: data.fields.laneOverride,
-        status: gov ? 'pending' : 'approved'
+        status: 'draft'
       });
-      return { quote: store.createQuote(payload), gov: gov };
+      if (overrideTotal != null && overrideTotal > 0) {
+        var adjustedMargin = marginFromManualTotal(data.pricing, overrideTotal);
+        payload.pricingMode = 'override';
+        payload.pricingOverride = {
+          total: overrideTotal,
+          margin: adjustedMargin,
+          engineTotal: data.pricing.total,
+          engineMargin: engineMargin
+        };
+        govQuote.pricing = { margin: adjustedMargin };
+      }
+      var gov = needsApproval(data.fields.custDiscPct, data.fields.quoteDiscPct, govQuote.pricing.margin, govQuote);
+      payload.status = gov ? 'pending' : 'approved';
+      var quote = store.createQuote(payload);
+      return { quote: quote, gov: gov, engineMargin: engineMargin };
     }
 
     function advance(nextStep, userText) {
@@ -2825,39 +2911,111 @@
           'bot'
         );
         var wrap = document.createElement('div');
-        wrap.className = 'assistant-chips';
+        wrap.className = 'assistant-chips assistant-action-row';
         var genBtn = document.createElement('button');
         genBtn.type = 'button';
         genBtn.className = 'btn btn-primary';
         genBtn.textContent = 'Generate & save quote';
         genBtn.addEventListener('click', function () {
           genBtn.disabled = true;
+          draft.manualOverrideTotal = null;
+          if (wrap.querySelector('[data-assistant-override-form]')) {
+            wrap.querySelector('[data-assistant-override-form]').remove();
+          }
+          refreshPreview();
           var result = saveDraftQuote();
-          if (!result) {
+          if (!finishAssistantSave(result)) {
             addMsg('Could not save — check customer and tariff.', 'bot');
             genBtn.disabled = false;
-            return;
           }
-          flow = null;
-          step = 'done';
-          var detailPage = result.gov ? 'quote-detail-pending.html' : 'quote-detail.html';
-          addMsg(
-            'Quote <strong><a href="' + detailPage + '?id=' + encodeURIComponent(result.quote.id) + '">' + result.quote.id + '</a></strong> saved' +
-            (result.gov ? ' — submitted for manager approval.' : ' — approved and ready to send.'),
-            'bot'
-          );
-          addChips(['View quote', 'Create another quote'], function (label) {
-            addMsg(label, 'user');
-            if (label.indexOf('View') === 0) {
-              location.href = detailPage + '?id=' + encodeURIComponent(result.quote.id);
-            } else {
-              draft = defaultDraft();
-              flow = 'create';
-              advance('customer');
+        });
+        var overrideBtn = document.createElement('button');
+        overrideBtn.type = 'button';
+        overrideBtn.className = 'btn btn-secondary';
+        overrideBtn.textContent = 'Manual override';
+        overrideBtn.addEventListener('click', function () {
+          if (thread.querySelector('[data-assistant-override-form]')) return;
+          genBtn.disabled = true;
+          overrideBtn.disabled = true;
+          var engineData = buildDraftQuotePayload();
+          var engineTotal = engineData.pricing.total;
+          var engineMargin = engineData.pricing.margin;
+          var formWrap = document.createElement('div');
+          formWrap.className = 'assistant-inline-form assistant-override-form';
+          formWrap.setAttribute('data-assistant-override-form', '');
+          var label = document.createElement('label');
+          label.textContent = 'Target quote total ($)';
+          var inp = document.createElement('input');
+          inp.type = 'number';
+          inp.className = 'tabular';
+          inp.min = '0';
+          inp.step = '0.01';
+          inp.value = String(Math.round(engineTotal * 100) / 100);
+          var marginHint = document.createElement('p');
+          marginHint.className = 'text-muted-sm';
+          marginHint.style.margin = '0';
+          function syncMarginHint() {
+            var t = parseFloat(inp.value);
+            if (isNaN(t) || t <= 0) {
+              marginHint.textContent = 'Enter a valid total.';
+              draft.manualOverrideTotal = null;
+              refreshPreview();
+              return;
             }
+            draft.manualOverrideTotal = t;
+            refreshPreview();
+            var adj = marginFromManualTotal(engineData.pricing, t);
+            var delta = Math.round((t - engineTotal) * 100) / 100;
+            marginHint.innerHTML =
+              'Engine: <span class="tabular">' + formatMoney(engineTotal) + '</span> @ ' + engineMargin + '% margin → ' +
+              'Override: <strong class="tabular">' + formatMoney(t) + '</strong> @ <strong class="tabular">' + adj + '%</strong> margin' +
+              (delta !== 0 ? ' (' + (delta > 0 ? '+' : '−') + formatMoney(Math.abs(delta)) + ')' : '');
+          }
+          inp.addEventListener('input', syncMarginHint);
+          draft.manualOverrideTotal = parseFloat(inp.value);
+          syncMarginHint();
+          var actions = document.createElement('div');
+          actions.className = 'assistant-override-actions';
+          var saveBtn = document.createElement('button');
+          saveBtn.type = 'button';
+          saveBtn.className = 'btn btn-primary btn-sm';
+          saveBtn.textContent = 'Save with override';
+          saveBtn.addEventListener('click', function () {
+            var t = parseFloat(inp.value);
+            if (isNaN(t) || t <= 0) return;
+            saveBtn.disabled = true;
+            var result = saveDraftQuote(t);
+            if (!finishAssistantSave(result, { overrideTotal: t, engineMargin: engineMargin })) {
+              addMsg('Could not save — check customer and tariff.', 'bot');
+              saveBtn.disabled = false;
+              return;
+            }
+            formWrap.remove();
           });
+          var cancelBtn = document.createElement('button');
+          cancelBtn.type = 'button';
+          cancelBtn.className = 'btn btn-secondary btn-sm';
+          cancelBtn.textContent = 'Cancel';
+          cancelBtn.addEventListener('click', function () {
+            formWrap.remove();
+            draft.manualOverrideTotal = null;
+            refreshPreview();
+            genBtn.disabled = false;
+            overrideBtn.disabled = false;
+          });
+          actions.appendChild(saveBtn);
+          actions.appendChild(cancelBtn);
+          formWrap.appendChild(label);
+          formWrap.appendChild(inp);
+          formWrap.appendChild(marginHint);
+          formWrap.appendChild(actions);
+          thread.appendChild(formWrap);
+          scrollThread();
+          inp.focus();
+          inp.select();
         });
         wrap.appendChild(genBtn);
+        wrap.appendChild(overrideBtn);
         thread.appendChild(wrap);
         scrollThread();
         return;
@@ -2978,6 +3136,8 @@
     bindNumericInput: bindNumericInput,
     basePreset: basePreset,
     quotePricing: quotePricing,
+    quotePricingCompute: quotePricingCompute,
+    applyManualOverrideDisplay: applyManualOverrideDisplay,
     pricingMetaFromQuote: pricingMetaFromQuote,
     renderPricingBreakdown: renderPricingBreakdown,
     renderStackedBar: renderStackedBar,

@@ -451,10 +451,20 @@
       if (commodityEl && cfg.commodity) commodityEl.value = cfg.commodity;
       if (baseInput) baseInput.dataset.userEdited = '1';
       if (uomEl) uomEl.dispatchEvent(new Event('change', { bubbles: true }));
+      var notice = document.querySelector('[data-tariff-template-notice]');
+      if (!notice) {
+        notice = document.createElement('p');
+        notice.className = 'inline-notice info';
+        notice.setAttribute('data-tariff-template-notice', '');
+        notice.style.marginBottom = 'var(--space-md)';
+        var header = document.querySelector('.page-header');
+        if (header) header.insertAdjacentElement('afterend', notice);
+      }
+      notice.innerHTML = '<strong>Using ' + src.id + ' as template</strong> — pricing model and baseline settings copied. Origin stations start empty; add the locations you need below.';
     }
     if (window.AwestMockup && window.AwestMockup.seedTariffConfiguratorOrigins) {
-      var grid = src && src.config && src.config.originGrid ? src.config.originGrid : null;
-      window.AwestMockup.seedTariffConfiguratorOrigins(grid);
+      var originGrid = cloneId ? null : (src && src.config && src.config.originGrid ? src.config.originGrid : null);
+      window.AwestMockup.seedTariffConfiguratorOrigins(originGrid);
     } else if (window.AwestMockup && window.AwestMockup.refreshTariffConfiguratorPick) {
       window.AwestMockup.refreshTariffConfiguratorPick();
     }
