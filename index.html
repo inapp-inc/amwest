@@ -164,7 +164,7 @@
   <div class="wt-eyebrow">Core platform modules</div>
   <h2 class="wt-sec-title">Explore what each module delivers</h2>
   <div class="wt-modules-intro">
-    <p>The foundation for governed pricing — tariffs, customers, quotes, admin, internal ops, hub integrations, and phased portal &amp; sales capabilities. See the <a href="#wt-value-add">platform enhancements</a> below for personalized quote layers and Quote Assistant. The mockup has <strong><span data-mockup-page-count>58</span> interactive screens</strong> with session-store CRUD; tabs, chips, and numeric fields wire to pricing logic.</p>
+    <p>The foundation for governed pricing — tariffs, customers, quotes, admin, internal ops, hub integrations, and phased portal &amp; sales capabilities. Portal quote requests share the same <code>quotes[]</code> store as internal ops and the Sales Pipeline — one record, full lifecycle visibility on both sides. See the <a href="#wt-value-add">platform enhancements</a> below for personalized quote layers and Quote Assistant. The mockup has <strong><span data-mockup-page-count>58</span> interactive screens</strong> with session-store CRUD; tabs, chips, and numeric fields wire to pricing logic.</p>
   </div>
   <div class="wt-modules-grid">
     <button type="button" class="wt-mod-tile" data-module-id="quote">
@@ -207,7 +207,7 @@
       <span class="wt-mod-phase ph1b">Phase 1b · Internal ops</span>
       <div class="wt-mod-icon">📈</div>
       <h3>Analytics &amp; Profitability</h3>
-      <p>Pricing and margin reporting — baseline in Phase 1b; Phase 2 chart expansions; Phase 3 sales metrics</p>
+      <p>Live KPIs, volume and margin charts, rep/tariff/lane tables, margin leakage and exceptions — includes portal pending requests; KPI drill-downs filter the quote list.</p>
     </button>
     <button type="button" class="wt-mod-tile" data-module-id="integrations">
       <span class="wt-mod-phase ph1c">Phase 1c · Integrations</span>
@@ -219,13 +219,13 @@
       <span class="wt-mod-phase ph2">Phase 2 · Portal</span>
       <div class="wt-mod-icon">🌐</div>
       <h3>Customer Self-Service Portal</h3>
-      <p>Quote request submits to American West (no instant pricing) — rep prepares the quote in the pipeline, then the customer sees it on the portal dashboard. Shipment Configurator, help center, tracker, address &amp; commodity CRUD.</p>
+      <p>Quote request creates a shared quote record (<code>channel: portal</code>) — visible in rep Quotes, CRM kanban, Analytics, and dashboard through the full lifecycle. Rep prepares pricing and sends; customer sees the finalized quote on the portal dashboard. Shipment tracker, help center, address &amp; commodity CRUD.</p>
     </button>
     <button type="button" class="wt-mod-tile" data-module-id="crm">
       <span class="wt-mod-phase ph3">Phase 3 · Sales</span>
       <div class="wt-mod-icon">🎯</div>
       <h3>Sales Pipeline &amp; CRM</h3>
-      <p>Team KPIs, rep leaderboard, opportunity kanban by lifecycle stage, and quote aging follow-ups.</p>
+      <p>Team KPIs, rep leaderboard, opportunity kanban by lifecycle stage (including Portal requests), and quote aging — all fed from the same quote store as internal ops and the customer portal.</p>
     </button>
   </div>
 </section>
@@ -267,7 +267,7 @@
 <section class="wt-section" id="wt-workflow">
   <div class="wt-eyebrow">Proposed key workflows</div>
   <h2 class="wt-sec-title">How the system works for each team</h2>
-    <p class="wt-sec-body">Click any role to walk through their end-to-end user flow — step by step, with links to the matching demo screens. Flows reflect the current mockup: platform enhancements (Quote Assistant, personalized quote layers), three-bucket discount badges, Standard/Spot/CFQ builder paths, amount hover drawer, tariff summary drawer, and live dashboard drilldowns.</p>
+    <p class="wt-sec-body">Click any role to walk through their end-to-end user flow — step by step, with links to the matching demo screens. Flows reflect the current mockup: portal requests wired into the sales pipeline (same quote ID from customer submit → rep pricing → send to customer), platform enhancements (Quote Assistant, personalized quote layers), three-bucket discount badges, Standard/Spot/CFQ builder paths, amount hover drawer, tariff summary drawer, and live dashboard drilldowns.</p>
   <p class="wt-flow-hint">Select a role below to expand their interactive flow ↓</p>
 
   <div class="wt-userflows" id="wt-userflows">
@@ -327,10 +327,10 @@
           <tr data-flow-row="rep">
             <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-accent)"></span>Sales rep</td>
             <td class="wt-swim-blank">—</td>
-            <td class="wt-swim-active">Quote list · three-bucket badges · amount hover drawer · <strong>Quote Assistant</strong> · Builder (Standard/Spot/CFQ) · Step 4a+4b layers · draft save</td>
+            <td class="wt-swim-active">Quote list (incl. portal requests) · three-bucket badges · amount hover drawer · <strong>Quote Assistant</strong> · Builder (Standard/Spot/CFQ) · Prepare pricing · Send to customer · draft save</td>
             <td class="wt-swim-active">Customer-term exception + quote discount + margin rules · Submit for Approval</td>
             <td class="wt-swim-active">Generate PDF <span class="wt-swim-phase">1a</span> · e-signature <span class="wt-swim-phase ph1c">1c</span> · TMS export <span class="wt-swim-phase ph1c">1c</span></td>
-            <td class="wt-swim-blank">—</td>
+            <td class="wt-swim-active-amber">Portal quote requests appear as Pipeline requests · same ID through rep workflow <span class="wt-swim-phase ph2">2</span></td>
           </tr>
           <tr data-flow-row="manager">
             <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-green)"></span>Sales manager</td>
@@ -359,9 +359,9 @@
           <tr data-flow-row="customer">
             <td class="wt-swim-role"><span class="wt-swim-dot" style="background:var(--wt-burgundy)"></span>Customer (portal)</td>
             <td class="wt-swim-blank">—</td>
-            <td class="wt-swim-active-amber">Self-service quote · tier chips · live breakdown · Save for Later <span class="wt-swim-phase ph2">2</span></td>
+            <td class="wt-swim-active-amber">Quote request · tier chips · Submit to American West (no instant pricing) <span class="wt-swim-phase ph2">2</span></td>
             <td class="wt-swim-blank">—</td>
-            <td class="wt-swim-active-amber">Always-visible breakdown · Accept &amp; Book <span class="wt-swim-phase ph2">2</span></td>
+            <td class="wt-swim-active-amber">Request confirmation · finalized quote on dashboard when rep sends <span class="wt-swim-phase ph2">2</span></td>
             <td class="wt-swim-active-amber">Address &amp; commodity CRUD · tracker · POD · requote <span class="wt-swim-phase ph2">2</span></td>
           </tr>
         </tbody>
@@ -993,7 +993,19 @@
   </div>
 
   <div class="wt-config-callout" id="wt-mockup-callout">
-    <strong>Demo UX (current mockup):</strong> All <strong><span data-mockup-page-count>58</span> screens</strong> wire tabs, chips, and numeric fields into business logic. Core builder supports <strong>Standard / Spot / CFQ</strong> with live pricing and approval routing. <strong><a href="#wt-value-add">Platform enhancements</a>:</strong> personalized quote layers (Step 4a/4b, three-bucket badges, layer templates) and Quote Assistant (conversational create → save). Quote list: hover <strong>Amount</strong> for calculation drawer. Portal: origin/destination, tier chips, book &amp; save-for-later. Reset demo after seed updates.
+    <strong>Demo UX (current mockup):</strong> All <strong><span data-mockup-page-count>58</span> screens</strong> wire tabs, chips, and numeric fields into business logic. Core builder supports <strong>Standard / Spot / CFQ</strong> with live pricing and approval routing. <strong><a href="#wt-value-add">Platform enhancements</a>:</strong> personalized quote layers (Step 4a/4b, three-bucket badges, layer templates) and Quote Assistant (conversational create → save). Quote list: hover <strong>Amount</strong> for calculation drawer; filter by <strong>Portal request</strong>. Portal: tier chips, submit to American West, quotes table on dashboard. Tariff detail: <strong>Use as template</strong> opens configurator. Reset demo after seed updates.
+  </div>
+
+  <div class="wt-config-callout" style="margin-top:12px">
+    <strong>End-to-end portal → pipeline (try this):</strong>
+    <ol style="margin:8px 0 0 1.1em;padding:0;font-size:14px;line-height:1.65">
+      <li><a href="portal/portal-quote-request.html">Portal → Quote Request</a> — submit shipment (Pacific Home account)</li>
+      <li><a href="internal/quotes.html?status=portal_request">Rep → Quotes</a> — same quote ID appears as <em>Portal request</em></li>
+      <li><a href="crm/crm-opportunities.html">CRM → Opportunities</a> — card in <em>Portal requests</em> column; stays visible as status advances</li>
+      <li>Quote detail → <strong>Prepare pricing</strong> → save in builder (same ID, not a new quote)</li>
+      <li>Approve if needed → <strong>Send to customer</strong> on quote detail</li>
+      <li><a href="portal/portal-dashboard.html">Portal dashboard</a> — quote shows as <em>Ready</em> with total in Your quotes table</li>
+    </ol>
   </div>
 
   <div id="wt-mockup-groups"><!-- rendered by js/mockup-catalog.js --></div>
@@ -1216,6 +1228,8 @@
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Lifecycle distinction (§6, §7)</div><ul class="wt-drawer-list">' +
         '<li>Quote status lifecycle (Draft→…→Archived) stays in internal Quote Detail</li>' +
+        '<li><strong>Portal → pipeline handoff (demo):</strong> Quote request creates <code>channel: portal</code> record in shared <code>quotes[]</code> — visible in rep Quotes, CRM kanban, Analytics, and dashboard through pricing, approval, and send</li>' +
+        '<li>Customer sees pending request immediately; finalized total appears on portal dashboard only after rep sends (<code>portalVisible</code>)</li>' +
         '<li>Quote-to-Shipment lifecycle tracked in portal Shipment Tracker — connected at Converted to Shipment handoff</li>' +
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Integrations</div><ul class="wt-drawer-list">' +
@@ -1496,12 +1510,13 @@
       icon: '📈',
       title: 'Analytics & Profitability',
       sub: 'Domain module · Analytics · Phase 1b onward',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1b"><strong>Margin intelligence:</strong> Internal reporting on tariff performance, lane profitability, and rep outcomes — baseline in Phase 1b, expanded with portal and CRM data in later phases.</div></div>' +
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1b"><strong>Margin intelligence:</strong> Live dashboard wired to session store — KPIs, volume/margin charts, rep and lane tables, margin leakage and exception lists. Includes portal pending requests; drill-downs filter the quote list.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
-        '<li>Phase 1b: Margin Analysis, Tariff Performance, Lane Performance charts</li>' +
-        '<li>Phase 2: Most Quoted Lanes, Margin Leakage, Win/Loss Rate, Geographic Heat Map</li>' +
+        '<li>Pipeline value (hero row), open quotes, win rate, avg margin, below-floor count, portal pending</li>' +
+        '<li>Volume and margin trend charts · service mix · outcome distribution · margin buckets</li>' +
+        '<li>Rep performance, tariff performance, and lane performance tables with drill-through</li>' +
+        '<li>Margin leakage and customer discount exception tables</li>' +
         '<li>Phase 3: Pipeline forecasting and sales metrics from CRM module</li>' +
-        '<li>Competitor tariff comparison feeds match-pricing justification</li>' +
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
         '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="admin">Pricing admin — margin &amp; tariff performance</button></li>' +
@@ -1513,7 +1528,6 @@
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
         '<a href="internal/analytics.html" target="_blank" rel="noopener noreferrer">Analytics Dashboard</a>' +
-        '<a href="internal/tariff-competitor-comparison.html" target="_blank" rel="noopener noreferrer">Competitor Comparison</a>' +
         '</div></div>'
     },
     integrations: {
@@ -1546,17 +1560,17 @@
       icon: '🌐',
       title: 'Customer Self-Service Portal',
       sub: 'Presentation layer · Phase 2 · separate portal shell',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph2"><strong>Customer channel:</strong> Distinct top-nav, card-based, mobile-first shell — shares API Gateway and Quote domain with internal ops but never exposes internal-only screens.</div></div>' +
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph2"><strong>Customer channel:</strong> Distinct top-nav, card-based, mobile-first shell — shares the same <code>quotes[]</code> store and Quote domain with internal ops and Sales Pipeline. Customer visibility is gated separately from rep pipeline visibility.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
-        '<li>Portal dashboard with Get a Quote CTA and recent activity</li>' +
-        '<li>Quote Request with Shipment Configurator and service tier comparison</li>' +
-        '<li>Always-visible plain-language pricing breakdown</li>' +
+        '<li>Portal dashboard with Get a Quote CTA, <strong>Your quotes</strong> table, and recent activity</li>' +
+        '<li>Quote Request — tier selection and Submit to American West (no instant pricing)</li>' +
+        '<li>Shared quote record (<code>channel: portal</code>) — rep sees it in Quotes, CRM kanban, Analytics from submit through send</li>' +
         '<li>Pricing Help Center — glossary, tiers, insurance terms</li>' +
         '<li>Shipment Tracker — Quote→Delivery lifecycle; POD download; requote</li>' +
         '<li>Self-service tools — address book, saved commodities</li>' +
         '</ul></div>' +
         drawerFormula(
-          '<p class="wt-drawer-formula-note">Customer-facing breakdown mirrors the source pipeline in plain language.</p>' +
+          '<p class="wt-drawer-formula-note">Customer-facing breakdown appears on finalized quotes after rep sends pricing — request screen collects shipment details only.</p>' +
           drawerPipelineCube +
           '<div class="wt-drawer-formula-line"><strong>Linehaul</strong> = per-pound rate × weight; minimum lane charge applied if higher</div>' +
           '<div class="wt-drawer-formula-line"><strong>Fuel</strong> = linehaul × weekly fuel %</div>' +
@@ -1582,12 +1596,12 @@
       icon: '🎯',
       title: 'Sales Pipeline & CRM',
       sub: 'Domain module · CRM & Sales Enablement · Phase 3',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph3"><strong>Sales enablement:</strong> Pipeline visibility tied to actual quoted rates and margins — syncs closed-won outcomes to external CRM via Ops Systems Hub.</div></div>' +
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph3"><strong>Sales enablement:</strong> Pipeline visibility tied to actual quoted rates and margins — reads the same <code>quotes[]</code> store as internal ops and portal, including portal-origin quotes through the full lifecycle.</div></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
         '<li>Sales Dashboard — Pipeline Value, Win Rate, Avg. Quote Aging KPIs</li>' +
         '<li>Rep leaderboard and Follow-ups Due Today</li>' +
-        '<li>Opportunity kanban by quote lifecycle stage</li>' +
-        '<li>Quote aging follow-ups with drag-and-drop where rules allow</li>' +
+        '<li>Opportunity kanban by quote lifecycle stage — dedicated <strong>Portal requests</strong> column; cards stay visible as status advances</li>' +
+        '<li>Quote aging follow-ups with Shift+click stage moves where rules allow</li>' +
         '<li>CRM sync — Salesforce / HubSpot via Ops Systems Hub</li>' +
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
@@ -1983,8 +1997,8 @@
       badge: 'Layer 5 · Phase 2', badgeClass: 'ph2',
       title: 'Customer Portal',
       sub: 'Self-service experience for shippers — separate top-nav shell, mobile-first.',
-      body: '<p>Customers view active quotes, accept or decline, download PDFs, and track shipment status. Distinct visual shell from internal ops but shares the same API Gateway and quote domain module.</p>' +
-        '<dl><dt>Connects to</dt><dd>API Gateway → Quote Mgmt · Document Hub</dd><dt>Lifecycle</dt><dd>Portal quotes are customer-facing; internal quotes remain ops-only until published</dd></dl>',
+      body: '<p>Customers submit quote requests (no instant pricing), track request status and finalized quotes on the dashboard, and follow shipment milestones. Distinct visual shell from internal ops but shares the same quote store — portal requests appear in the rep pipeline immediately and stay visible through pricing and send.</p>' +
+        '<dl><dt>Connects to</dt><dd>API Gateway → Quote Mgmt · Document Hub</dd><dt>Lifecycle</dt><dd>Portal request → rep prepares pricing → Send to customer → quote visible on portal dashboard (<code>portalVisible</code>)</dd><dt>Demo store</dt><dd><code>createPortalQuote()</code> writes to shared <code>quotes[]</code>; customer view filtered by <code>portal.activeCustomerId</code></dd></dl>',
       links: [
         { label: 'Portal home', href: 'portal/portal-dashboard.html' },
         { label: 'Quote request', href: 'portal/portal-quote-request.html' },
@@ -1995,8 +2009,8 @@
       badge: 'Layer 5 · Phase 3', badgeClass: 'ph3',
       title: 'Sales Pipeline UI',
       sub: 'CRM-style pipeline views for reps and sales leadership.',
-      body: '<p>Kanban pipeline, opportunity detail, and rep leaderboard. Reads quote and customer data from domain services; syncs closed-won outcomes to external CRM via Ops Systems Hub.</p>' +
-        '<dl><dt>Connects to</dt><dd>API Gateway → CRM &amp; Sales module → Quote Mgmt</dd></dl>',
+      body: '<p>Kanban pipeline, opportunity detail, and rep leaderboard. Reads quote and customer data from the shared session store — portal-origin quotes included from <em>Portal request</em> through sent and converted. Syncs closed-won outcomes to external CRM via Ops Systems Hub.</p>' +
+        '<dl><dt>Connects to</dt><dd>API Gateway → CRM &amp; Sales module → Quote Mgmt</dd><dt>Demo wiring</dt><dd><code>isRepPipelineQuote()</code> includes all portal-channel quotes; kanban <em>Portal requests</em> column matches Quotes list filter</dd></dl>',
       links: [
         { label: 'CRM dashboard', href: 'crm/crm-dashboard.html' },
         { label: 'Opportunities', href: 'crm/crm-opportunities.html' }
@@ -2040,7 +2054,7 @@
       badge: 'Layer 3 · Phase 1a–3', badgeClass: 'ph1a',
       title: 'Quote Management',
       sub: 'Full quote lifecycle — draft through accepted/lost with provenance.',
-      body: '<p>Creates and governs quotes through the full lifecycle. Shipment Configurator builds cube/weight from item dimensions. Three-bucket pricing: applied terms (snapshotted at create), customer discount exception (Step 4b override), and quote-level discount. Enriched quote list with applied · exception · quote badges, amount hover drawer, and Show/Hide calculation in Actions. Dashboard one-click approval with live KPI drilldowns. All quote state lives in the browser session store (<code>awest:store</code>) — amounts, status, and artifacts stay consistent across quotes list, detail, Sales Pipeline, and portal until reset.</p>' +
+      body: '<p>Creates and governs quotes through the full lifecycle. Shipment Configurator builds cube/weight from item dimensions. Three-bucket pricing: applied terms (snapshotted at create), customer discount exception (Step 4b override), and quote-level discount. Enriched quote list with applied · exception · quote badges, amount hover drawer, and Show/Hide calculation in Actions. Portal quote requests (<code>channel: portal</code>, status <code>portal_request</code>) enter the same store and rep pipeline — Prepare pricing reuses the quote ID; Send to customer sets <code>portalVisible</code>. Dashboard one-click approval with live KPI drilldowns. All quote state lives in the browser session store (<code>awest:store</code>) — amounts, status, and artifacts stay consistent across quotes list, detail, Sales Pipeline, Analytics, and portal until reset.</p>' +
         '<dl><dt>Hub dependencies</dt><dd>Document Hub (PDF · e-signature in Phase 1c) · Rating Hub (Phase 1c) · Ops Hub (TMS export · Phase 1c)</dd></dl>',
       links: [
         { label: 'Quotes list', href: 'internal/quotes.html' },
@@ -2072,7 +2086,7 @@
       badge: 'Layer 3 · Phase 1b–3', badgeClass: 'ph1b',
       title: 'Analytics',
       sub: 'Win rates, margin trends, and rep performance dashboards.',
-      body: '<p>Baseline internal analytics in Phase 1b. Phase 2 adds portal engagement metrics; Phase 3 adds pipeline forecasting from CRM data.</p>',
+      body: '<p>Live analytics dashboard wired to session store — pipeline KPIs (portal requests included), volume and margin trends, rep/tariff/lane tables, margin leakage, and customer discount exceptions. Phase 3 adds pipeline forecasting from CRM data.</p>',
       links: [{ label: 'Analytics dashboard', href: 'internal/analytics.html' }]
     },
     'mod-crm': {
@@ -2294,11 +2308,12 @@
     rep: {
       badge: 'Phase 1a · MVP + enhancements', badgeClass: 'ph1a',
       title: 'Sales Rep user flow',
-      sub: 'Core daily workflow — scan the quote list with three-bucket badges, price via Quote Assistant or Builder (Standard/Spot/CFQ), apply personalized layers in Step 4a/4b, route for approval when rules breach, and deliver PDF output.',
-      alt: '<strong>Platform enhancements:</strong> Quote Assistant runs the full create → save path on the same pricing engine as Builder. Personalized quote layers (Step 4a applied terms + Step 4b adjustments) show as applied · exception · quote badges. Hover Amount on the quote list for the calculation drawer; hover tariff on detail for summary drawer. Save as Draft persists to the session store.',
+      sub: 'Core daily workflow — scan the quote list (including portal requests), price via Quote Assistant or Builder (Standard/Spot/CFQ), apply personalized layers in Step 4a/4b, route for approval when rules breach, and deliver PDF output.',
+      alt: '<strong>Portal requests:</strong> Customer submissions appear in Quotes and CRM kanban with status <em>Portal request</em> — open detail, Prepare pricing (same quote ID), then Send to customer when approved. Platform enhancements: Quote Assistant runs the full create → save path on the same pricing engine as Builder. Hover Amount on the quote list for the calculation drawer.',
       steps: [
         { title: 'Sign in', desc: 'Authenticate by role; internal MFA in Phase 1c.', phase: 'ph1a', href: 'internal/login.html', label: 'Login' },
-        { title: 'Quote list', desc: 'Scan three-bucket badges (applied · exception · quote); hover Amount for calculation drawer; inline quote discount edits.', phase: 'ph1a', href: 'internal/quotes.html', label: 'Quote List' },
+        { title: 'Quote list', desc: 'Scan three-bucket badges; filter Portal request; hover Amount for calculation drawer; inline quote discount edits.', phase: 'ph1a', href: 'internal/quotes.html', label: 'Quote List' },
+        { title: 'Portal request', desc: 'Customer-submitted quote — Prepare pricing opens builder with same ID; stays in list/kanban through draft, pending, approved, and sent.', phase: 'ph2', href: 'internal/quotes.html?status=portal_request', label: 'Portal Requests' },
         { title: 'Quote Assistant', desc: 'Platform enhancement — conversational create: customer → service → tariff → lane → shipment → adjustments → save.', phase: 'ph1a', href: 'internal/quote-assistant.html', label: 'Quote Assistant' },
         { title: 'Quote Builder', desc: 'Alternative path — B2B or Home Transport · Standard/Spot/CFQ · Step 4a applied terms + Step 4b layers · draft save · live margin.', phase: 'ph1a', href: 'internal/quote-builder.html', label: 'Quote Builder' },
         { title: 'Personalized layers', desc: 'Step 4a read-only snapshot; Step 4b quote discount, customer-term exception, lane override, accessorials from layer templates.', phase: 'ph1a', href: 'internal/quote-builder.html', label: 'Builder Step 4b' },
@@ -2331,7 +2346,7 @@
       alt: '<strong>Reference model:</strong> One base schedule per service type (B2B, Threshold, WGI, WGNI). Customer discounts snapshotted at quote create; rep layers come from quote layer templates in Step 4b. Tariff list Edit matrix jumps directly to rate table.',
       steps: [
         { title: 'Tariff List', desc: 'Base schedules by service type; Edit matrix row action.', phase: 'ph1a', href: 'internal/tariffs.html', label: 'Tariff List' },
-        { title: 'Tariff Detail', desc: 'Grid layout — rate settings, origin grid, baseline program rules (commodity/minimum). Quote-time layers linked, not edited here.', phase: 'ph1a', href: 'internal/tariff-detail.html', label: 'Tariff Detail' },
+        { title: 'Tariff Detail', desc: 'Grid layout — rate settings, origin grid, baseline rules; Use as template opens configurator with clone prefill.', phase: 'ph1a', href: 'internal/tariff-detail.html', label: 'Tariff Detail' },
         { title: 'Rate table matrix', desc: 'Per-pound rates and lane minimums by zone × cube bracket.', phase: 'ph1a', href: 'internal/tariff-rate-matrix.html', label: 'Rate Matrix' },
         { title: 'Tariff Configurator', desc: 'Single-page setup — inherits base matrix; add origin stations and configure exceptions.', phase: 'ph1a', href: 'internal/tariff-wizard.html', label: 'Configurator' },
         { title: 'Version compare', desc: 'Diff two versions; rollback with confirmation.', phase: 'ph1b', href: 'internal/tariff-comparison.html', label: 'Comparison' },
@@ -2360,16 +2375,16 @@
     customer: {
       badge: 'Phase 2 · Portal', badgeClass: 'ph2',
       title: 'Customer (Portal) user flow',
-      sub: 'Self-service channel — request a quote with tier comparison and live breakdown, book or save for later, then track shipment through delivery.',
-      alt: '<strong>Portal wiring:</strong> Origin/destination and tier chips hydrate from session store. Accept &amp; Book and Save for Later both persist portal quotes. Pricing Guide explains linehaul, fuel, and insurance in plain language.',
+      sub: 'Self-service channel — submit a quote request (no instant pricing), track status on the dashboard, and follow shipments through delivery.',
+      alt: '<strong>Portal → pipeline wiring:</strong> Submit creates a shared quote record assigned to the customer\'s rep. Same ID appears in rep Quotes and CRM kanban immediately. Customer sees <em>Awaiting pricing</em> until rep sends; then dashboard shows total and <em>Ready</em> status.',
       steps: [
-        { title: 'Portal home', desc: 'Welcome banner, Get a Quote CTA, recent activity.', phase: 'ph2', href: 'portal/portal-dashboard.html', label: 'Portal Home' },
-        { title: 'Quote Request', desc: 'Submit shipment details and preferred service — routed to sales rep; no instant pricing.', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Quote Request' },
-        { title: 'Pricing breakdown', desc: 'Always-visible plain-language line items on result card.', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Breakdown' },
+        { title: 'Portal home', desc: 'Welcome banner, Get a Quote CTA, Your quotes table, recent activity.', phase: 'ph2', href: 'portal/portal-dashboard.html', label: 'Portal Home' },
+        { title: 'Quote Request', desc: 'Origin/destination, weight/cube, tier chips — Submit to American West (no instant pricing).', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Quote Request' },
+        { title: 'Request submitted', desc: 'Confirmation screen — quote ID assigned; rep notified via shared store.', phase: 'ph2', href: 'portal/portal-quote-confirmation.html', label: 'Confirmation' },
+        { title: 'Rep prepares quote', desc: 'Same quote ID in rep Quotes / CRM — Prepare pricing → builder → Send to customer (rep-side step).', phase: 'ph2', href: 'internal/quotes.html?status=portal_request', label: 'Rep Quotes' },
+        { title: 'Quote ready', desc: 'Portal dashboard Your quotes table shows finalized total after rep sends.', phase: 'ph2', href: 'portal/portal-dashboard.html', label: 'Dashboard' },
         { title: 'Pricing Guide', desc: 'Glossary and service tiers; deep-linked from terms.', phase: 'ph2', href: 'portal/portal-pricing-help.html', label: 'Help Center' },
-        { title: 'Accept & Book', desc: 'Confirm quote and receive confirmation screen.', phase: 'ph2', href: 'portal/portal-quote-confirmation.html', label: 'Confirmation' },
         { title: 'Shipment Tracker', desc: 'Quote→Accepted→BOL→Pickup→Tracking→Delivery→Invoice.', phase: 'ph2', href: 'portal/portal-shipment-tracker.html', label: 'Tracker' },
-        { title: 'POD & requote', desc: 'Download POD; requote or duplicate past shipments.', phase: 'ph2', href: 'portal/portal-pod.html', label: 'POD' },
         { title: 'Self-service tools', desc: 'Address book and saved commodities hydrated from store.', phase: 'ph2', href: 'portal/portal-self-service.html', label: 'Self-Service' }
       ]
     }

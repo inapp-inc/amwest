@@ -23,7 +23,7 @@
       badgeLabel: 'Phase 1a · MVP',
       title: 'Quote workflow',
       items: [
-        { href: 'internal/quotes.html', title: 'Quote List', desc: 'Three-bucket badges · amount hover drawer · inline quote discount · row approve/reject' },
+        { href: 'internal/quotes.html', title: 'Quote List', desc: 'Three-bucket badges · Portal request filter · amount hover drawer · inline quote discount · row approve/reject' },
         { href: 'internal/quote-assistant.html', title: 'Quote Assistant', desc: 'Platform enhancement — conversational create → save on shared pricing engine' },
         { href: 'internal/quote-builder.html', title: 'Quote Builder', desc: 'B2B / Home Transport · Step 4a applied terms · Step 4b adjustments · live pricing · draft save' },
         { href: 'internal/quote-builder.html?cfq=1', title: 'Quote Builder (CFQ)', desc: 'Call-for-Quote path — manual base/fuel rates wired to pricing engine' },
@@ -42,7 +42,7 @@
       title: 'Tariff administration',
       items: [
         { href: 'internal/tariffs.html', title: 'Tariff List', desc: 'Base schedules by service type · filter bar · Edit matrix row action' },
-        { href: 'internal/tariff-detail.html', title: 'Tariff Detail', desc: 'Service/UOM selects · origin grid · baseline rules · live numeric save · reference inheritance' },
+        { href: 'internal/tariff-detail.html', title: 'Tariff Detail', desc: 'Service/UOM selects · origin grid · baseline rules · Use as template · live numeric save' },
         { href: 'internal/tariff-wizard.html', title: 'Tariff Configurator', desc: 'Single-page setup — add origin stations, pricing model, baseline rules persist on create' },
         { href: 'internal/tariff-rate-matrix.html', title: 'Rate Table Matrix', desc: 'Zone × weight/cube breaks per origin × service — save to session store' },
         { href: 'internal/tariff-add-override.html', title: 'Add Tariff Override', desc: 'Add baseline rule to tariff config' },
@@ -75,7 +75,7 @@
       title: 'Operations & analytics',
       items: [
         { href: 'internal/dashboard.html', title: 'Dashboard', desc: 'Live KPIs · rep drilldowns · pending queue Approve/Reject' },
-        { href: 'internal/analytics.html', title: 'Analytics', desc: 'KPIs · volume & margin trends · rep/tariff/lane tables · margin leakage & exceptions' },
+        { href: 'internal/analytics.html', title: 'Analytics', desc: 'Pipeline KPIs · portal pending · volume & margin trends · rep/tariff/lane tables · leakage & exceptions' },
         { href: 'internal/tariff-comparison.html', title: 'Tariff Comparison', desc: 'Compare two tariffs — selects update base-rate diff from store' },
         { href: 'internal/tariff-competitor-comparison.html', title: 'Competitor Comparison', desc: 'AW rate vs competitor quote — seeded from Q-0823' },
         { href: 'internal/quote-layer-templates.html', title: 'Quote Layer Templates', desc: 'Platform enhancement — admin catalog (store-hydrated) defining Step 4b adjustment layers' }
@@ -119,10 +119,10 @@
       badgeLabel: 'Phase 2 · Portal',
       title: 'Customer self-service',
       items: [
-        { href: 'portal/portal-dashboard.html', title: 'Customer Home', desc: 'Welcome, Get a Quote CTA, recent activity' },
-        { href: 'portal/portal-quote-request.html', title: 'Quote Request', desc: 'Submit shipment to American West — no instant pricing; rep prepares final quote' },
+        { href: 'portal/portal-dashboard.html', title: 'Customer Home', desc: 'Welcome · Get a Quote CTA · Your quotes table · recent activity' },
+        { href: 'portal/portal-quote-request.html', title: 'Quote Request', desc: 'Tier chips · Submit to American West — creates shared quote in rep pipeline' },
         { href: 'portal/portal-pricing-help.html', title: 'Pricing Help Center', desc: 'Glossary, tiers, insurance — deep-linkable from quotes' },
-        { href: 'portal/portal-quote-confirmation.html', title: 'Request submitted', desc: 'Sent to American West confirmation; also shows finalized quote when ready' },
+        { href: 'portal/portal-quote-confirmation.html', title: 'Request submitted', desc: 'Sent to American West confirmation; shows finalized quote when rep sends' },
         { href: 'portal/portal-shipment-tracker.html', title: 'Shipment Tracker', desc: 'Quote→Invoice lifecycle · requote / duplicate links' },
         { href: 'portal/portal-self-service.html', title: 'Self-Service Tools', desc: 'Address book · saved commodities · support tickets from store' },
         { href: 'portal/portal-pod.html', title: 'Proof of Delivery', desc: 'POD download view' },
@@ -136,8 +136,8 @@
       badgeLabel: 'Phase 3 · Sales',
       title: 'Sales Pipeline & CRM',
       items: [
-        { href: 'crm/crm-dashboard.html', title: 'Sales Dashboard', desc: 'Team KPIs, rep leaderboard, follow-ups from store' },
-        { href: 'crm/crm-opportunities.html', title: 'Opportunity Kanban', desc: 'Quote lifecycle stages — Shift+click to move · syncs store status' }
+        { href: 'crm/crm-dashboard.html', title: 'Sales Dashboard', desc: 'Team KPIs (incl. portal quotes) · rep leaderboard · follow-ups from store' },
+        { href: 'crm/crm-opportunities.html', title: 'Opportunity Kanban', desc: 'Portal requests column · full lifecycle stages · Shift+click to move · syncs store status' }
       ]
     }
   ];
