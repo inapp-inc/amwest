@@ -75,7 +75,7 @@
       title: 'Operations & analytics',
       items: [
         { href: 'internal/dashboard.html', title: 'Dashboard', desc: 'Live KPIs · rep drilldowns · pending queue Approve/Reject' },
-        { href: 'internal/analytics.html', title: 'Analytics', desc: 'Win rate KPIs · lane profitability table from store' },
+        { href: 'internal/analytics.html', title: 'Analytics', desc: 'KPIs · volume & margin trends · rep/tariff/lane tables · margin leakage & exceptions' },
         { href: 'internal/tariff-comparison.html', title: 'Tariff Comparison', desc: 'Compare two tariffs — selects update base-rate diff from store' },
         { href: 'internal/tariff-competitor-comparison.html', title: 'Competitor Comparison', desc: 'AW rate vs competitor quote — seeded from Q-0823' },
         { href: 'internal/quote-layer-templates.html', title: 'Quote Layer Templates', desc: 'Platform enhancement — admin catalog (store-hydrated) defining Step 4b adjustment layers' }

@@ -111,6 +111,15 @@ require('./seed-data.js');
   S.load();
   assert(S.getQuote(pq.id), 'portal quote survives localStorage reload');
 
+  S.updateQuote(pq.id, { status: 'approved', weight: 2500, quoteDiscPct: 2 });
+  var updated = S.getQuote(pq.id);
+  assert(updated && updated.id === pq.id, 'edit portal quote keeps same id');
+  assert(updated.channel === 'portal', 'portal quote keeps channel');
+  assert(updated.status === 'approved' || updated.status === 'pending', 'portal quote moves out of request status');
+  assert(S.isRepPipelineQuote(updated), 'priced portal quote stays in rep pipeline');
+  S.setQuoteStatus(pq.id, 'sent');
+  assert(S.isRepPipelineQuote(S.getQuote(pq.id)), 'sent portal quote stays in rep pipeline');
+
   /* Base tariff auto-resolve on create/update */
   var sariQ = S.createQuote({
     customerId: 'SARI-1211',

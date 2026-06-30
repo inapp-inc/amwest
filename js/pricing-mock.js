@@ -1526,6 +1526,18 @@
     return resolveCustomerDiscForService(c, serviceType || 'b2b');
   }
 
+  function resolveHdTierFromQuote(q) {
+    if (!q) return 'threshold';
+    if (q.preferredService === 'threshold' || q.preferredService === 'wgni' || q.preferredService === 'wgi') {
+      return q.preferredService;
+    }
+    var ps = q.primaryService || 'threshold';
+    if (ps === 'wg-insp' || ps === 'wgi') return 'wgi';
+    if (ps === 'wg-no-insp' || ps === 'wgni') return 'wgni';
+    if (ps === 'threshold') return 'threshold';
+    return 'wgi';
+  }
+
   function initQuoteBuilderPricing() {
     var root = document.querySelector('[data-quote-builder-pricing]');
     if (!root) return;
@@ -1750,6 +1762,19 @@
       if (competitorInput && parseNumericInput(competitorInput, 0) > 0) {
         payload.competitorRate = parseNumericInput(competitorInput, 0);
       }
+      var editId = new URLSearchParams(location.search).get('id') || editQuoteId;
+      if (editId) {
+        var storeForQuote = getStore();
+        var existing = storeForQuote ? storeForQuote.getQuote(editId) : null;
+        if (existing) {
+          if (existing.origin) payload.origin = existing.origin;
+          if (existing.destination) payload.destination = existing.destination;
+          if (existing.commodity) payload.commodity = existing.commodity;
+          if (existing.channel) payload.channel = existing.channel;
+          if (existing.portalSubmittedAt) payload.portalSubmittedAt = existing.portalSubmittedAt;
+          if (existing.preferredService) payload.preferredService = existing.preferredService;
+        }
+      }
       return payload;
     }
 
@@ -1824,13 +1849,15 @@
     function saveBuilderQuote(status) {
       var store = getStore();
       if (!store) return;
+      var quoteId = new URLSearchParams(location.search).get('id') || editQuoteId;
+      var existing = quoteId ? store.getQuote(quoteId) : null;
       var q = builderQuote();
       var svc = resolveBuilderService(selectedFamily, selectedHdTier, builderCustomerId);
       var fields = extractQuoteFieldsFromAdjustments(quoteAdjustments, previewAppliedTerms(q));
-      var snapshotTerms = editQuoteId && storedAppliedTerms
+      var snapshotTerms = quoteId && storedAppliedTerms
         ? storedAppliedTerms
         : buildAppliedTerms(q, storeAdapter());
-      var payload = Object.assign({
+      var payload = {
         quoteDiscPct: fields.quoteDiscPct,
         laneOverride: q.laneOverride,
         customerDiscPct: fields.custDiscPct,
@@ -1839,16 +1866,45 @@
         tariffId: svc.tariffId,
         serviceFamily: selectedFamily,
         appliedTerms: JSON.parse(JSON.stringify(snapshotTerms)),
-        quoteAdjustments: JSON.parse(JSON.stringify(quoteAdjustments))
-      }, store.getAssistantPrefill() || {}, q);
-      if (editQuoteId) {
-        store.updateQuote(editQuoteId, payload);
+        quoteAdjustments: JSON.parse(JSON.stringify(quoteAdjustments)),
+        pickupZip: q.pickupZip,
+        deliveryZip: q.deliveryZip,
+        weight: q.weight,
+        cube: q.cube,
+        declaredValue: q.declaredValue,
+        customerId: q.customerId,
+        originStation: q.originStation,
+        pricingMode: q.pricingMode,
+        origin: q.origin,
+        destination: q.destination,
+        commodity: q.commodity,
+        channel: q.channel,
+        portalSubmittedAt: q.portalSubmittedAt,
+        preferredService: q.preferredService
+      };
+      if (q.spotBaseCwt != null) payload.spotBaseCwt = q.spotBaseCwt;
+      if (q.spotFuelPct != null) payload.spotFuelPct = q.spotFuelPct;
+      if (q.cfqManualBase != null) payload.cfqManualBase = q.cfqManualBase;
+      if (q.cfqManualFuel != null) payload.cfqManualFuel = q.cfqManualFuel;
+      if (q.competitorName) payload.competitorName = q.competitorName;
+      if (q.competitorRate != null) payload.competitorRate = q.competitorRate;
+      if (quoteId) {
+        if (existing && existing.channel === 'portal') {
+          payload.channel = 'portal';
+          payload.portalSubmittedAt = existing.portalSubmittedAt;
+          payload.preferredService = existing.preferredService || payload.preferredService;
+        }
+        store.updateQuote(quoteId, payload);
+        store.clearAssistantPrefill();
         if (status === 'draft') {
           window.location.href = 'quotes.html';
         } else {
-          window.location.href = (status === 'pending' ? 'quote-detail-pending.html' : 'quote-detail.html') + '?id=' + encodeURIComponent(editQuoteId);
+          window.location.href = (status === 'pending' ? 'quote-detail-pending.html' : 'quote-detail.html') + '?id=' + encodeURIComponent(quoteId);
         }
       } else {
+        var prefill = store.getAssistantPrefill();
+        if (prefill) Object.assign(payload, prefill);
+        delete payload.id;
         var nq = store.createQuote(payload);
         store.clearAssistantPrefill();
         if (status === 'draft') {
@@ -1877,10 +1933,10 @@
       if (initSrc) {
         if (initSrc.primaryService && initSrc.primaryService !== 'b2b') {
           selectedFamily = 'home';
-          selectedHdTier = initSrc.primaryService;
-        } else if (initSrc.serviceFamily === 'home') {
+          selectedHdTier = resolveHdTierFromQuote(initSrc);
+        } else if (initSrc.serviceFamily === 'home' || initSrc.serviceFamily === 'hd') {
           selectedFamily = 'home';
-          selectedHdTier = initSrc.primaryService || 'threshold';
+          selectedHdTier = resolveHdTierFromQuote(initSrc);
         }
         var famRadio = document.querySelector('[data-service-family][value="' + selectedFamily + '"]');
         if (famRadio) famRadio.checked = true;

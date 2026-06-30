@@ -165,7 +165,7 @@
       var countEl = bar.parentElement.querySelector('[data-filter-count]');
       var emptyEl = bar.parentElement.querySelector('[data-filter-empty]');
       var urlParams = getUrlParams();
-      var OPEN_STATUSES = ['draft', 'pending', 'approved', 'sent'];
+      var OPEN_STATUSES = ['draft', 'pending', 'approved', 'sent', 'portal_request'];
 
       function detailRowFor(quoteId) {
         return tbody.querySelector('tr[data-quote-detail="' + quoteId + '"]');
@@ -308,7 +308,8 @@
 
   /* ── Clickable drill-down rows ── */
   function initDrilldownRows() {
-    document.querySelectorAll('tr[data-drill-href]').forEach(function (row) {
+    document.querySelectorAll('tr[data-drill-href]:not([data-drill-wired])').forEach(function (row) {
+      row.setAttribute('data-drill-wired', '1');
       row.classList.add('drill-row');
       if (!row.hasAttribute('tabindex')) row.tabIndex = 0;
 
@@ -965,6 +966,7 @@
     global.AwestMockup = global.AwestMockup || {};
     global.AwestMockup.seedTariffConfiguratorOrigins = seedOrigins;
     global.AwestMockup.refreshTariffConfiguratorPick = refreshTariffConfiguratorPick;
+    global.AwestMockup.initDrilldownRows = initDrilldownRows;
 
     global.addEventListener('awest:change', refreshTariffConfiguratorPick);
 

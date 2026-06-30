@@ -337,7 +337,16 @@
     return commit(function (s) {
       var q = s.quotes.find(function (x) { return x.id === id; });
       if (!q) return;
-      Object.keys(partial).forEach(function (k) { q[k] = partial[k]; });
+      var wasPortalRequest = q.channel === 'portal' && q.status === 'portal_request';
+      Object.keys(partial).forEach(function (k) {
+        if (k === 'id') return;
+        q[k] = partial[k];
+      });
+      if (q.channel === 'portal') {
+        if (partial.portalSubmittedAt == null && q.portalSubmittedAt) { /* keep */ }
+        else if (!q.portalSubmittedAt && wasPortalRequest) { /* keep null ok */ }
+        if (partial.portalVisible !== true && q.status !== 'sent') q.portalVisible = false;
+      }
       if (q.pricingMode !== 'override') {
         if ('tariffId' in partial) {
           if (partial.tariffId == null || !getTariff(partial.tariffId)) {
@@ -992,9 +1001,18 @@
     });
   }
 
+  function normalizePortalServiceTier(tier) {
+    var t = tier || 'wgi';
+    if (t === 'wg-insp') return 'wgi';
+    if (t === 'wg-no-insp') return 'wgni';
+    if (t === 'threshold' || t === 'wgni' || t === 'wgi') return t;
+    return 'wgi';
+  }
+
   function createPortalQuote(partial) {
     var s = getState();
     var cust = getCustomer(partial.customerId || s.portal.activeCustomerId);
+    var tier = normalizePortalServiceTier(partial.preferredService || partial.primaryService);
     return createQuote(Object.assign({}, partial, {
       channel: 'portal',
       status: 'portal_request',
@@ -1003,12 +1021,17 @@
       repId: (cust && cust.repId) || partial.repId || s.meta.currentUserId,
       pricingMode: 'engine',
       pricingOverride: null,
-      preferredService: partial.preferredService || partial.primaryService || 'wgi'
+      commodity: partial.commodity || 'FAK',
+      serviceFamily: 'hd',
+      preferredService: tier,
+      primaryService: tier
     }));
   }
 
   function isRepPipelineQuote(q) {
-    return !!q && (q.channel !== 'portal' || q.status === 'portal_request');
+    if (!q) return false;
+    /* Portal quotes stay in rep views through the full lifecycle; customer visibility is separate. */
+    return q.channel === 'internal' || q.channel === 'portal' || !q.channel;
   }
 
   function isPortalCustomerVisibleQuote(q, customerId) {
@@ -1037,9 +1060,9 @@
   /* ── Derived metrics ── */
   function getMetrics() {
     var s = getState();
-    var quotes = s.quotes.filter(function (q) { return q.channel === 'internal' || !q.channel; });
+    var quotes = s.quotes.filter(function (q) { return isRepPipelineQuote(q); });
     var open = quotes.filter(function (q) {
-      return ['draft', 'pending', 'approved', 'sent'].indexOf(q.status) >= 0;
+      return ['draft', 'pending', 'approved', 'sent', 'portal_request'].indexOf(q.status) >= 0;
     });
     var pending = quotes.filter(function (q) { return q.status === 'pending'; });
     var sentWeek = quotes.filter(function (q) {

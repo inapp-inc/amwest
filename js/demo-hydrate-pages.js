@@ -224,6 +224,43 @@
     }
 
     var approvalPanel = document.querySelector('[data-quote-detail-approval]');
+
+    if (q.status === 'portal_request' && q.channel === 'portal') {
+      if (stepper) {
+        stepper.innerHTML = '<span class="step active">Portal request</span><span class="arrow">→</span>' +
+          '<span class="step">Draft</span><span class="arrow">→</span>' +
+          '<span class="step">Pending Approval</span><span class="arrow">→</span>' +
+          '<span class="step">Approved</span><span class="arrow">→</span>' +
+          '<span class="step">Sent</span>';
+      }
+      var portalBanner = document.querySelector('[data-portal-request-banner]');
+      if (!portalBanner) {
+        portalBanner = document.createElement('div');
+        portalBanner.className = 'inline-notice info';
+        portalBanner.setAttribute('data-portal-request-banner', '');
+        portalBanner.style.marginBottom = 'var(--space-lg)';
+        var insertAfter = document.querySelector('.stepper') || document.querySelector('.page-header');
+        if (insertAfter) insertAfter.insertAdjacentElement('afterend', portalBanner);
+      }
+      var tierLabels = { threshold: 'Threshold', wgni: 'White Glove No Inspection', wgi: 'White Glove Inspection' };
+      var tier = tierLabels[q.preferredService] || tierLabels[q.primaryService] || q.preferredService || 'Home delivery';
+      portalBanner.innerHTML = '<strong>Customer portal request</strong> — submitted ' + fmtDate(q.portalSubmittedAt || q.createdAt) +
+        '. ' + (q.weight || 0).toLocaleString() + ' lbs · ' + (q.cube || 0) + ' cu ft · ' +
+        fmtMoney(q.declaredValue || 0) + ' declared value · ' + tier + ' · ' + laneLabel(q) + '.';
+      var actionRow = document.querySelector('.main-content > div[style*="flex-wrap"]');
+      if (actionRow && !document.querySelector('[data-portal-prepare-quote]')) {
+        var prep = document.createElement('a');
+        prep.href = 'quote-builder.html?id=' + encodeURIComponent(id);
+        prep.className = 'btn btn-primary';
+        prep.setAttribute('data-portal-prepare-quote', '');
+        prep.textContent = 'Prepare pricing';
+        actionRow.insertBefore(prep, actionRow.firstChild);
+      }
+    } else {
+      var oldPortalBanner = document.querySelector('[data-portal-request-banner]');
+      if (oldPortalBanner) oldPortalBanner.remove();
+    }
+
     if (q.status === 'pending') {
       if (!approvalPanel) {
         approvalPanel = document.createElement('div');
@@ -276,7 +313,7 @@
         sendBtn.type = 'button';
         sendBtn.className = 'btn btn-primary';
         sendBtn.setAttribute('data-quote-action', 'send');
-        sendBtn.textContent = 'Mark as Sent';
+        sendBtn.textContent = q.channel === 'portal' ? 'Send to customer' : 'Mark as Sent';
         sendBtn.addEventListener('click', function () { S().sendQuote(id); location.reload(); });
         actions.insertBefore(sendBtn, actions.firstChild);
       }
@@ -532,23 +569,333 @@
     /* save: demo-crud.js */
   }
 
+  function serviceLabel(code) {
+    var labels = {
+      b2b: 'B2B',
+      threshold: 'Threshold',
+      wgni: 'WG No Inspection',
+      wgi: 'White Glove Inspection',
+      'wg-insp': 'White Glove Inspection',
+      'wg-no-insp': 'WG No Inspection'
+    };
+    return labels[code] || code || 'Other';
+  }
+
+  function laneKey(q) {
+    var o = (q.origin || '').replace(/\s*Metro\s*/i, '').trim();
+    var d = (q.destination || '').replace(/\s*Metro\s*/i, '').trim();
+    if (o && d) return o + ' → ' + d;
+    return q.laneCode || 'Unknown lane';
+  }
+
+  function quoteInDateRange(q, rangeDays) {
+    if (!rangeDays || rangeDays === 'All') return true;
+    var days = parseInt(rangeDays, 10);
+    if (!days) return true;
+    var ts = new Date(q.updatedAt || q.createdAt).getTime();
+    return Date.now() - ts <= days * 86400000;
+  }
+
+  function renderAnalyticsBarChart(mount, series, opts) {
+    if (!mount || !series.length) {
+      mount.innerHTML = '<p class="text-muted-sm">No data for this period.</p>';
+      return;
+    }
+    var max = Math.max.apply(null, series.map(function (s) { return s.value; }).concat([1]));
+    mount.innerHTML = series.map(function (s) {
+      var pct = Math.round((s.value / max) * 100);
+      var h = Math.max(pct, s.value > 0 ? 8 : 0);
+      return '<div class="analytics-bar-wrap">' +
+        '<span class="analytics-bar-value">' + s.display + '</span>' +
+        '<div class="analytics-bar" style="height:' + h + '%" title="' + s.label + ': ' + s.display + '"></div>' +
+        '<span class="analytics-bar-label">' + s.label + '</span></div>';
+    }).join('');
+    if (opts && opts.subEl && opts.subText) opts.subEl.textContent = opts.subText;
+  }
+
+  function renderStackedList(mount, rows) {
+    if (!mount) return;
+    if (!rows.length) {
+      mount.innerHTML = '<li class="text-muted-sm">No data</li>';
+      return;
+    }
+    var max = Math.max.apply(null, rows.map(function (r) { return r.value; }).concat([1]));
+    mount.innerHTML = rows.map(function (r) {
+      var pct = Math.round((r.value / max) * 100);
+      return '<li class="analytics-stacked-row">' +
+        '<span>' + r.label + '</span><span>' + r.display + '</span>' +
+        '<div class="analytics-stacked-track"><div class="analytics-stacked-fill ' + (r.cls || '') + '" style="width:' + pct + '%"></div></div>' +
+        '</li>';
+    }).join('');
+  }
+
   function hydrateAnalyticsFull() {
     if (pageName() !== 'analytics') return;
+    var state = S().getState();
     var metrics = S().getMetrics();
-    var board = S().getRepLeaderboard();
-    document.querySelectorAll('[data-win-rate-kpis] .kpi-card .value').forEach(function (el, i) {
-      if (i === 0) el.textContent = metrics.winRate + '%';
-      if (board[i - 1]) el.textContent = board[i - 1].winRate + '%';
+    var floor = state.settings.marginFloor || 15;
+    var quotes = state.quotes.filter(function (q) { return S().isRepPipelineQuote(q); });
+    var marginSum = 0;
+    var belowFloor = 0;
+    var portalPending = 0;
+    var byService = {};
+    var byStatus = {};
+    var byMonth = {};
+    var byTariff = {};
+    var byRep = {};
+    var marginBuckets = { high: 0, ok: 0, low: 0, leak: 0 };
+    var leakage = [];
+    var exceptions = [];
+
+    quotes.forEach(function (q) {
+      var p = S().computeQuotePricing(q);
+      var margin = p.margin || 0;
+      marginSum += margin;
+      if (margin < floor) {
+        belowFloor++;
+        if (leakage.length < 8) {
+          leakage.push({ q: q, margin: margin });
+        }
+      }
+      if (q.status === 'portal_request') portalPending++;
+
+      if (P() && P().hasCustomerDiscException && P().hasCustomerDiscException(q)) {
+        if (exceptions.length < 8) exceptions.push(q);
+      }
+
+      var svc = q.primaryService || 'b2b';
+      if (!byService[svc]) byService[svc] = { count: 0, marginSum: 0 };
+      byService[svc].count++;
+      byService[svc].marginSum += margin;
+
+      byStatus[q.status] = (byStatus[q.status] || 0) + 1;
+
+      var d = new Date(q.createdAt || q.updatedAt);
+      var monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      if (!byMonth[monthKey]) byMonth[monthKey] = { count: 0, marginSum: 0 };
+      byMonth[monthKey].count++;
+      byMonth[monthKey].marginSum += margin;
+
+      var tid = q.tariffId || 'Unknown';
+      if (!byTariff[tid]) byTariff[tid] = { count: 0, marginSum: 0, revenue: 0 };
+      byTariff[tid].count++;
+      byTariff[tid].marginSum += margin;
+      byTariff[tid].revenue += p.total || 0;
+
+      if (q.repId) {
+        if (!byRep[q.repId]) byRep[q.repId] = { count: 0, won: 0, lost: 0, marginSum: 0, pipeline: 0 };
+        byRep[q.repId].count++;
+        byRep[q.repId].marginSum += margin;
+        if (q.status === 'converted' || q.status === 'accepted') byRep[q.repId].won++;
+        if (q.status === 'lost') byRep[q.repId].lost++;
+        if (['draft', 'pending', 'approved', 'sent', 'portal_request'].indexOf(q.status) >= 0) {
+          byRep[q.repId].pipeline += p.total || 0;
+        }
+      }
+
+      if (margin >= floor + 5) marginBuckets.high++;
+      else if (margin >= floor) marginBuckets.ok++;
+      else if (margin >= floor - 3) marginBuckets.low++;
+      else marginBuckets.leak++;
     });
 
-    var lanes = S().getLaneAnalytics();
+    var avgMargin = quotes.length ? Math.round((marginSum / quotes.length) * 10) / 10 : 0;
+
+    document.querySelector('[data-analytics-floor-label]') &&
+      (document.querySelector('[data-analytics-floor-label]').textContent = floor + '%');
+
+    var kpiMap = {
+      pipeline: fmtMoney(metrics.pipelineTotal).replace('.00', ''),
+      open: String(metrics.openCount),
+      'win-rate': metrics.winRate + '%',
+      'avg-margin': avgMargin + '%',
+      'below-floor': String(belowFloor),
+      portal: String(portalPending)
+    };
+    document.querySelectorAll('[data-analytics-kpi]').forEach(function (card) {
+      var key = card.getAttribute('data-analytics-kpi');
+      var val = card.querySelector('.value');
+      if (val && kpiMap[key] != null) val.textContent = kpiMap[key];
+      if (card.classList.contains('kpi-card--drill') && !card._analyticsDrillWired) {
+        card._analyticsDrillWired = true;
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', function () {
+          if (key === 'pipeline' || key === 'open') location.href = 'quotes.html?view=open&from=analytics';
+          else if (key === 'win-rate') location.href = 'quotes.html?status=converted&from=analytics';
+          else if (key === 'below-floor') location.href = 'quotes.html?from=analytics&drill=Below%20margin%20floor';
+          else if (key === 'portal') location.href = 'quotes.html?status=portal_request&from=analytics';
+        });
+      }
+    });
+
+    var monthKeys = Object.keys(byMonth).sort().slice(-6);
+    var monthLabels = monthKeys.map(function (k) {
+      var parts = k.split('-');
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return months[parseInt(parts[1], 10) - 1] || k;
+    });
+    renderAnalyticsBarChart(
+      document.querySelector('[data-analytics-volume-chart]'),
+      monthKeys.map(function (k, i) {
+        return { label: monthLabels[i], value: byMonth[k].count, display: String(byMonth[k].count) };
+      }),
+      { subEl: document.querySelector('[data-analytics-volume-sub]'), subText: quotes.length + ' quotes in store' }
+    );
+    renderAnalyticsBarChart(
+      document.querySelector('[data-analytics-margin-chart]'),
+      monthKeys.map(function (k, i) {
+        var avg = byMonth[k].count ? Math.round((byMonth[k].marginSum / byMonth[k].count) * 10) / 10 : 0;
+        return { label: monthLabels[i], value: avg, display: avg + '%' };
+      }),
+      { subEl: document.querySelector('[data-analytics-margin-sub]'), subText: 'Floor ' + floor + '% · team avg ' + avgMargin + '%' }
+    );
+
+    renderStackedList(
+      document.querySelector('[data-analytics-service-mix]'),
+      Object.keys(byService).sort(function (a, b) { return byService[b].count - byService[a].count; }).map(function (svc) {
+        var row = byService[svc];
+        var avg = row.count ? Math.round((row.marginSum / row.count) * 10) / 10 : 0;
+        return { label: serviceLabel(svc), value: row.count, display: row.count + ' · ' + avg + '% avg', cls: '' };
+      })
+    );
+
+    var statusOrder = ['portal_request', 'draft', 'pending', 'approved', 'sent', 'converted', 'lost', 'expired'];
+    renderStackedList(
+      document.querySelector('[data-analytics-outcomes]'),
+      statusOrder.filter(function (st) { return byStatus[st]; }).map(function (st) {
+        var cls = st === 'converted' ? 'analytics-stacked-fill--green' : (st === 'lost' || st === 'expired' ? 'analytics-stacked-fill--red' : (st === 'pending' ? 'analytics-stacked-fill--amber' : ''));
+        return {
+          label: G().quoteStatusLabel(st),
+          value: byStatus[st],
+          display: String(byStatus[st]),
+          cls: cls
+        };
+      })
+    );
+
+    renderStackedList(
+      document.querySelector('[data-analytics-margin-buckets]'),
+      [
+        { label: 'Healthy (≥ floor + 5%)', value: marginBuckets.high, display: String(marginBuckets.high), cls: 'analytics-stacked-fill--green' },
+        { label: 'At floor', value: marginBuckets.ok, display: String(marginBuckets.ok), cls: 'analytics-stacked-fill--teal' },
+        { label: 'Watch (below floor)', value: marginBuckets.low, display: String(marginBuckets.low), cls: 'analytics-stacked-fill--amber' },
+        { label: 'Leakage', value: marginBuckets.leak, display: String(marginBuckets.leak), cls: 'analytics-stacked-fill--red' }
+      ]
+    );
+
+    var repTb = document.querySelector('[data-analytics-reps] tbody');
+    if (repTb) {
+      repTb.innerHTML = state.users.filter(function (u) {
+        return u.role === 'Sales Rep' || u.role === 'Sales Manager';
+      }).map(function (u) {
+        var r = byRep[u.id] || { count: 0, won: 0, lost: 0, marginSum: 0, pipeline: 0 };
+        var wr = r.won + r.lost > 0 ? Math.round((r.won / (r.won + r.lost)) * 100) : 0;
+        var avg = r.count ? Math.round((r.marginSum / r.count) * 10) / 10 : 0;
+        return '<tr data-drill-href="quotes.html?rep=' + encodeURIComponent(u.name) + '">' +
+          '<td>' + u.name + '</td><td class="tabular">' + r.count + '</td><td class="tabular">' + wr + '%</td>' +
+          '<td class="tabular">' + avg + '%</td><td class="tabular">' + fmtMoney(r.pipeline).replace('.00', '') + '</td></tr>';
+      }).join('');
+    }
+
+    var tariffTb = document.querySelector('[data-analytics-tariffs] tbody');
+    if (tariffTb) {
+      tariffTb.innerHTML = Object.keys(byTariff).sort(function (a, b) {
+        return byTariff[b].count - byTariff[a].count;
+      }).map(function (tid) {
+        var t = byTariff[tid];
+        var tariff = S().getTariff(tid);
+        var avg = t.count ? Math.round((t.marginSum / t.count) * 10) / 10 : 0;
+        return '<tr data-drill-href="tariff-detail.html?id=' + encodeURIComponent(tid) + '">' +
+          '<td><a href="tariff-detail.html?id=' + encodeURIComponent(tid) + '">' + (tariff ? tariff.name : tid) + '</a></td>' +
+          '<td class="tabular">' + t.count + '</td><td class="tabular">' + avg + '%</td>' +
+          '<td class="tabular">' + fmtMoney(t.revenue).replace('.00', '') + '</td></tr>';
+      }).join('');
+    }
+
+    var lanes = {};
+    quotes.forEach(function (q) {
+      var key = laneKey(q);
+      if (!lanes[key]) {
+        lanes[key] = {
+          lane: key,
+          customer: custName(q.customerId),
+          count: 0,
+          marginSum: 0,
+          totalSum: 0,
+          pipeline: 0,
+          service: q.primaryService || 'b2b'
+        };
+      }
+      var p = S().computeQuotePricing(q);
+      lanes[key].count++;
+      lanes[key].marginSum += p.margin || 0;
+      lanes[key].totalSum += p.total || 0;
+      if (['draft', 'pending', 'approved', 'sent', 'portal_request'].indexOf(q.status) >= 0) {
+        lanes[key].pipeline += p.total || 0;
+      }
+    });
+    var laneRows = Object.keys(lanes).map(function (k) { return lanes[k]; });
+
+    var customerSel = document.querySelector('#a-customer');
+    if (customerSel && customerSel.options.length <= 1) {
+      var names = {};
+      laneRows.forEach(function (L) { names[L.customer] = true; });
+      Object.keys(names).sort().forEach(function (n) {
+        var o = document.createElement('option');
+        o.value = n;
+        o.textContent = n;
+        customerSel.appendChild(o);
+      });
+    }
+    var laneSel = document.querySelector('#a-lane');
+    if (laneSel && laneSel.options.length <= 1) {
+      laneRows.forEach(function (L) {
+        var o = document.createElement('option');
+        o.value = L.lane;
+        o.textContent = L.lane;
+        laneSel.appendChild(o);
+      });
+    }
+
     var tbody = document.querySelector('#analytics-lanes tbody');
     if (tbody) {
-      tbody.innerHTML = lanes.map(function (L) {
-        return '<tr data-lane="' + L.lane + '" data-customer="' + L.customer + '"><td>' + L.lane + '</td><td class="tabular">' + L.quotes + '</td><td class="tabular">' + L.avgMargin + '%</td></tr>';
+      tbody.innerHTML = laneRows.map(function (L) {
+        var avgM = L.count ? Math.round((L.marginSum / L.count) * 10) / 10 : 0;
+        var avgT = L.count ? Math.round(L.totalSum / L.count) : 0;
+        return '<tr data-lane="' + L.lane + '" data-customer="' + L.customer + '" data-service="' + L.service + '" data-drill-href="quotes.html?customer=' + encodeURIComponent(L.customer) + '">' +
+          '<td>' + L.lane + '</td><td>' + L.customer + '</td><td class="tabular">' + L.count + '</td>' +
+          '<td class="tabular">' + avgM + '%</td><td class="tabular">' + fmtMoney(avgT).replace('.00', '') + '</td>' +
+          '<td class="tabular">' + fmtMoney(L.pipeline).replace('.00', '') + '</td></tr>';
       }).join('');
       var count = document.querySelector('[data-filter-count]');
-      if (count) count.textContent = 'Showing all ' + lanes.length + ' lane records';
+      if (count) count.textContent = 'Showing all ' + laneRows.length + ' lane records';
+    }
+
+    var leakTb = document.querySelector('[data-analytics-leakage] tbody');
+    if (leakTb) {
+      leakTb.innerHTML = leakage.length ? leakage.map(function (row) {
+        return '<tr data-drill-href="quote-detail.html?id=' + encodeURIComponent(row.q.id) + '">' +
+          '<td class="tabular"><a href="quote-detail.html?id=' + encodeURIComponent(row.q.id) + '">' + row.q.id + '</a></td>' +
+          '<td>' + custName(row.q.customerId) + '</td><td class="tabular">' + row.margin + '%</td>' +
+          '<td>' + G().quoteStatusLabel(row.q.status) + '</td></tr>';
+      }).join('') : '<tr><td colspan="4" class="text-muted-sm">No quotes below floor in current data</td></tr>';
+    }
+
+    var excTb = document.querySelector('[data-analytics-exceptions] tbody');
+    if (excTb) {
+      excTb.innerHTML = exceptions.length ? exceptions.map(function (q) {
+        var master = q.appliedTerms ? q.appliedTerms.customerDiscPctMaster : q.customerDiscPct;
+        var effective = P() && P().getEffectiveCustomerDisc ? P().getEffectiveCustomerDisc(q) : q.customerDiscPct;
+        return '<tr data-drill-href="quote-detail.html?id=' + encodeURIComponent(q.id) + '">' +
+          '<td class="tabular"><a href="quote-detail.html?id=' + encodeURIComponent(q.id) + '">' + q.id + '</a></td>' +
+          '<td class="tabular">' + (master != null ? master : '—') + '%</td><td class="tabular">' + effective + '%</td>' +
+          '<td>' + G().quoteStatusLabel(q.status) + '</td></tr>';
+      }).join('') : '<tr><td colspan="4" class="text-muted-sm">No discount exceptions in current data</td></tr>';
+    }
+
+    global.dispatchEvent(new CustomEvent('awest:filter-refresh'));
+    if (global.AwestMockup && global.AwestMockup.initDrilldownRows) {
+      global.AwestMockup.initDrilldownRows();
     }
   }
 
@@ -720,8 +1067,8 @@
           cube: cube,
           declaredValue: dv,
           preferredService: selectedTier,
-          primaryService: selectedTier === 'threshold' ? 'threshold' : (selectedTier === 'wgni' ? 'wg-no-insp' : 'wg-insp'),
-          serviceFamily: selectedTier === 'threshold' ? 'hd' : 'hd'
+          primaryService: selectedTier,
+          serviceFamily: 'hd'
         });
         location.href = 'portal-quote-confirmation.html?id=' + encodeURIComponent(q.id);
       });
@@ -935,6 +1282,31 @@
     }
 
     var activity = document.querySelector('[data-portal-activity]');
+    var quotesTable = document.querySelector('[data-portal-quotes-table] tbody');
+    if (quotesTable) {
+      var sortedQuotes = portalQuotes.slice().sort(function (a, b) {
+        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+      });
+      if (!sortedQuotes.length) {
+        quotesTable.innerHTML = '<tr><td colspan="5">No quotes yet — <a href="portal-quote-request.html">Request a quote</a></td></tr>';
+      } else {
+        quotesTable.innerHTML = sortedQuotes.map(function (q) {
+          var statusLabel = q.status === 'portal_request'
+            ? 'Awaiting pricing'
+            : (q.status === 'sent' ? 'Ready' : (G().quoteStatusLabel ? G().quoteStatusLabel(q.status) : q.status));
+          var totalCell = q.status === 'portal_request'
+            ? '—'
+            : fmtMoney(quotePricing(q).total || 0);
+          var detailHref = 'portal-quote-confirmation.html?id=' + encodeURIComponent(q.id);
+          return '<tr data-drill-href="' + detailHref + '">' +
+            '<td class="tabular"><a href="' + detailHref + '">' + q.id + '</a></td>' +
+            '<td>' + laneLabel(q) + '</td>' +
+            '<td><span class="badge badge-' + (q.status === 'portal_request' ? 'portal_request' : q.status) + '">' + statusLabel + '</span></td>' +
+            '<td class="tabular">' + totalCell + '</td>' +
+            '<td class="tabular">' + fmtDate(q.portalSubmittedAt || q.updatedAt || q.createdAt) + '</td></tr>';
+        }).join('');
+      }
+    }
     if (activity) {
       var items = [];
       portalQuotes.slice().sort(function (a, b) {
@@ -942,7 +1314,7 @@
       }).forEach(function (q) {
         var when = fmtDate(q.portalSubmittedAt || q.updatedAt || q.createdAt);
         if (q.status === 'portal_request') {
-          items.push('<li><span>Quote request ' + q.id + ' sent to American West · ' + laneLabel(q) + '</span><span class="tabular" style="color:var(--neutral-600)">' + when + '</span></li>');
+          items.push('<li><span>Quote request <a href="portal-quote-confirmation.html?id=' + encodeURIComponent(q.id) + '">' + q.id + '</a> sent to American West · ' + laneLabel(q) + '</span><span class="tabular" style="color:var(--neutral-600)">' + when + '</span></li>');
         } else if (q.portalVisible && q.status === 'sent') {
           var p = quotePricing(q);
           items.push('<li><span><a href="portal-quote-confirmation.html?id=' + encodeURIComponent(q.id) + '">Quote ' + q.id + ' ready</a> · ' + fmtMoney(p.total || 0) + '</span><span class="tabular" style="color:var(--neutral-600)">' + when + '</span></li>');

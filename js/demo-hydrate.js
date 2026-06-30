@@ -176,7 +176,7 @@
     var myQuotes = state.quotes.filter(function (q) {
       return q.repId === user.id && S().isRepPipelineQuote(q);
     });
-    var openStatuses = ['draft', 'pending', 'approved', 'sent'];
+    var openStatuses = ['draft', 'pending', 'approved', 'sent', 'portal_request'];
     var open = myQuotes.filter(function (q) { return openStatuses.indexOf(q.status) >= 0; });
     var pending = myQuotes.filter(function (q) { return q.status === 'pending'; });
     var sentWeek = myQuotes.filter(function (q) {
@@ -394,6 +394,9 @@
     document.querySelectorAll('a[href="quote-pdf.html"], a[href="quote-esign.html"], a[href="quote-tms-export.html"]').forEach(function (a) {
       if (a.href.indexOf('id=') < 0) a.href = a.getAttribute('href').split('.html')[0] + '.html?id=' + encodeURIComponent(id);
     });
+    document.querySelectorAll('a[href="quote-builder.html"]').forEach(function (a) {
+      a.href = 'quote-builder.html?id=' + encodeURIComponent(id);
+    });
 
     document.title = 'Quote ' + q.id + ' — American West';
   }
@@ -570,6 +573,7 @@
 
   /* ── Analytics ── */
   function hydrateAnalytics() {
+    if (pageName() === 'analytics') return;
     var metrics = S().getMetrics();
     document.querySelectorAll('.kpi-card .value').forEach(function (el, i) {
       if (i === 0) el.textContent = metrics.openCount;

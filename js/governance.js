@@ -139,6 +139,7 @@
   }
 
   var QUOTE_NEXT_STEP = {
+    portal_request: 'Next step: open Quote Builder to price this portal request, then send the finalized quote to the customer.',
     draft: 'Next step: finalize the quote or submit for manager approval if discounts exceed your authority.',
     pending: 'Next step: a Sales Manager approves or rejects this quote.',
     approved: 'Next step: generate a PDF and send the quote to the customer.',
