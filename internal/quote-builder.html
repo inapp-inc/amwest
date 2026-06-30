@@ -184,9 +184,17 @@
 <div class="margin-gauge"><div class="margin-gauge-track" style="height:4px;flex:1"><div class="margin-gauge-fill green" style="width:75%"></div><div class="margin-gauge-tick" style="left:50%"></div></div></div></div>
 <p style="font-size:11px;color:var(--neutral-600);margin-top:var(--space-sm)" data-builder-cube-note>—</p>
 <p data-cfq-manual hidden style="font-size:13px;color:var(--neutral-600);padding:var(--space-md) 0">Enter manual rates above to see pricing breakdown.</p>
+<div class="inline-notice info" data-builder-override-notice hidden style="margin-top:var(--space-sm)"><strong>Manual override active</strong> — <span data-builder-override-notice-text></span></div>
+<div data-builder-override-panel hidden class="assistant-override-form" style="margin-top:var(--space-sm)">
+<label for="qb-override-total">Target quote total ($)</label>
+<input id="qb-override-total" type="number" class="tabular" data-builder-override-total step="0.01" min="0">
+<p class="text-muted-sm" data-builder-override-hint style="margin:0"></p>
+<button type="button" class="btn btn-secondary btn-sm" data-builder-override-clear>Clear override</button>
+</div>
 <div style="margin-top:var(--space-lg);display:flex;flex-direction:column;gap:var(--space-sm)">
 <p class="text-muted-sm" data-builder-submit-hint style="margin:0">Ready to finalize — click Generate Quote to save and release within policy.</p>
 <button type="button" class="btn btn-primary" data-quote-submit-btn>Generate Quote</button>
+<button type="button" class="btn btn-secondary" data-builder-override-toggle>Manual override</button>
 <a href="quotes.html" class="btn btn-secondary" data-quote-draft>Save as Draft</a>
 <a href="quotes.html" class="btn btn-link" style="text-align:center">Cancel</a>
 </div></div></div>

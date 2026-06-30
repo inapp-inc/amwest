@@ -705,6 +705,13 @@
     return merged;
   }
 
+  function marginFromManualTotal(pricing, manualTotal) {
+    if (!pricing || !(manualTotal > 0)) return 0;
+    var netLh = pricing.stack && pricing.stack.linehaul != null ? pricing.stack.linehaul : pricing.linehaul;
+    var access = (pricing.insurance || 0) + (pricing.lift || 0) + (pricing.residential || 0);
+    return computeMargin(netLh, pricing.fuel || 0, access, manualTotal, pricing.quoteDiscPct || 0);
+  }
+
   function quotePricingCompute(q, serviceType) {
     var engine = computeEngineForQuote(q, serviceType);
     if (q.pricingMode === 'override' && q.pricingOverride) {
@@ -1716,6 +1723,62 @@
     var competitorNameInput = document.querySelector('[data-competitor-name]');
     var draftBtn = document.querySelector('[data-quote-draft]');
     var densityDisplay = document.querySelector('[data-builder-density]');
+    var overrideToggle = document.querySelector('[data-builder-override-toggle]');
+    var overridePanel = document.querySelector('[data-builder-override-panel]');
+    var overrideInput = document.querySelector('[data-builder-override-total]');
+    var overrideHint = document.querySelector('[data-builder-override-hint]');
+    var overrideNotice = document.querySelector('[data-builder-override-notice]');
+    var overrideNoticeText = document.querySelector('[data-builder-override-notice-text]');
+    var overrideClearBtn = document.querySelector('[data-builder-override-clear]');
+    var manualOverrideTotal = null;
+    var overridePanelOpen = false;
+
+    function clearManualOverride() {
+      manualOverrideTotal = null;
+      overridePanelOpen = false;
+      if (overrideInput) overrideInput.value = '';
+      if (overridePanel) overridePanel.hidden = true;
+      if (overrideNotice) overrideNotice.hidden = true;
+      if (overrideToggle) overrideToggle.textContent = 'Manual override';
+    }
+
+    function syncOverrideHint(enginePricing) {
+      if (!overrideHint || !overrideInput) return;
+      var t = parseFloat(overrideInput.value);
+      if (isNaN(t) || t <= 0) {
+        overrideHint.textContent = 'Enter a target total — margin adjusts from the engine price.';
+        manualOverrideTotal = null;
+        if (overrideNotice) overrideNotice.hidden = true;
+        return;
+      }
+      manualOverrideTotal = t;
+      var adj = marginFromManualTotal(enginePricing, t);
+      var delta = Math.round((t - enginePricing.total) * 100) / 100;
+      overrideHint.innerHTML =
+        'Engine: <span class="tabular">' + formatMoney(enginePricing.total) + '</span> @ ' + enginePricing.margin + '% → ' +
+        'Override: <strong class="tabular">' + formatMoney(t) + '</strong> @ <strong class="tabular">' + adj + '%</strong>' +
+        (delta !== 0 ? ' (' + (delta > 0 ? '+' : '−') + formatMoney(Math.abs(delta)) + ')' : '');
+      if (overrideNotice && overrideNoticeText) {
+        overrideNotice.hidden = false;
+        overrideNoticeText.textContent = formatMoney(enginePricing.total) + ' → ' + formatMoney(t) + ' @ ' + adj + '% margin';
+      }
+    }
+
+    function canUseManualOverride(enginePricing) {
+      return readPricingMode() === 'engine' && enginePricing && !enginePricing.cfq;
+    }
+
+    function applyBuilderOverrideDisplay(enginePricing) {
+      if (manualOverrideTotal != null && manualOverrideTotal > 0 && canUseManualOverride(enginePricing)) {
+        return applyManualOverrideDisplay(enginePricing, {
+          total: manualOverrideTotal,
+          margin: marginFromManualTotal(enginePricing, manualOverrideTotal),
+          engineTotal: enginePricing.total,
+          engineMargin: enginePricing.margin
+        });
+      }
+      return enginePricing;
+    }
 
     function isSpotMode() {
       var spot = document.querySelector('[data-quote-type-toggle] input[value="spot"]:checked');
@@ -1831,7 +1894,17 @@
       var applied = previewAppliedTerms(q);
       renderAppliedTermsPanel(applied, appliedTermsMount);
       var fields = extractQuoteFieldsFromAdjustments(quoteAdjustments, applied);
-      var primary = pricingWithQuoteModel(q, svc.primaryService, applied, quoteAdjustments);
+      var enginePrimary = pricingWithQuoteModel(q, svc.primaryService, applied, quoteAdjustments);
+      if (!canUseManualOverride(enginePrimary)) clearManualOverride();
+      var primary = applyBuilderOverrideDisplay(enginePrimary);
+      if (overrideToggle) overrideToggle.hidden = !canUseManualOverride(enginePrimary);
+      if (overridePanelOpen && overridePanel && canUseManualOverride(enginePrimary)) {
+        overridePanel.hidden = false;
+        if (overrideInput && !overrideInput.value && enginePrimary.total) {
+          overrideInput.value = String(Math.round(enginePrimary.total * 100) / 100);
+        }
+        syncOverrideHint(enginePrimary);
+      }
       if (costLayersMount) costLayersMount.innerHTML = renderCostLayers(primary);
       if (totalHero) totalHero.textContent = primary.cfq ? 'CFQ' : formatMoney(primary.total);
       if (marginInline) marginInline.textContent = primary.cfq ? 'Manual quote' : primary.margin + '% margin';
@@ -1894,6 +1967,7 @@
         customerId: q.customerId,
         originStation: q.originStation,
         pricingMode: q.pricingMode,
+        pricingOverride: null,
         origin: q.origin,
         destination: q.destination,
         commodity: q.commodity,
@@ -1901,6 +1975,16 @@
         portalSubmittedAt: q.portalSubmittedAt,
         preferredService: q.preferredService
       };
+      var enginePricing = pricingWithQuoteModel(q, svc.primaryService, snapshotTerms, quoteAdjustments);
+      if (manualOverrideTotal != null && manualOverrideTotal > 0 && canUseManualOverride(enginePricing)) {
+        payload.pricingMode = 'override';
+        payload.pricingOverride = {
+          total: manualOverrideTotal,
+          margin: marginFromManualTotal(enginePricing, manualOverrideTotal),
+          engineTotal: enginePricing.total,
+          engineMargin: enginePricing.margin
+        };
+      }
       if (q.spotBaseCwt != null) payload.spotBaseCwt = q.spotBaseCwt;
       if (q.spotFuelPct != null) payload.spotFuelPct = q.spotFuelPct;
       if (q.cfqManualBase != null) payload.cfqManualBase = q.cfqManualBase;
@@ -1974,6 +2058,12 @@
         }
         if (initSrc.competitorName && competitorNameInput) competitorNameInput.value = initSrc.competitorName;
         if (initSrc.competitorRate != null && competitorInput) competitorInput.value = String(initSrc.competitorRate);
+        if (initSrc.pricingMode === 'override' && initSrc.pricingOverride && initSrc.pricingOverride.total) {
+          manualOverrideTotal = initSrc.pricingOverride.total;
+          overridePanelOpen = true;
+          if (overrideInput) overrideInput.value = String(initSrc.pricingOverride.total);
+          if (overrideToggle) overrideToggle.textContent = 'Hide manual override';
+        }
         syncServiceUI();
       }
     } else {
@@ -2001,6 +2091,38 @@
         e.preventDefault();
         saveBuilderQuote('draft');
       });
+    }
+
+    if (overrideToggle && !overrideToggle._wired) {
+      overrideToggle._wired = true;
+      overrideToggle.addEventListener('click', function () {
+        var qNow = builderQuote();
+        var svcNow = resolveBuilderService(selectedFamily, selectedHdTier, builderCustomerId);
+        var engineNow = pricingWithQuoteModel(qNow, svcNow.primaryService, previewAppliedTerms(qNow), quoteAdjustments);
+        if (!canUseManualOverride(engineNow)) return;
+        overridePanelOpen = !overridePanelOpen;
+        if (overridePanelOpen) {
+          if (overridePanel) overridePanel.hidden = false;
+          if (overrideInput && !overrideInput.value) {
+            overrideInput.value = String(Math.round(engineNow.total * 100) / 100);
+          }
+          overrideToggle.textContent = 'Hide manual override';
+        } else {
+          clearManualOverride();
+        }
+        refresh();
+      });
+    }
+    if (overrideClearBtn && !overrideClearBtn._wired) {
+      overrideClearBtn._wired = true;
+      overrideClearBtn.addEventListener('click', function () {
+        clearManualOverride();
+        refresh();
+      });
+    }
+    if (overrideInput && !overrideInput._wired) {
+      overrideInput._wired = true;
+      bindNumericInput(overrideInput, refresh);
     }
 
     if (competitorNameInput && !competitorNameInput._wired) {
@@ -2560,13 +2682,6 @@
         renderPricingBreakdown(p, false, { weight: draft.weight, ratePerLb: p.ratePerLb }) +
         marginNote +
         (gov ? '<p class="inline-notice amber" style="margin-top:var(--space-sm)"><strong>Approval required</strong> — ' + gov.msg + '</p>' : '');
-    }
-
-    function marginFromManualTotal(pricing, manualTotal) {
-      if (!pricing || !(manualTotal > 0)) return 0;
-      var netLh = pricing.stack && pricing.stack.linehaul != null ? pricing.stack.linehaul : pricing.linehaul;
-      var access = (pricing.insurance || 0) + (pricing.lift || 0) + (pricing.residential || 0);
-      return computeMargin(netLh, pricing.fuel || 0, access, manualTotal, pricing.quoteDiscPct || 0);
     }
 
     function finishAssistantSave(result, options) {
@@ -3138,6 +3253,7 @@
     quotePricing: quotePricing,
     quotePricingCompute: quotePricingCompute,
     applyManualOverrideDisplay: applyManualOverrideDisplay,
+    marginFromManualTotal: marginFromManualTotal,
     pricingMetaFromQuote: pricingMetaFromQuote,
     renderPricingBreakdown: renderPricingBreakdown,
     renderStackedBar: renderStackedBar,
