@@ -24,6 +24,12 @@
     setItem: function (k, v) { this._data[k] = v; },
     removeItem: function (k) { delete this._data[k]; }
   };
+  global.localStorage = {
+    _data: {},
+    getItem: function (k) { return this._data[k] || null; },
+    setItem: function (k, v) { this._data[k] = v; },
+    removeItem: function (k) { delete this._data[k]; }
+  };
   global.dispatchEvent = function () {};
 
 require('./dummy-tariff-data.js');

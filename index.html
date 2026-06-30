@@ -15,7 +15,7 @@
 <body class="wt-body">
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
-  <span class="demo-banner-text">Interactive session demo — edits persist in browser until reset. Not production.</span>
+  <span class="demo-banner-text">Not production. Sample data only.</span>
   <a class="demo-banner-link" href="#wt-mockups">Browse mock screens</a>
 </div>
 
@@ -164,7 +164,7 @@
   <div class="wt-eyebrow">Core platform modules</div>
   <h2 class="wt-sec-title">Explore what each module delivers</h2>
   <div class="wt-modules-intro">
-    <p>The foundation for governed pricing — tariffs, customers, quotes, admin, and phased portal &amp; sales capabilities. See the <a href="#wt-value-add">platform enhancements</a> below for personalized quote layers and Quote Assistant. The mockup has <strong><span data-mockup-page-count>58</span> interactive screens</strong> with session-store CRUD; tabs, chips, and numeric fields wire to pricing logic.</p>
+    <p>The foundation for governed pricing — tariffs, customers, quotes, admin, internal ops, hub integrations, and phased portal &amp; sales capabilities. See the <a href="#wt-value-add">platform enhancements</a> below for personalized quote layers and Quote Assistant. The mockup has <strong><span data-mockup-page-count>58</span> interactive screens</strong> with session-store CRUD; tabs, chips, and numeric fields wire to pricing logic.</p>
   </div>
   <div class="wt-modules-grid">
     <button type="button" class="wt-mod-tile" data-module-id="quote">
@@ -209,11 +209,17 @@
       <h3>Analytics &amp; Profitability</h3>
       <p>Pricing and margin reporting — baseline in Phase 1b; Phase 2 chart expansions; Phase 3 sales metrics</p>
     </button>
+    <button type="button" class="wt-mod-tile" data-module-id="integrations">
+      <span class="wt-mod-phase ph1c">Phase 1c · Integrations</span>
+      <div class="wt-mod-icon">🔗</div>
+      <h3>Hub Integrations</h3>
+      <p>DocuSign e-signature, TMS export with rate-key mapping, Rating &amp; Quote Hub activation, and internal MFA — connects governed quotes to operational systems.</p>
+    </button>
     <button type="button" class="wt-mod-tile" data-module-id="portal">
       <span class="wt-mod-phase ph2">Phase 2 · Portal</span>
       <div class="wt-mod-icon">🌐</div>
       <h3>Customer Self-Service Portal</h3>
-      <p>Quote request with tier comparison, live breakdown, origin/destination wired to store. Accept &amp; Book and Save for Later create portal quotes. Shipment Configurator, help center, tracker, address &amp; commodity CRUD.</p>
+      <p>Quote request submits to American West (no instant pricing) — rep prepares the quote in the pipeline, then the customer sees it on the portal dashboard. Shipment Configurator, help center, tracker, address &amp; commodity CRUD.</p>
     </button>
     <button type="button" class="wt-mod-tile" data-module-id="crm">
       <span class="wt-mod-phase ph3">Phase 3 · Sales</span>
@@ -227,47 +233,34 @@
 <!-- ══ PROPOSED VALUE-ADD ══ -->
 <section class="wt-section" id="wt-value-add">
   <div class="wt-eyebrow wt-eyebrow--proposed">Platform enhancements</div>
-  <h2 class="wt-sec-title">Capabilities that enhance the platform's value</h2>
-  <p class="wt-sec-body">The core modules above deliver the governed tariff and quote foundation. We propose these two enhancements to build on that foundation — shortening rep quote time, making negotiation transparent, and giving managers clearer visibility into how each price was composed.</p>
+  <h2 class="wt-sec-title">Proposed capabilities</h2>
+  <p class="wt-sec-body">Two enhancements that build on the core quote platform — faster quoting and clearer pricing.</p>
 
   <div class="wt-value-add-grid">
-    <div class="wt-value-add-card">
-      <button type="button" class="wt-value-add-card-main" data-value-add-id="personalized-quotes">
-        <span class="wt-value-add-badge">Enhancement · Quote personalization</span>
+    <div class="wt-value-add-card" data-value-add-id="personalized-quotes">
+      <div class="wt-value-add-card-main">
+        <span class="wt-value-add-badge">Quote personalization</span>
         <div class="wt-value-add-icon" aria-hidden="true">✦</div>
-        <h3>Personalized quotes — layer discounts &amp; configuration</h3>
-        <p>Per-shipment quote composition with snapshotted applied terms, rep-negotiated adjustments, and a configurable layer catalog — so every quoted price shows exactly what was applied, overridden, or negotiated.</p>
-        <ul class="wt-value-add-points">
-          <li>Three-bucket model — applied · exception · quote discount badges</li>
-          <li>Step 4a read-only applied terms + Step 4b quote adjustments</li>
-          <li>Admin-configurable quote layer templates (discounts, overrides, accessorials)</li>
-        </ul>
-        <span class="wt-value-add-cta">Explore capability →</span>
-      </button>
+        <h3>Personalized quotes</h3>
+        <p>Apply quote-level discounts and adjustments on top of customer terms, with clear visibility into what drove each price.</p>
+      </div>
       <div class="wt-value-add-demo-links">
         <a href="internal/quote-builder.html" target="_blank" rel="noopener noreferrer">Quote Builder</a>
         <a href="internal/quote-layer-templates.html" target="_blank" rel="noopener noreferrer">Layer templates</a>
       </div>
     </div>
-    <div class="wt-value-add-card">
-      <button type="button" class="wt-value-add-card-main" data-value-add-id="quote-assistant">
-        <span class="wt-value-add-badge">Enhancement · AI-assisted quoting</span>
+    <div class="wt-value-add-card" data-value-add-id="quote-assistant">
+      <div class="wt-value-add-card-main">
+        <span class="wt-value-add-badge">AI-assisted quoting</span>
         <div class="wt-value-add-icon" aria-hidden="true">💬</div>
-        <h3>Quote Assistant — conversational quote builder</h3>
-        <p>A guided chatbot that walks reps through customer selection, service type, lane, shipment details, and adjustments — then generates and saves a governed quote without tab-hopping across screens.</p>
-        <ul class="wt-value-add-points">
-          <li>End-to-end create flow — customer → service → tariff → lane → save</li>
-          <li>Quick-action chips for common lanes and quote lookups</li>
-          <li>Live pricing preview with the same engine as Quote Builder</li>
-        </ul>
-        <span class="wt-value-add-cta">Explore capability →</span>
-      </button>
+        <h3>Quote Assistant</h3>
+        <p>A conversational flow that walks reps through building and saving a quote — same pricing rules as the standard builder.</p>
+      </div>
       <div class="wt-value-add-demo-links">
         <a href="internal/quote-assistant.html" target="_blank" rel="noopener noreferrer">Open Quote Assistant</a>
       </div>
     </div>
   </div>
-  <p class="wt-value-add-footnote">These capabilities extend the governed quote platform — increasing speed, transparency, and rep adoption. Click either card for scope, demo screens, and business impact.</p>
 </section>
 
 <!-- ══ WORKFLOWS ══ -->
@@ -993,7 +986,7 @@
 <section class="wt-section" id="wt-mockups">
   <div class="wt-eyebrow">Interactive mockups</div>
   <h2 class="wt-sec-title">Browse every screen in the mock UI</h2>
-  <p class="wt-sec-body">Open demo screens here — grouped by delivery phase. Every mockup page loads a <strong>session store</strong> (<code>awest:store</code>, <span data-store-version>v9</span>) so quotes, tariffs, fuel rates, and approvals stay consistent across internal ops, portal, and Sales Pipeline until you reset. Use the <strong>Session</strong> menu in the demo banner to switch users (Rep, Manager, Admin) or reset data.</p>
+  <p class="wt-sec-body">Open demo screens here — grouped by delivery phase. Every mockup page loads a <strong>demo store</strong> (<code>awest:store</code>, <span data-store-version>v9</span>) in localStorage so quotes, tariffs, fuel rates, and approvals stay consistent across internal ops, portal, and Sales Pipeline when hosted on GitHub Pages. Use the <strong>Demo user</strong> menu in the demo banner to switch users (Rep, Manager, Admin) or reset data.</p>
 
   <div class="wt-config-callout" style="margin-top:12px">
     <strong>Demo sign-in:</strong> <span class="tabular">jordan.ellis@americanwest.com</span> (Sales Rep) · <span class="tabular">morgan.reyes@americanwest.com</span> (Sales Manager — can approve) · <span class="tabular">admin@americanwest.com</span> (Admin). Open any screen below, or start at <a href="internal/login.html">Login</a>.
@@ -1012,7 +1005,7 @@
     <span class="cobrand-sep" aria-hidden="true">×</span>
     <img src="assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
   </a>
-  <p class="wt-footer-demo"><strong>Session store demo (<span data-store-version>v9</span>)</strong> — <span data-mockup-page-count>58</span> interactive HTML screens with live client-side CRUD. Use the demo banner to switch roles or reset session data.</p>
+  <p class="wt-footer-demo"><strong>Demo store (<span data-store-version>v9</span>)</strong> — <span data-mockup-page-count>58</span> interactive HTML screens with live client-side CRUD on GitHub Pages. Use the demo banner to switch roles or reset demo data.</p>
   <p>American West Tariff &amp; Pricing System · Co-branded proposal preview · InApp Inc. · Confidential</p>
 </footer>
 
@@ -1142,7 +1135,7 @@
         '</ul></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">UI screens (MVP surface)</div><ul class="wt-drawer-list">' +
         '<li>Login · Forgot Password · Users &amp; Roles (basic admin)</li>' +
-        '<li>Tariff List · Detail/Editor (grid) · Configurator (5-step) · <strong>Rate Table Matrix</strong> (28 origin × service-type tabs)</li>' +
+        '<li>Tariff List · Detail/Editor (grid) · Configurator (single page) · <strong>Rate Table Matrix</strong> (origin × service dropdowns)</li>' +
         '<li>Customer List · Customer Detail (grid) · per-service-type discounts</li>' +
         '<li>Quote List (three-bucket badges · amount hover drawer) · Quote Builder (Step 4a/4b) · Quote Detail · Quote PDF Preview</li>' +
         '<li><strong>Platform enhancements (demo):</strong> Quote Assistant (conversational create → save) · personalized quote layers · quote layer template catalog</li>' +
@@ -1280,49 +1273,23 @@
   var valueAddData = {
     'personalized-quotes': {
       icon: '✦',
-      title: 'Personalized quotes — layer discounts & configuration',
-      sub: 'Platform enhancement · Quote Management · Phase 1a+',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Platform value:</strong> Reps negotiate differently on every shipment, but today those adjustments live in email threads and spreadsheet notes. This capability makes quote-level configuration first-class — every discount, override, and accessorial is visible, governed, and auditable on the quote record.</div></div>' +
-        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">How it works</div><ul class="wt-drawer-list">' +
-        '<li><strong>Applied terms (Step 4a)</strong> — customer master discounts and tariff context snapshotted at quote create; read-only on open quotes</li>' +
-        '<li><strong>Quote adjustments (Step 4b)</strong> — rep-editable layers: quote discount, customer-term exception, lane override, accessorials, custom flat/% lines</li>' +
-        '<li><strong>Three-bucket badges</strong> — list and detail surfaces show applied · exception · quote at a glance</li>' +
-        '<li><strong>Quote layer templates</strong> — admins define the catalog reps pick from; each template can require approval when changed</li>' +
-        '<li><strong>Grouped cost stack</strong> — “From customer &amp; tariff” vs “Your adjustments” with live total hero and amount hover drawer</li>' +
-        '<li><strong>Governance</strong> — customer-term exceptions and deep discounts route to manager approval when rules breach</li>' +
-        '</ul></div>' +
-        drawerFormula(
-          drawerPipelineCore +
-          '<div class="wt-drawer-formula-line"><strong>Quote pricing buckets</strong> — (1) <em>Applied</em>: snapshotted customer % · (2) <em>Exception</em>: one-off override ≠ master · (3) <em>Quote</em>: rep-negotiated % · then lane override &amp; accessorials<em>Example: <span data-live-quote-example>loading from session store…</span></em></div>'
-        ) +
+      title: 'Personalized quotes',
+      sub: 'Platform enhancement',
+      body: '<div class="wt-drawer-section"><p>Quote-level discounts and adjustments on top of customer and tariff terms. Every quote shows what was applied, overridden, or negotiated.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
-        '<a href="internal/quote-builder.html" target="_blank" rel="noopener noreferrer">Quote Builder (Step 4a/4b)</a>' +
-        '<a href="internal/quotes.html" target="_blank" rel="noopener noreferrer">Quote List (badges &amp; drawer)</a>' +
-        '<a href="internal/quote-detail.html?id=Q-2026-0847" target="_blank" rel="noopener noreferrer">Quote Detail</a>' +
-        '<a href="internal/quote-layer-templates.html" target="_blank" rel="noopener noreferrer">Quote Layer Templates</a>' +
+        '<a href="internal/quote-builder.html" target="_blank" rel="noopener noreferrer">Quote Builder</a>' +
+        '<a href="internal/quotes.html" target="_blank" rel="noopener noreferrer">Quote List</a>' +
+        '<a href="internal/quote-layer-templates.html" target="_blank" rel="noopener noreferrer">Layer templates</a>' +
         '</div></div>'
     },
     'quote-assistant': {
       icon: '💬',
-      title: 'Quote Assistant — conversational quote builder',
-      sub: 'Platform enhancement · Quote Management · Phase 1a+',
-      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1a"><strong>Platform value:</strong> Reps spend minutes jumping between customer records, tariff lookup, and builder fields. Quote Assistant keeps the same governed pricing engine but delivers it through a guided conversation — ideal for experienced reps who know the lane and want speed, and newer reps who benefit from step-by-step prompts.</div></div>' +
-        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Conversation flow</div><ul class="wt-drawer-list">' +
-        '<li><strong>Create new quote</strong> — customer → B2B or Home Transport → auto-resolved tariff → lane/shipment inputs</li>' +
-        '<li><strong>Rep adjustments</strong> — discount and layer steps when negotiated</li>' +
-        '<li><strong>Generate &amp; save</strong> — persists to session store with the same approval rules as Quote Builder</li>' +
-        '<li><strong>Quick chips</strong> — common lanes, open existing quote by number, explain pricing breakdown</li>' +
-        '<li><strong>Live preview</strong> — pricing breakdown panel uses the shared engine (not a separate calculator)</li>' +
-        '</ul></div>' +
-        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Relationship to core modules</div><ul class="wt-drawer-list">' +
-        '<li>Uses the same Pricing Engine, Customer Management, and Tariff Admin data as Quote Builder</li>' +
-        '<li>Complements — does not replace — the full builder for complex spot/CFQ or side-by-side comparison workflows</li>' +
-        '<li>Output quotes appear in the enriched quote list with identical lifecycle (pending → approved → sent)</li>' +
-        '</ul></div>' +
+      title: 'Quote Assistant',
+      sub: 'Platform enhancement',
+      body: '<div class="wt-drawer-section"><p>A guided conversation to build and save a quote — customer, lane, shipment details, and adjustments — using the same pricing engine as Quote Builder.</p></div>' +
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
         '<a href="internal/quote-assistant.html" target="_blank" rel="noopener noreferrer">Quote Assistant</a>' +
-        '<a href="internal/quotes.html" target="_blank" rel="noopener noreferrer">Quote List (saved output)</a>' +
-        '<a href="internal/quote-builder.html" target="_blank" rel="noopener noreferrer">Quote Builder (parallel path)</a>' +
+        '<a href="internal/quotes.html" target="_blank" rel="noopener noreferrer">Quote List</a>' +
         '</div></div>'
     }
   };
@@ -1374,7 +1341,7 @@
         '<li><strong>Origin station grid</strong> — density, minimum charge, and linehaul adjustment per origin and service level</li>' +
         '<li><strong>Rate table matrix</strong> — per-pound rates and lane minimums by zone × weight/cube break</li>' +
         '<li><strong>Baseline program rules</strong> — commodity surcharges, minimum charge floors, scheduled promotions (not rep overrides)</li>' +
-        '<li>5-step Configurator for guided setup; version diff in Phase 1b</li>' +
+        '<li>Single-page Configurator for guided setup; version diff in Phase 1b</li>' +
         '</ul></div>' +
         drawerFormula(
           drawerPipelineCube +
@@ -1547,6 +1514,32 @@
         '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
         '<a href="internal/analytics.html" target="_blank" rel="noopener noreferrer">Analytics Dashboard</a>' +
         '<a href="internal/tariff-competitor-comparison.html" target="_blank" rel="noopener noreferrer">Competitor Comparison</a>' +
+        '</div></div>'
+    },
+    integrations: {
+      icon: '🔗',
+      title: 'Hub Integrations',
+      sub: 'Integration layer · Document & Ops Systems hubs · Phase 1c',
+      body: '<div class="wt-drawer-section"><div class="wt-drawer-callout ph1c"><strong>Integration slice:</strong> Activates hub adapters and connects governed quotes to American West operational systems. Ships after or in parallel with Phase 1b — live TMS export requires rate-key mapping from Pricing Setup.</div></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Key capabilities</div><ul class="wt-drawer-list">' +
+        '<li><strong>DocuSign e-signature</strong> — Document Hub adapter; executed docs archived on the quote record</li>' +
+        '<li><strong>TMS export</strong> — Ops Systems Hub pushes accepted quotes using normalized rate-key mapping</li>' +
+        '<li><strong>Rating &amp; Quote Hub</strong> — external rating API consumer activated (stub → live)</li>' +
+        '<li><strong>Internal MFA</strong> — TOTP second factor for sales and admin users at login</li>' +
+        '<li>Async job queue for integration retries (as volume requires)</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Associated user flows</div><ul class="wt-drawer-list wt-drawer-flows">' +
+        '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="rep">Sales rep — e-sign and TMS handoff after PDF</button></li>' +
+        '<li><button type="button" class="wt-drawer-flow-jump" data-jump-flow="ops">Operations — TMS mapping config (1b) and export (1c)</button></li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Architecture</div><ul class="wt-drawer-list">' +
+        '<li><strong>Layer 2:</strong> Document Hub (e-sign) · Ops Systems Hub (TMS) · Rating &amp; Quote Hub</li>' +
+        '<li><strong>Depends on:</strong> Quote Management · Phase 1b TMS rate-key mapping</li>' +
+        '</ul></div>' +
+        '<div class="wt-drawer-section"><div class="wt-drawer-sec-title">Demo screens</div><div class="wt-drawer-mock-links">' +
+        '<a href="internal/quote-esign.html?id=Q-2026-0823" target="_blank" rel="noopener noreferrer">E-Signature</a>' +
+        '<a href="internal/quote-tms-export.html?id=Q-2026-0823" target="_blank" rel="noopener noreferrer">TMS Export</a>' +
+        '<a href="#wt-mockup-integrations" class="wt-drawer-mockup-scroll">All integration mockups ↓</a>' +
         '</div></div>'
     },
     portal: {
@@ -1852,7 +1845,7 @@
   var drawerClose = document.getElementById('wt-drawer-close');
   var deliveryCells = document.querySelectorAll('.wt-delivery-cell[data-phase]');
   var moduleTiles = document.querySelectorAll('.wt-mod-tile[data-module-id]');
-  var valueAddTiles = document.querySelectorAll('.wt-value-add-card-main[data-value-add-id]');
+  var valueAddTiles = document.querySelectorAll('.wt-value-add-card[data-value-add-id]');
   var configCards = document.querySelectorAll('.wt-config-card[data-config-id]');
   var renderFlowFn = null;
 
@@ -1879,7 +1872,10 @@
       link.addEventListener('click', function (e) {
         e.preventDefault();
         closeDrawer();
-        var target = document.getElementById('wt-mockup-reference') || document.getElementById('wt-mockups');
+        var hash = (link.getAttribute('href') || '').replace(/^#/, '');
+        var target = (hash && document.getElementById(hash)) ||
+          document.getElementById('wt-mockup-reference') ||
+          document.getElementById('wt-mockups');
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
@@ -1909,10 +1905,7 @@
       tile.classList.toggle('is-open', source && source.type === 'module' && tile.getAttribute('data-module-id') === source.id);
     });
     valueAddTiles.forEach(function (tile) {
-      var card = tile.closest('.wt-value-add-card');
-      if (card) {
-        card.classList.toggle('is-open', source && source.type === 'value-add' && tile.getAttribute('data-value-add-id') === source.id);
-      }
+      tile.classList.toggle('is-open', source && source.type === 'value-add' && tile.getAttribute('data-value-add-id') === source.id);
     });
     configCards.forEach(function (card) {
       card.classList.toggle('is-open', source && source.type === 'config' && card.getAttribute('data-config-id') === source.id);
@@ -1942,10 +1935,7 @@
     document.body.style.overflow = '';
     deliveryCells.forEach(function (cell) { cell.classList.remove('is-open'); });
     moduleTiles.forEach(function (tile) { tile.classList.remove('is-open'); });
-    valueAddTiles.forEach(function (tile) {
-      var card = tile.closest('.wt-value-add-card');
-      if (card) card.classList.remove('is-open');
-    });
+    valueAddTiles.forEach(function (tile) { tile.classList.remove('is-open'); });
     configCards.forEach(function (card) { card.classList.remove('is-open'); });
   }
 
@@ -1958,12 +1948,6 @@
   moduleTiles.forEach(function (tile) {
     tile.addEventListener('click', function () {
       openModuleDrawer(tile.getAttribute('data-module-id'));
-    });
-  });
-
-  valueAddTiles.forEach(function (tile) {
-    tile.addEventListener('click', function () {
-      openValueAddDrawer(tile.getAttribute('data-value-add-id'));
     });
   });
 
@@ -2349,7 +2333,7 @@
         { title: 'Tariff List', desc: 'Base schedules by service type; Edit matrix row action.', phase: 'ph1a', href: 'internal/tariffs.html', label: 'Tariff List' },
         { title: 'Tariff Detail', desc: 'Grid layout — rate settings, origin grid, baseline program rules (commodity/minimum). Quote-time layers linked, not edited here.', phase: 'ph1a', href: 'internal/tariff-detail.html', label: 'Tariff Detail' },
         { title: 'Rate table matrix', desc: 'Per-pound rates and lane minimums by zone × cube bracket.', phase: 'ph1a', href: 'internal/tariff-rate-matrix.html', label: 'Rate Matrix' },
-        { title: 'Tariff Configurator', desc: 'Guided setup — inherits base matrix; configure exceptions (5 steps).', phase: 'ph1a', href: 'internal/tariff-wizard.html', label: 'Configurator' },
+        { title: 'Tariff Configurator', desc: 'Single-page setup — inherits base matrix; add origin stations and configure exceptions.', phase: 'ph1a', href: 'internal/tariff-wizard.html', label: 'Configurator' },
         { title: 'Version compare', desc: 'Diff two versions; rollback with confirmation.', phase: 'ph1b', href: 'internal/tariff-comparison.html', label: 'Comparison' },
         { title: 'Agreement template', desc: 'Cover sheet language for Quote PDF output.', phase: 'ph1a', href: 'internal/admin-agreement-template.html', label: 'Agreement Template' },
         { title: 'Quote layer templates', desc: 'Platform enhancement — admin catalog for Step 4b: quote discount, customer-term exception, lane override, accessorials.', phase: 'ph1b', href: 'internal/quote-layer-templates.html', label: 'Layer Templates' },
@@ -2380,7 +2364,7 @@
       alt: '<strong>Portal wiring:</strong> Origin/destination and tier chips hydrate from session store. Accept &amp; Book and Save for Later both persist portal quotes. Pricing Guide explains linehaul, fuel, and insurance in plain language.',
       steps: [
         { title: 'Portal home', desc: 'Welcome banner, Get a Quote CTA, recent activity.', phase: 'ph2', href: 'portal/portal-dashboard.html', label: 'Portal Home' },
-        { title: 'Quote Request', desc: 'Origin/destination wired · tier chips · live breakdown · Accept & Book or Save for Later.', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Quote Request' },
+        { title: 'Quote Request', desc: 'Submit shipment details and preferred service — routed to sales rep; no instant pricing.', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Quote Request' },
         { title: 'Pricing breakdown', desc: 'Always-visible plain-language line items on result card.', phase: 'ph2', href: 'portal/portal-quote-request.html', label: 'Breakdown' },
         { title: 'Pricing Guide', desc: 'Glossary and service tiers; deep-linked from terms.', phase: 'ph2', href: 'portal/portal-pricing-help.html', label: 'Help Center' },
         { title: 'Accept & Book', desc: 'Confirm quote and receive confirmation screen.', phase: 'ph2', href: 'portal/portal-quote-confirmation.html', label: 'Confirmation' },

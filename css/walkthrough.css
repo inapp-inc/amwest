@@ -1601,12 +1601,7 @@ h1.wt-hero-title em {
   align-items: flex-start;
   width: 100%;
   padding: 32px 28px 20px;
-  border: none;
-  background: transparent;
   text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
 }
 .wt-value-add-card.is-open .wt-value-add-card-main {
   background: linear-gradient(135deg, var(--wt-accent-lt) 0%, var(--wt-surface) 65%);
@@ -1634,43 +1629,13 @@ h1.wt-hero-title em {
   color: var(--wt-ink);
   line-height: 1.35;
   margin-bottom: 10px;
-  max-width: 28ch;
 }
-.wt-value-add-card > p {
-  font-size: 13px;
+.wt-value-add-card-main p {
+  font-size: 14px;
   color: var(--wt-ink-mid);
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-.wt-value-add-points {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px;
-  width: 100%;
-}
-.wt-value-add-points li {
-  position: relative;
-  padding-left: 16px;
-  font-size: 12px;
-  color: var(--wt-ink-soft);
-  line-height: 1.55;
-  margin-bottom: 6px;
-}
-.wt-value-add-points li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--wt-accent);
-}
-.wt-value-add-cta {
-  margin-top: auto;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--wt-accent);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 42ch;
 }
 .wt-value-add-demo-links {
   display: flex;

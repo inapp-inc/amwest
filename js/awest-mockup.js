@@ -4,6 +4,8 @@
 (function () {
   'use strict';
 
+  var global = typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this);
+
   function ready(fn) {
     if (document.readyState !== 'loading') fn();
     else document.addEventListener('DOMContentLoaded', fn);
@@ -217,7 +219,17 @@
         return true;
       }
 
+      function syncRows() {
+        if (isQuotesTable) {
+          rows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-quote-id]'));
+        } else {
+          rows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-quote-id], tr[data-status], tr[data-customer], tr[data-rep]'));
+          if (!rows.length) rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+        }
+      }
+
       function applyFilters() {
+        syncRows();
         var values = getValues();
         var visible = 0;
         rows.forEach(function (row) {
@@ -244,6 +256,7 @@
         bar.querySelectorAll('input[name="search"]').forEach(function (inp) {
           inp.value = '';
         });
+        syncRows();
         rows.forEach(function (row) { setRowVisible(row, true); });
         if (countEl) countEl.textContent = 'Showing all ' + rows.length + ' records';
         if (emptyEl) emptyEl.hidden = true;
@@ -289,6 +302,7 @@
       });
 
       applyUrlParams();
+      global.addEventListener('awest:filter-refresh', applyFilters);
     });
   }
 
@@ -461,17 +475,61 @@
     });
   }
 
+  /* ── Tariff configurator — pricing model presets (align with Tariff Detail) ── */
+  function initTariffWizardPricing() {
+    var serviceSelect = document.getElementById('tw-service');
+    if (!serviceSelect || serviceSelect._twPricingWired) return;
+    serviceSelect._twPricingWired = true;
+
+    var baseInput = document.getElementById('tw-base');
+    var rateTableInput = document.getElementById('tw-rate-table');
+    var marginInput = document.getElementById('tw-floor');
+    var densityInput = document.getElementById('tw-density');
+
+    var D = global.AwestDummyTariff;
+    var servicePresets = D && D.overviewPresets ? D.overviewPresets : {
+      b2b: { amount: 44, lane: 'National B2B Matrix', margin: 15, density: 8.5 },
+      threshold: { amount: 40, lane: 'Home Delivery Threshold Matrix', margin: 12, density: 7.0 },
+      'wg-no-insp': { amount: 48, lane: 'White Glove — No Inspection', margin: 15, density: 8.5 },
+      'wg-insp': { amount: 52, lane: 'National B2B Matrix', margin: 15, density: 8.5 }
+    };
+
+    function applyServicePreset() {
+      var preset = servicePresets[serviceSelect.value] || servicePresets.b2b;
+      if (baseInput && baseInput.dataset.userEdited !== '1') baseInput.value = String(preset.amount);
+      if (rateTableInput) rateTableInput.value = preset.lane;
+      if (marginInput) marginInput.value = String(preset.margin);
+      if (densityInput) densityInput.value = String(preset.density);
+    }
+
+    if (baseInput) {
+      baseInput.addEventListener('input', function () {
+        baseInput.dataset.userEdited = '1';
+      });
+    }
+    serviceSelect.addEventListener('change', applyServicePreset);
+    applyServicePreset();
+  }
+
   /* ── UOM → density field visibility (wizard + other forms) ── */
   function initUomDensity() {
     var uomSelect = document.getElementById('tw-uom');
     if (uomSelect && !uomSelect._uomWired) {
       uomSelect._uomWired = true;
-      var wizardPanel = uomSelect.closest('.wizard-panel');
-      var densityField = wizardPanel && wizardPanel.querySelector('[data-density-field]');
+      var pricingSection = document.getElementById('tw-pricing-model');
+      var densityField = pricingSection && pricingSection.querySelector('[data-density-field]');
       var baseLabel = document.querySelector('[data-tw-base-label]');
       function syncWizard() {
         var val = uomSelect.value;
-        if (densityField) densityField.hidden = val !== 'cwt' && val !== 'cube';
+        var showDensity = val === 'cwt' || val === 'cube';
+        if (densityField) densityField.hidden = !showDensity;
+        pricingSection.querySelectorAll('[data-uom-field]').forEach(function (wrap) {
+          var show = wrap.getAttribute('data-uom-field') === val;
+          wrap.hidden = !show;
+          wrap.querySelectorAll('input, select, textarea').forEach(function (inp) {
+            inp.disabled = !show;
+          });
+        });
         if (baseLabel && global.AwestNumericFields) {
           baseLabel.textContent = global.AwestNumericFields.baseRateLabelForUom(val);
         }
@@ -800,6 +858,123 @@
         opt.classList.add('selected');
       });
     });
+  }
+
+  /* ── Tariff configurator — dynamic origin stations ── */
+  function initTariffConfigurator() {
+    var root = document.querySelector('[data-tariff-configurator]');
+    if (!root) return;
+    var list = root.querySelector('[data-wizard-origin-list]');
+    var pick = root.querySelector('[data-wizard-origin-pick]');
+    var addBtn = root.querySelector('[data-wizard-add-origin]');
+    var emptyEl = root.querySelector('[data-wizard-origin-empty]');
+    if (!list || !pick || !addBtn) return;
+
+    function availableOrigins() {
+      var store = global.AwestStore;
+      var lists = store && store.getState().validationLists;
+      var TE = global.AwestTariffEngine;
+      if (lists && lists.origins && lists.origins.length) return lists.origins.slice();
+      return TE ? TE.AW_ORIGINS.slice() : ['LAX', 'SFO', 'DFW', 'EWR', 'TMV', 'PHX', 'ATL'];
+    }
+
+    function addedCodes() {
+      return Array.prototype.map.call(
+        list.querySelectorAll('.origin-station-row[data-origin-code]'),
+        function (row) { return row.getAttribute('data-origin-code'); }
+      );
+    }
+
+    function syncEmpty() {
+      var has = list.querySelector('.origin-station-row[data-origin-code]');
+      if (emptyEl) emptyEl.hidden = !!has;
+    }
+
+    function refreshPick() {
+      var added = addedCodes();
+      var origins = availableOrigins().filter(function (o) { return added.indexOf(o) === -1; });
+      pick.innerHTML = origins.length
+        ? origins.map(function (o) { return '<option value="' + o + '">' + o + '</option>'; }).join('')
+        : '<option value="">No stations available</option>';
+      addBtn.disabled = !origins.length;
+    }
+
+    function refreshTariffConfiguratorPick() {
+      refreshPick();
+      syncEmpty();
+    }
+
+    function createOriginRow(code, opts) {
+      opts = opts || {};
+      var cell = opts.b2b || opts.wgi || {};
+      var densityInput = document.getElementById('tw-density');
+      var defaultDensity = densityInput ? parseFloat(densityInput.value) : 8.5;
+      var density = cell.density != null ? cell.density : (isNaN(defaultDensity) ? 8.5 : defaultDensity);
+      var minAdj = cell.minAdjPct != null ? cell.minAdjPct : 0;
+      var lhAdj = cell.linehaulAdjPct != null ? cell.linehaulAdjPct : 0;
+      var row = document.createElement('div');
+      row.className = 'origin-station-row';
+      row.setAttribute('data-origin-code', code);
+      row.innerHTML =
+        '<div class="origin-station-head">' +
+          '<span class="origin-station-code">' + code + '</span>' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-wizard-remove-origin aria-label="Remove ' + code + '">Remove</button>' +
+        '</div>' +
+        '<div class="origin-station-detail">' +
+          '<div class="field"><label>Density factor</label>' +
+            '<input type="number" class="tabular" step="0.1" min="0" value="' + density + '"></div>' +
+          '<div class="field"><label>Min charge adj. %</label>' +
+            '<input type="number" class="tabular" data-rate-adj-input step="0.1" value="' + minAdj + '" list="aw-rate-adj-presets"></div>' +
+          '<div class="field"><label>Linehaul adj. %</label>' +
+            '<input type="number" class="tabular" data-rate-adj-input step="0.1" value="' + lhAdj + '" list="aw-rate-adj-presets"></div>' +
+        '</div>';
+      row.querySelector('[data-wizard-remove-origin]').addEventListener('click', function () {
+        row.remove();
+        refreshPick();
+        syncEmpty();
+      });
+      list.appendChild(row);
+      syncEmpty();
+      refreshPick();
+    }
+
+    function seedOrigins(originGrid) {
+      list.querySelectorAll('.origin-station-row[data-origin-code]').forEach(function (r) { r.remove(); });
+      if (originGrid) {
+        Object.keys(originGrid).forEach(function (code) {
+          if (originGrid[code].enabled === false) return;
+          createOriginRow(code, originGrid[code]);
+        });
+      }
+      refreshPick();
+      syncEmpty();
+    }
+
+    if (!addBtn._wizardOriginWired) {
+      addBtn._wizardOriginWired = true;
+      addBtn.addEventListener('click', function () {
+        var code = pick.value;
+        if (!code || addedCodes().indexOf(code) >= 0) return;
+        createOriginRow(code, {});
+      });
+    }
+
+    refreshPick();
+    syncEmpty();
+
+    global.AwestMockup = global.AwestMockup || {};
+    global.AwestMockup.seedTariffConfiguratorOrigins = seedOrigins;
+    global.AwestMockup.refreshTariffConfiguratorPick = refreshTariffConfiguratorPick;
+
+    global.addEventListener('awest:change', refreshTariffConfiguratorPick);
+
+    try {
+      var cloneId = new URLSearchParams(location.search).get('clone');
+      if (cloneId && global.AwestStore) {
+        var src = global.AwestStore.getTariff(cloneId);
+        if (src && src.config && src.config.originGrid) seedOrigins(src.config.originGrid);
+      }
+    } catch (e) { /* ignore */ }
   }
 
   /* ── Origin station include toggles ── */
@@ -1314,6 +1489,7 @@
     initWizards();
     initQuoteTypeToggle();
     initTariffOverview();
+    initTariffWizardPricing();
     initUomDensity();
     initShipmentConfigurator();
     initPricingBreakdownDrawer();
@@ -1321,6 +1497,7 @@
     initCubeThresholdNotice();
     initHighValueNotice();
     initTariffTemplateToggle();
+    initTariffConfigurator();
     initOriginStationToggles();
     initSteppedSelectors();
     initActionPills();

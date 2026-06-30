@@ -23,6 +23,12 @@
     setItem: function (k, v) { this._data[k] = v; },
     removeItem: function (k) { delete this._data[k]; }
   };
+  global.localStorage = {
+    _data: {},
+    getItem: function (k) { return this._data[k] || null; },
+    setItem: function (k, v) { this._data[k] = v; },
+    removeItem: function (k) { delete this._data[k]; }
+  };
   global.dispatchEvent = function () {};
   global.alert = function () {};
 
@@ -93,12 +99,17 @@ require('./seed-data.js');
     customerId: cid,
     origin: 'Seattle',
     destination: 'Portland',
-    weight: 2000,
-    status: 'sent',
-    pricingOverride: { total: 1500, margin: 18 }
+    weight: 2000
   });
   assert(pq && pq.channel === 'portal', 'create portal quote');
+  assert(pq.status === 'portal_request', 'portal quote is request status');
+  assert(pq.portalVisible === false, 'portal quote hidden until rep sends');
   assert(S.getQuote(pq.id), 'portal quote in store');
+  assert(S.isRepPipelineQuote(pq), 'portal request visible in rep pipeline');
+  assert(S.getState().quotes.some(function (q) { return q.id === pq.id && S.isRepPipelineQuote(q); }), 'portal quote in rep list filter');
+  global.localStorage.setItem('awest:store', JSON.stringify(S.getState()));
+  S.load();
+  assert(S.getQuote(pq.id), 'portal quote survives localStorage reload');
 
   /* Base tariff auto-resolve on create/update */
   var sariQ = S.createQuote({

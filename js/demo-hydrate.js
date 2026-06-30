@@ -41,6 +41,7 @@
     var G = typeof window !== 'undefined' && window.AwestGovernance;
     var label = G ? G.quoteStatusLabel(status) : status;
     var norm = G ? G.normalizeQuoteStatus(status) : status;
+    if (status === 'portal_request') norm = 'portal_request';
     var cls = 'badge badge-' + (norm === 'pending' ? 'pending' : norm);
     return '<span class="' + cls + '">' + label + '</span>';
   }
@@ -91,7 +92,7 @@
     });
 
     var state = S().getState();
-    var quotes = state.quotes.filter(function (q) { return q.channel !== 'portal'; });
+    var quotes = state.quotes.filter(function (q) { return S().isRepPipelineQuote(q); });
     var html = '';
     quotes.forEach(function (q) {
       var cust = custName(q.customerId);
@@ -104,7 +105,8 @@
       html += '<td class="tabular"><a href="' + href + '">' + q.id + '</a></td>';
       html += '<td>' + cust + '</td><td>' + laneLabel(q) + '</td>';
       html += '<td class="quote-disc-mount"></td>';
-      html += '<td class="quote-amount-cell" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View quote calculation"><span class="quote-total-amt tabular">' + fmtMoney(p.total || 0) + '</span><div class="quote-stack-mount"></div></td>';
+      html += '<td class="quote-amount-cell" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View quote calculation"><span class="quote-total-amt tabular">' +
+        (q.status === 'portal_request' ? 'Pending' : fmtMoney(p.total || 0)) + '</span><div class="quote-stack-mount"></div></td>';
       html += '<td class="tabular" data-quote-margin>' + (p.margin || 0) + '%</td>';
       html += '<td>' + statusBadge(q.status) + '</td>';
       html += '<td class="tabular">' + fmtDate(q.updatedAt) + '</td>';
@@ -143,6 +145,7 @@
     if (count) count.textContent = 'Showing all ' + quotes.length + ' records';
     hydrateFilterOptions('#q-customer', state.customers.map(function (c) { return c.name; }));
     hydrateFilterOptions('#q-rep', state.users.filter(function (u) { return u.role === 'Sales Rep' || u.role === 'Sales Manager'; }).map(function (u) { return u.name; }));
+    global.dispatchEvent(new CustomEvent('awest:filter-refresh'));
   }
 
   function hydrateFilterOptions(sel, names) {
@@ -171,7 +174,7 @@
     var metrics = S().getMetrics();
     var repNameEnc = encodeURIComponent(user.name);
     var myQuotes = state.quotes.filter(function (q) {
-      return q.repId === user.id && q.channel !== 'portal';
+      return q.repId === user.id && S().isRepPipelineQuote(q);
     });
     var openStatuses = ['draft', 'pending', 'approved', 'sent'];
     var open = myQuotes.filter(function (q) { return openStatuses.indexOf(q.status) >= 0; });
@@ -675,8 +678,8 @@
     var kanban = document.querySelector('.kanban');
     if (!kanban) return;
     var state = S().getState();
-    var quotes = state.quotes.filter(function (q) { return q.channel !== 'portal'; });
-    var stages = ['draft', 'pending', 'approved', 'sent', 'converted', 'expired', 'lost'];
+    var quotes = state.quotes.filter(function (q) { return S().isRepPipelineQuote(q); });
+    var stages = ['portal_request', 'draft', 'pending', 'approved', 'sent', 'converted', 'expired', 'lost'];
     var total = quotes.reduce(function (s, q) { return s + (quotePricing(q).total || 0); }, 0);
     var lead = document.querySelector('.page-lead');
     if (lead) lead.innerHTML = 'Quote stages by status · <span class="tabular">' + fmtMoney(total) + '</span> total value · ' + quotes.length + ' active quotes';
@@ -698,7 +701,9 @@
         var a = document.createElement('a');
         a.className = 'kanban-card';
         a.href = '../internal/' + quoteDetailHref(q.id);
-        a.innerHTML = '<strong>' + q.id + '</strong><br><span class="tabular">' + fmtMoney(quotePricing(q).total || 0) + '</span><br><small>' + fmtDate(q.updatedAt) + '</small>';
+        a.innerHTML = '<strong>' + q.id + '</strong><br><span class="tabular">' +
+          (q.status === 'portal_request' ? 'Awaiting rep quote' : fmtMoney(quotePricing(q).total || 0)) +
+          '</span><br><small>' + fmtDate(q.updatedAt) + '</small>';
         col.appendChild(a);
       });
     });
@@ -710,16 +715,7 @@
 
   /* ── Portal ── */
   function hydratePortalDashboard() {
-    var state = S().getState();
-    var cid = state.portal.activeCustomerId;
-    var quotes = state.quotes.filter(function (q) {
-      return q.customerId === cid && (q.channel === 'portal' || q.status === 'sent' || q.status === 'converted' || q.status === 'accepted');
-    });
-    var shipments = state.shipments.filter(function (sh) { return sh.customerId === cid; });
-    document.querySelectorAll('.kpi-card .value, .stat-value').forEach(function (el, i) {
-      if (i === 0) el.textContent = quotes.length;
-      if (i === 1) el.textContent = shipments.filter(function (s) { return s.status !== 'delivered'; }).length;
-    });
+    /* Full dashboard wiring in demo-hydrate-pages.js hydratePortalDashboardFull */
   }
 
   function hydratePortalQuoteRequest() {
@@ -747,15 +743,35 @@
     if (pageName() !== 'portal-quote-confirmation') return;
     var id = getQueryQuoteId();
     var q = id ? S().getQuote(id) : null;
-    if (!q) return;
-    var p = quotePricing(q);
-    document.querySelectorAll('[data-portal-confirm-ref]').forEach(function (el) {
-      var sh = S().getState().shipments.find(function (s) { return s.quoteId === q.id; });
-      el.textContent = sh ? sh.id : q.id;
-    });
-    document.querySelectorAll('[data-portal-confirm-total]').forEach(function (el) {
-      el.textContent = fmtMoney(p.total || 0);
-    });
+    var titleEl = document.querySelector('[data-portal-confirm-title]');
+    var bodyEl = document.querySelector('[data-portal-confirm-body]');
+    var totalEl = document.querySelector('[data-portal-confirm-total]');
+    if (!q) {
+      if (titleEl) titleEl.textContent = 'Sent to American West';
+      return;
+    }
+    if (q.status === 'portal_request') {
+      if (titleEl) titleEl.textContent = 'Sent to American West';
+      if (bodyEl) {
+        bodyEl.innerHTML = 'Your quote request <strong data-portal-confirm-ref>' + q.id + '</strong> has been submitted. A sales rep will prepare pricing and notify you on your dashboard when the final quote is ready.';
+      }
+      if (totalEl) totalEl.hidden = true;
+    } else if (q.portalVisible && q.status === 'sent') {
+      var p = quotePricing(q);
+      if (titleEl) titleEl.textContent = 'Your quote is ready';
+      if (bodyEl) {
+        bodyEl.innerHTML = 'Quote <strong data-portal-confirm-ref>' + q.id + '</strong> · ' + laneLabel(q) + ' · Total <span class="tabular">' + fmtMoney(p.total || 0) + '</span>';
+      }
+      if (totalEl) totalEl.hidden = true;
+    } else {
+      document.querySelectorAll('[data-portal-confirm-ref]').forEach(function (el) {
+        el.textContent = q.id;
+      });
+      if (totalEl) {
+        totalEl.hidden = false;
+        totalEl.textContent = fmtMoney(quotePricing(q).total || 0);
+      }
+    }
   }
 
   function wirePortalAccountSwitch() {

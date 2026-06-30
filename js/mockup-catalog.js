@@ -43,7 +43,7 @@
       items: [
         { href: 'internal/tariffs.html', title: 'Tariff List', desc: 'Base schedules by service type · filter bar · Edit matrix row action' },
         { href: 'internal/tariff-detail.html', title: 'Tariff Detail', desc: 'Service/UOM selects · origin grid · baseline rules · live numeric save · reference inheritance' },
-        { href: 'internal/tariff-wizard.html', title: 'Tariff Configurator', desc: '5-step wizard — origin stations, commodity, baseline rules persist on create' },
+        { href: 'internal/tariff-wizard.html', title: 'Tariff Configurator', desc: 'Single-page setup — add origin stations, pricing model, baseline rules persist on create' },
         { href: 'internal/tariff-rate-matrix.html', title: 'Rate Table Matrix', desc: 'Zone × weight/cube breaks per origin × service — save to session store' },
         { href: 'internal/tariff-add-override.html', title: 'Add Tariff Override', desc: 'Add baseline rule to tariff config' },
         { href: 'internal/tariff-delete-confirm.html', title: 'Delete Tariff', desc: 'Destructive confirmation — removes from store' },
@@ -120,9 +120,9 @@
       title: 'Customer self-service',
       items: [
         { href: 'portal/portal-dashboard.html', title: 'Customer Home', desc: 'Welcome, Get a Quote CTA, recent activity' },
-        { href: 'portal/portal-quote-request.html', title: 'Quote Request', desc: 'Origin/destination · tier comparison · live breakdown · Accept & Book · Save for Later' },
+        { href: 'portal/portal-quote-request.html', title: 'Quote Request', desc: 'Submit shipment to American West — no instant pricing; rep prepares final quote' },
         { href: 'portal/portal-pricing-help.html', title: 'Pricing Help Center', desc: 'Glossary, tiers, insurance — deep-linkable from quotes' },
-        { href: 'portal/portal-quote-confirmation.html', title: 'Quote Confirmed', desc: 'Accept & book success screen' },
+        { href: 'portal/portal-quote-confirmation.html', title: 'Request submitted', desc: 'Sent to American West confirmation; also shows finalized quote when ready' },
         { href: 'portal/portal-shipment-tracker.html', title: 'Shipment Tracker', desc: 'Quote→Invoice lifecycle · requote / duplicate links' },
         { href: 'portal/portal-self-service.html', title: 'Self-Service Tools', desc: 'Address book · saved commodities · support tickets from store' },
         { href: 'portal/portal-pod.html', title: 'Proof of Delivery', desc: 'POD download view' },

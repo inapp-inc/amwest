@@ -576,17 +576,16 @@
 
   function buildBaselineRulesFromWizard() {
     var rules = [];
-    var commSel = document.getElementById('tw-comm-ov');
-    if (commSel && commSel.value && commSel.value !== 'None') {
-      var m = commSel.value.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
-      if (m) {
-        rules.push({
-          type: 'Commodity',
-          scope: m[1].trim(),
-          value: m[2].trim(),
-          effect: m[2].trim() + ' on base rate'
-        });
-      }
+    var commodityEl = document.getElementById('tw-commodity');
+    var commoditySurcharges = { Upholstery: '+8%', 'Case Goods': '+3%' };
+    if (commodityEl && commoditySurcharges[commodityEl.value]) {
+      var pct = commoditySurcharges[commodityEl.value];
+      rules.push({
+        type: 'Commodity',
+        scope: commodityEl.value,
+        value: pct,
+        effect: pct + ' on base rate'
+      });
     }
     var minEl = document.getElementById('tw-min-charge');
     var minVal = minEl && minEl.value.trim() ? minEl.value.trim() : '';
@@ -635,17 +634,15 @@
 
   function readWizardOriginGridFromDom() {
     var TE = window.AwestTariffEngine;
-    var grid = TE ? TE.defaultOriginGrid() : {};
+    var grid = {};
     var services = ['b2b', 'threshold', 'wgni', 'wgi'];
-    document.querySelectorAll('.origin-station-row').forEach(function (row) {
-      var codeEl = row.querySelector('.origin-station-code');
-      var origin = codeEl ? codeEl.textContent.trim() : '';
+    var list = document.querySelector('[data-wizard-origin-list]');
+    var rows = list ? list.querySelectorAll('.origin-station-row[data-origin-code]') : document.querySelectorAll('.origin-station-row[data-origin-code]');
+    rows.forEach(function (row) {
+      var origin = row.getAttribute('data-origin-code');
       if (!origin) return;
-      var enabled = row.querySelector('[data-station-include][value="yes"]:checked') !== null;
-      grid[origin] = grid[origin] || { enabled: enabled };
-      grid[origin].enabled = enabled;
-      if (!enabled) return;
-      var densityInp = row.querySelector('.origin-station-detail input.tabular');
+      grid[origin] = { enabled: true };
+      var densityInp = row.querySelector('.origin-station-detail input[type="number"]');
       var adjInputs = row.querySelectorAll('[data-rate-adj-input]');
       var density = densityInp ? parseNum(densityInp.value) : 8.5;
       var minAdj = adjInputs[0] ? parseNum(adjInputs[0].value) : 0;
@@ -654,7 +651,18 @@
         grid[origin][svc] = { density: density, minAdjPct: minAdj, linehaulAdjPct: lhAdj };
       });
     });
+    if (!Object.keys(grid).length && TE) {
+      return TE.defaultOriginGrid();
+    }
     return grid;
+  }
+
+  function firstWizardOriginDensity() {
+    var grid = readWizardOriginGridFromDom();
+    var codes = Object.keys(grid).filter(function (k) { return grid[k].enabled !== false; });
+    if (!codes.length) return 8.5;
+    var cell = grid[codes[0]].b2b || grid[codes[0]].wgi;
+    return cell && cell.density != null ? cell.density : 8.5;
   }
 
   function readOriginGridFromDom() {
@@ -871,6 +879,8 @@
       var id = idEl && idEl.value.trim() ? idEl.value.trim() : ('TAR-' + Date.now().toString(36).slice(-6).toUpperCase());
       var baseEl = document.getElementById('tw-base');
       var densityEl = document.getElementById('tw-density');
+      var rateTableEl = document.getElementById('tw-rate-table');
+      var minChargeEl = document.getElementById('tw-min-charge');
       var floorEl = document.getElementById('tw-floor');
       var serviceEl = document.getElementById('tw-service');
       var uomEl = document.getElementById('tw-uom');
@@ -896,13 +906,15 @@
         config: {
           baseRateCwt: parseNum(baseEl ? baseEl.value : td.baseRateCwt || dummyTariff().baseRateCwt),
           priorBaseRateCwt: td.priorBaseRateCwt || dummyTariff().priorBaseRateCwt,
-          minimumCharge: minRule ? parseNum(minRule.value) : (td.minimumCharge || dummyTariff().minimumChargeTariff),
+          minimumCharge: minChargeEl && minChargeEl.value.trim()
+            ? parseNum(minChargeEl.value)
+            : (minRule ? parseNum(String(minRule.value).replace(/[^\d.-]/g, '')) : (td.minimumCharge || dummyTariff().minimumChargeTariff)),
           marginFloorPct: parseNum(floorEl ? floorEl.value : 15),
-          density: parseNum(densityEl ? densityEl.value : 8.5),
+          density: parseNum(densityEl ? densityEl.value : firstWizardOriginDensity()),
           minDensity: minDensityEl ? parseNum(minDensityEl.value) : null,
           minCube: minCubeEl && minCubeEl.value.trim() ? parseNum(minCubeEl.value) : null,
           commodity: commodityEl ? commodityEl.value : 'FAK',
-          rateTableLabel: 'National B2B Matrix',
+          rateTableLabel: rateTableEl && rateTableEl.value.trim() ? rateTableEl.value.trim() : 'National B2B Matrix',
           description: name,
           effectiveEnd: endEl ? endEl.value : '2026-12-31',
           baselineRules: baselineRules,

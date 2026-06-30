@@ -59,7 +59,7 @@
       a.click();
     });
 
-    wrap.appendChild(document.createTextNode('Session: '));
+    wrap.appendChild(document.createTextNode('Demo user: '));
     wrap.appendChild(userSel);
     wrap.appendChild(resetBtn);
     wrap.appendChild(exportBtn);
@@ -93,17 +93,18 @@
 
   ready(function () {
     if (!global.AwestStore) return;
-    document.querySelectorAll('.demo-banner-text').forEach(function (el) {
-      var note = (global.AwestDummyTariff && global.AwestDummyTariff.disclaimer) || 'Tariff rates are fictional sample data.';
-      if (el.textContent.indexOf('fictional') < 0) {
-        el.textContent = el.textContent.replace(/\s*$/, '') + ' ' + note;
-      }
-    });
     global.AwestStore.load();
     handlePendingRedirect();
     injectDemoControls();
     updateUserHeader();
     global.addEventListener('awest:change', function () {
+      if (global.AwestDemoHydrate && global.AwestDemoHydrate.rerun) {
+        global.AwestDemoHydrate.rerun();
+      }
+    });
+    global.addEventListener('storage', function (e) {
+      if (e.key !== 'awest:store' || !global.AwestStore) return;
+      global.AwestStore.load();
       if (global.AwestDemoHydrate && global.AwestDemoHydrate.rerun) {
         global.AwestDemoHydrate.rerun();
       }

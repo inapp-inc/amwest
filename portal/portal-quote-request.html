@@ -14,7 +14,7 @@
 </head><body>
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
-  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <span class="demo-banner-text">Not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
@@ -23,7 +23,7 @@
 <a href="../index.html" class="logo cobrand-lockup" title="American West × InApp demo mockup">
 <img src="https://awest.com/wp-content/uploads/2020/07/AW-Logo-with-Sun-1.jpg" alt="American West" class="logo-img logo-img-aw">
 <span class="cobrand-sep" aria-hidden="true">×</span>
-<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img-inapp">
+<img src="../assets/inapp-logo.png" alt="InApp" class="logo-img logo-img-inapp">
 </a>
 <nav class="portal-nav-links"><a href="portal-dashboard.html">Dashboard</a>
 <a href="portal-quote-request.html" class="active">Get a Quote</a>
@@ -45,6 +45,8 @@
 <main class="portal-main">
 
 <h1 class="portal-page-title">Request a Quote</h1>
+<p class="text-muted-sm" style="margin-bottom:var(--space-lg);max-width:62ch">Tell us about your shipment. Your request goes to American West for pricing — a sales rep will prepare your quote and notify you when it is ready in the portal.</p>
+
 <div class="portal-two-col">
 <div>
 <div class="card">
@@ -56,58 +58,50 @@
 <a href="#" class="field-link" data-shipment-configurator-open data-shipment-cube="#portal-cube" data-shipment-weight="[data-shipment-weight]" data-shipment-shell="modal">Build from item dimensions (L × W × H ÷ 1,728)</a></div>
 <input id="portal-cube" class="tabular" data-shipment-cube value="520">
 </div>
-<p style="font-size:12px;color:var(--neutral-600);margin-top:4px" data-portal-cube-hint>—</p>
 <div class="field"><label>Declared value ($)</label><input type="number" class="tabular" data-declared-value step="1" min="0" value=""></div>
 <div class="inline-notice info" data-high-value-notice hidden><strong>High declared value</strong> — may exceed standard insurance coverage. <a href="portal-pricing-help.html#insurance">Learn about declared value &amp; insurance</a></div>
 </div>
 
-<h2 style="font-size:16px;font-weight:700;margin:var(--space-lg) 0 var(--space-sm)">Home Transport</h2>
-<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Residential delivery — compare three levels below. Each starts from a base rate, then fuel and insurance layers apply.</p>
+<h2 style="font-size:16px;font-weight:700;margin:var(--space-lg) 0 var(--space-sm)">Preferred service level</h2>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-md)">Choose the delivery level you want quoted. Pricing is prepared by your American West rep — not shown on this screen.</p>
 <div class="service-tier-grid">
-<div class="service-tier-card">
+<div class="service-tier-card" data-tier-id="threshold">
 <h4>Threshold</h4>
-<p class="service-tier-price tabular">—</p>
+<p class="service-tier-note">Delivered to garage or porch</p>
 <ul class="service-tier-features">
 <li>✕ No unpacking</li>
 <li>✕ No pre-delivery inspection</li>
-<li>✓ Delivered to garage/porch</li>
+<li>✓ Curbside / garage delivery</li>
 </ul>
 </div>
-<div class="service-tier-card">
+<div class="service-tier-card" data-tier-id="wgni">
 <h4>White Glove No Inspection</h4>
-<p class="service-tier-price tabular">—</p>
+<p class="service-tier-note">In-home placement</p>
 <ul class="service-tier-features">
 <li>✓ Full in-home placement</li>
 <li>✓ Unpacking &amp; debris removal</li>
 <li>✕ No pre-delivery inspection</li>
 </ul>
 </div>
-<div class="service-tier-card is-recommended">
+<div class="service-tier-card is-recommended" data-tier-id="wgi">
 <h4>White Glove Inspection</h4>
-<p class="service-tier-price tabular">—</p>
+<p class="service-tier-note">Recommended · full service</p>
 <ul class="service-tier-features">
 <li>✓ Full in-home placement</li>
 <li>✓ Unpacking &amp; debris removal</li>
 <li>✓ Pre-delivery inspection</li>
-<li>✓ Up to 30 min. light assembly</li>
 </ul>
 </div>
 </div>
 </div>
 
-<div class="card" style="background:var(--neutral-900);color:#fff;border:none;align-self:start">
-<h3 class="portal-panel-title">Your Quote — White Glove Inspection</h3>
-<p class="portal-quote-total tabular">—</p>
-<p style="font-size:13px;opacity:.85;margin-bottom:var(--space-sm)" data-portal-route-note>SEA → PDX · Estimated transit 3–5 days</p>
-
-<p class="portal-compute-note">—</p>
-
-<div class="portal-breakdown">
-<!-- populated from session store -->
-</div>
-
-<a href="#" class="btn btn-burgundy" style="width:100%;margin-top:var(--space-lg);margin-bottom:var(--space-sm)" data-portal-book>Accept &amp; Book</a>
-<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;border-color:rgba(255,255,255,.4);color:#fff" data-portal-save-later>Save for Later</a>
+<div class="card portal-submit-panel" style="align-self:start">
+<h3 class="portal-panel-title">Submit request</h3>
+<p style="font-size:14px;color:var(--neutral-700);line-height:1.6;margin-bottom:var(--space-md)">We will route this to your American West sales rep. You will see status on your dashboard — pricing appears only after the rep sends the final quote.</p>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-sm)" data-portal-route-note>272 → 296</p>
+<p style="font-size:13px;color:var(--neutral-600);margin-bottom:var(--space-lg)" data-portal-tier-summary>Preferred service: White Glove Inspection</p>
+<button type="button" class="btn btn-burgundy" style="width:100%" data-portal-submit>Submit to American West</button>
+<a href="portal-dashboard.html" class="btn btn-secondary" style="width:100%;margin-top:var(--space-sm)">Cancel</a>
 </div>
 </div>
 

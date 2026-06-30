@@ -1051,6 +1051,99 @@ a.kanban-card:hover {
   display: none;
 }
 
+.tariff-configurator {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.tariff-config-section {
+  margin: 0;
+}
+
+.origin-station-add-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--neutral-200);
+}
+
+.origin-station-empty {
+  margin: 0;
+  padding: var(--space-md);
+  border: 1px dashed var(--neutral-300);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.origin-station-empty[hidden] {
+  display: none;
+}
+
+.configurator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+
+.tariff-config-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  list-style: none;
+  margin: 0 0 var(--space-lg);
+  padding: 0;
+  counter-reset: none;
+}
+
+.tariff-config-flow li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--neutral-600);
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--neutral-200);
+  background: var(--surface-50, #fafafa);
+}
+
+.tariff-config-flow li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  background: var(--neutral-200);
+  color: var(--neutral-700);
+}
+
+.tariff-config-flow li.is-current {
+  color: var(--aw-blue-700, #1e40af);
+  border-color: var(--aw-blue-200, #bfdbfe);
+  background: var(--aw-blue-50, #eff6ff);
+}
+
+.tariff-config-flow li.is-current span {
+  background: var(--aw-blue-600, #2563eb);
+  color: #fff;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: var(--neutral-600);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
 .stepped-select select {
   width: 100%;
 }
@@ -1676,6 +1769,39 @@ a.kanban-card:hover {
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
+}
+
+.portal-notice {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius);
+  background: var(--aw-blue-50, #eff6ff);
+  border: 1px solid var(--aw-blue-200, #bfdbfe);
+  color: var(--aw-blue-900, #1e3a8a);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.portal-notice--pending {
+  background: var(--surface-100);
+  border-color: var(--neutral-300);
+  color: var(--neutral-800);
+}
+
+.service-tier-note {
+  font-size: 12px;
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-sm);
+}
+
+.portal-submit-panel {
+  border: 1px solid var(--neutral-200);
+}
+
+.badge-portal_request,
+.badge-portal-request {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
 }
 
 /* Timeline & kanban */

@@ -19,6 +19,12 @@ global.sessionStorage = {
   setItem: function (k, v) { this._data[k] = v; },
   removeItem: function (k) { delete this._data[k]; }
 };
+global.localStorage = {
+  _data: {},
+  getItem: function (k) { return this._data[k] || null; },
+  setItem: function (k, v) { this._data[k] = v; },
+  removeItem: function (k) { delete this._data[k]; }
+};
 global.dispatchEvent = function () {};
 
 require('./dummy-tariff-data.js');
@@ -114,7 +120,7 @@ require('./governance.js');
 require('./awest-store.js');
 
 var storeState = global.AwestSeed.build();
-sessionStorage.setItem('awest:store', JSON.stringify(storeState));
+localStorage.setItem('awest:store', JSON.stringify(storeState));
 global.AwestStore.load();
 
 var q847 = global.AwestStore.getQuote('Q-2026-0847');

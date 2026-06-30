@@ -14,7 +14,7 @@
 </head><body>
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
-  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <span class="demo-banner-text">Not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
@@ -44,14 +44,15 @@
 </header>
 <main class="portal-main">
 
-<div class="portal-hero"><h1>Welcome back, Pacific Home Furnishings</h1><p>Manage quotes, track shipments, and view invoices in one place.</p></div>
+<div class="portal-hero"><h1 data-portal-welcome>Welcome back</h1><p>Manage quote requests, review finalized quotes, and track shipments.</p></div>
+
+<div class="portal-notice" data-portal-notice hidden role="status"></div>
+
 <div class="portal-cards">
-<a href="portal-quote-request.html" class="cta-card"><h2>Get a Quote</h2><p>Request pricing for your next shipment</p></a>
+<a href="portal-quote-request.html" class="cta-card"><h2>Get a Quote</h2><p>Submit a shipment for pricing</p></a>
 <div class="card"><h3 class="panel-title">Recent Activity</h3>
-<ul class="activity-feed">
-<li><span>Quote Q-2026-0823 approved</span><span class="tabular" style="color:var(--neutral-600)">Jun 18</span></li>
-<li><span>Shipment SH-8842 picked up</span><span class="tabular" style="color:var(--neutral-600)">Jun 17</span></li>
-<li><span>Invoice INV-4421 sent</span><span class="tabular" style="color:var(--neutral-600)">Jun 15</span></li>
+<ul class="activity-feed" data-portal-activity>
+<li><span>Loading activity…</span></li>
 </ul></div></div>
 
 <footer class="mock-footer">

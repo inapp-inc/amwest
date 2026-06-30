@@ -14,7 +14,7 @@
 </head><body>
 <div class="demo-banner" role="status">
   <span class="demo-banner-badge">Demo mockup</span>
-  <span class="demo-banner-text">Interactive HTML prototype — not production. Sample data only.</span>
+  <span class="demo-banner-text">Not production. Sample data only.</span>
   <a class="demo-banner-link" href="../index.html">Demo overview</a>
 </div>
 
@@ -44,22 +44,22 @@
 <main class="main">
 <div class="main-content">
 
-<div class="page-header"><div><h1>Tariff Configurator</h1><p class="page-lead">Step-by-step setup for a new or cloned tariff — service levels, origins, rate tables, and customer exceptions.</p></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
+<div class="page-header"><div><h1>Tariff Configurator</h1><p class="page-lead">Set up a new tariff on one page — pricing model, origin stations, and optional baseline rules.</p></div><a href="tariffs.html" class="btn btn-secondary">Cancel</a></div>
 
-<div data-wizard>
-<div class="wizard-steps">
-<button type="button" class="wizard-step active" data-wizard-step>1. Basics</button>
-<button type="button" class="wizard-step" data-wizard-step>2. Origin Stations</button>
-<button type="button" class="wizard-step" data-wizard-step>3. Pricing Model</button>
-<button type="button" class="wizard-step" data-wizard-step>4. Overrides</button>
-<button type="button" class="wizard-step" data-wizard-step>5. Review</button>
-</div>
+<div class="tariff-configurator" data-tariff-configurator>
 
-<div class="wizard-panel" data-wizard-panel>
-<div class="card">
-<h3 class="panel-title">Step 1: Basics</h3>
-<p class="tariff-inherit-note" style="margin-bottom:var(--space-md)">Service type inherits the base rate matrix from <strong>TAR-B2B-BASE</strong>. Configure baseline exceptions only — origin station factors and commodity/minimum deltas. Customer discounts and rep overrides stay on Customers and Quote layer templates.</p>
-<div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="White Glove Inspection — B2B"></div>
+<ol class="tariff-config-flow" aria-label="Configurator steps">
+<li class="is-current"><span>1</span> Basics</li>
+<li><span>2</span> Pricing model</li>
+<li><span>3</span> Origin stations</li>
+<li><span>4</span> Baseline rules</li>
+<li><span>5</span> Create → matrix</li>
+</ol>
+
+<section class="card tariff-config-section">
+<h3 class="panel-title">Basics</h3>
+<p class="tariff-inherit-note" style="margin-bottom:var(--space-md)">Inherits the base rate matrix from <strong>TAR-B2B-BASE</strong>. Customer discounts and rep overrides stay on Customers and Quote layer templates.</p>
+<div class="field"><label for="tw-name">Tariff name</label><input id="tw-name" value="National B2B — CWT"></div>
 <div class="field"><label for="tw-id">Tariff ID</label><input id="tw-id" class="tabular" value="TAR-NEW-001"></div>
 <label class="field" style="display:flex;align-items:center;gap:8px;cursor:pointer">
 <input type="checkbox" data-template-toggle> Start from standard template
@@ -73,91 +73,18 @@
 <button type="button" class="template-option">EWR · Business/B2B · CWT · Case Goods</button>
 <button type="button" class="template-option">PHX · White Glove No Insp. · % Invoice · Upholstery</button>
 </div>
-<p style="font-size:12px;color:var(--neutral-600);margin-top:8px">Selecting a template pre-fills Steps 2–4. You can still edit every field.</p>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);margin-top:var(--space-md)">
 <div class="field"><label for="tw-start">Effective start</label><input id="tw-start" type="date" value="2026-01-01"></div>
 <div class="field"><label for="tw-end">Effective end</label><input id="tw-end" type="date" value="2026-12-31"></div>
 </div>
-</div>
-<div class="wizard-nav"><span></span><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
-</div>
+</section>
 
-<div class="wizard-panel" data-wizard-panel hidden>
-<div class="card">
-<h3 class="panel-title">Step 2: Origin Stations</h3>
-<p class="page-lead" style="margin-bottom:var(--space-md)">Toggle <strong>Include Station?</strong> for each origin. Only enabled stations appear in pricing and review.</p>
-<div class="origin-station-grid">
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">LAX</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-lax" value="yes" data-station-include checked> Yes</label>
-<label><input type="radio" name="st-lax" value="no" data-station-include> No</label></div></div>
-<div class="origin-station-detail">
-<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
-<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option><option value="other">Other</option></select><input data-stepped-custom hidden placeholder="Custom %" style="margin-top:4px"></div>
-<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option selected>+5</option><option>0</option><option>-5</option><option>-10</option><option>-15</option><option value="other">Other</option></select></div>
-</div></div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">DFW</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-dfw" value="yes" data-station-include checked> Yes</label>
-<label><input type="radio" name="st-dfw" value="no" data-station-include> No</label></div></div>
-<div class="origin-station-detail">
-<div class="field"><label>Density factor</label><input class="tabular" value="8.0"></div>
-<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option></select></div>
-<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+15</option><option>+10</option><option>+5</option><option selected>0</option><option>-5</option><option>-10</option><option>-15</option></select></div>
-</div></div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">EWR</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-ewr" value="yes" data-station-include> Yes</label>
-<label><input type="radio" name="st-ewr" value="no" data-station-include checked> No</label></div></div>
-<div class="origin-station-detail" hidden>
-<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
-<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option selected>0</option></select></div>
-<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option selected>0</option></select></div>
-</div></div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">TMV</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-tmv" value="yes" data-station-include> Yes</label>
-<label><input type="radio" name="st-tmv" value="no" data-station-include checked> No</label></div></div>
-<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div></div>
+<section class="card tariff-config-section" id="tw-pricing-model">
+<h3 class="panel-title">Pricing model</h3>
+<div class="config-callout">
+<strong>What this section sets:</strong> Default service level, unit of measure, and tariff-wide rate settings. Zone-by-zone freight rates are configured after create on the <a href="tariff-rate-matrix.html">Rate Table Matrix</a> (same fields as Tariff Detail).
 </div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">SFO</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-sfo" value="yes" data-station-include checked> Yes</label>
-<label><input type="radio" name="st-sfo" value="no" data-station-include> No</label></div></div>
-<div class="origin-station-detail">
-<div class="field"><label>Density factor</label><input class="tabular" value="8.5"></div>
-<div class="field stepped-select"><label>Min charge adj. %</label><select data-stepped-select><option selected>0</option><option>-5</option></select></div>
-<div class="field stepped-select"><label>Linehaul adj. %</label><select data-stepped-select><option>+5</option><option selected>0</option></select></div>
-</div></div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">PHX</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-phx" value="yes" data-station-include> Yes</label>
-<label><input type="radio" name="st-phx" value="no" data-station-include checked> No</label></div></div>
-<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="7.5"></div></div>
-</div>
-<div class="origin-station-row">
-<div class="origin-station-head"><span class="origin-station-code">ATL</span>
-<div class="origin-station-toggle"><span>Include Station?</span>
-<label><input type="radio" name="st-atl" value="yes" data-station-include> Yes</label>
-<label><input type="radio" name="st-atl" value="no" data-station-include checked> No</label></div></div>
-<div class="origin-station-detail" hidden><div class="field"><label>Density factor</label><input class="tabular" value="8.0"></div></div>
-</div>
-</div>
-</div>
-<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
-</div>
-
-<div class="wizard-panel" data-wizard-panel hidden>
-<div class="card">
-<h3 class="panel-title">Step 3: Pricing model</h3>
-<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Choose service level and unit of measure — these seed the draft tariff’s defaults (density, base rate, margin floor). Per-zone freight rates are configured later on the Rate Table Matrix, not in this step.</p>
 <div class="tariff-model-selectors">
 <div class="field"><label for="tw-service">Service level</label>
 <select id="tw-service">
@@ -173,70 +100,46 @@
 <option value="seat">Seat</option>
 <option value="invoice">% Invoice</option>
 <option value="flat">Flat Rate</option>
-<option value="spot">Spot Quote</option>
 </select></div>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md)">
-<div class="field" data-density-field><label for="tw-density">Density factor (lbs/cu ft)</label><input id="tw-density" class="tabular" value="8.5"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Pre-filled per enabled station; editable as global override.</p></div>
-<div class="field"><label for="tw-min-density">Minimum density</label><input id="tw-min-density" class="tabular" value="6.0"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is CWT.</p></div>
-<div class="field"><label for="tw-min-cube">Minimum $/cube</label><input id="tw-min-cube" class="tabular" placeholder="—" disabled style="background:var(--surface-100)"><p style="font-size:11px;color:var(--neutral-600);margin-top:4px">Required when UOM is % Invoice.</p></div>
+<div class="tariff-detail-fields-grid" style="margin-top:var(--space-md)">
+<div class="field" data-density-field><label for="tw-density">Density (lbs per cu ft)</label><input id="tw-density" type="number" class="tabular" step="0.1" min="0" value="8.5"><p class="field-hint">Shown when UOM is CWT or Cube — default for new origin rows.</p></div>
+<div class="field" data-uom-field="cwt"><label for="tw-min-density">Minimum density</label><input id="tw-min-density" class="tabular" value="6.0"><p class="field-hint">Required when UOM is CWT.</p></div>
+<div class="field" data-uom-field="invoice" hidden><label for="tw-min-cube">Minimum $/cube</label><input id="tw-min-cube" class="tabular" placeholder="e.g. 12.50"><p class="field-hint">Required when UOM is % Invoice.</p></div>
 <div class="field"><label for="tw-commodity">Commodity</label><select id="tw-commodity"><option selected>FAK</option><option>Carton</option><option>Blanketwrap</option><option>Furniture</option><option>Case Goods</option><option>Upholstery</option><option>Custom</option></select></div>
 <div class="field"><label for="tw-base" data-tw-base-label>Base rate ($/CWT)</label><input id="tw-base" type="number" class="tabular" step="0.01" min="0" value=""></div>
+<div class="field"><label for="tw-rate-table">Rate table</label><input id="tw-rate-table" value="National B2B Matrix"></div>
+<div class="field"><label for="tw-min-charge">Minimum charge ($, baseline floor)</label><input id="tw-min-charge" type="number" class="tabular" step="1" min="0" placeholder="e.g. 111"></div>
 <div class="field"><label for="tw-floor">Minimum margin floor (%)</label><input id="tw-floor" type="number" class="tabular" step="0.1" min="0" max="100" value="15"></div>
 </div>
-</div>
-<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><button type="button" class="btn btn-primary" data-wizard-next>Next</button></div>
-</div>
+</section>
 
-<div class="wizard-panel" data-wizard-panel hidden>
-<div class="card">
-<h3 class="panel-title">Step 4: Baseline program rules (optional)</h3>
-<p class="page-lead" style="margin-bottom:var(--space-md)">Structural rules published with this tariff — commodity surcharges, minimum charge floors, or scheduled promotions. Skip if the inherited matrix is sufficient; reps handle per-shipment negotiation in Quote Builder Step 4b.</p>
-<div class="field"><label for="tw-comm-ov">Commodity rule (optional)</label><select id="tw-comm-ov"><option>None</option><option>Upholstery (+8%)</option><option>Case Goods (+3%)</option></select></div>
-<div class="field"><label for="tw-min-charge">Minimum charge override ($, optional)</label><input id="tw-min-charge" type="number" class="tabular" step="1" min="0" placeholder="e.g. 111"></div>
-<div class="field"><label for="tw-promo">Scheduled promotion (optional)</label><select id="tw-promo"><option>None</option><option>Q1 volume −2% linehaul (all commodities)</option></select></div>
+<section class="card tariff-config-section" id="tw-origin-stations">
+<h3 class="panel-title">Origin stations</h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Add stations enabled for this tariff. Density and adjustment factors apply across service levels — fine-tune per service level later on Tariff Detail.</p>
+<div class="origin-station-grid" data-wizard-origin-list>
+<p class="origin-station-empty text-muted-sm" data-wizard-origin-empty>No origin stations added yet.</p>
 </div>
-<div class="wizard-nav">
-<button type="button" class="btn btn-secondary" data-wizard-back>Back</button>
-<div class="wizard-nav-end">
-<button type="button" class="btn btn-secondary" data-wizard-next>Skip</button>
-<button type="button" class="btn btn-primary" data-wizard-next>Next</button>
+<div class="origin-station-add-bar">
+<div class="field" style="margin:0;min-width:200px">
+<label for="tw-origin-pick">Station</label>
+<select id="tw-origin-pick" data-wizard-origin-pick aria-label="Select origin station"></select>
 </div>
+<button type="button" class="btn btn-secondary" data-wizard-add-origin>Add origin station</button>
 </div>
-</div>
+</section>
 
-<div class="wizard-panel" data-wizard-panel hidden>
-<div class="card">
-<h3 class="panel-title">Step 5: Review</h3>
-<p class="page-lead" style="margin-bottom:var(--space-md)">Summary grouped by enabled origin stations.</p>
-<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">LAX · enabled</h4>
-<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
-<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul +5%</td></tr>
-<tr><th scope="row">Density</th><td class="tabular">8.5 lbs/cu ft</td></tr>
-</tbody></table>
-<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">DFW · enabled</h4>
-<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
-<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul 0%</td></tr>
-<tr><th scope="row">Density</th><td class="tabular">8.0 lbs/cu ft</td></tr>
-</tbody></table>
-<h4 style="font-size:14px;margin:var(--space-md) 0 var(--space-sm)">SFO · enabled</h4>
-<table class="data-table" style="margin-bottom:var(--space-lg)"><tbody>
-<tr><th scope="row">Adjustments</th><td>Min charge 0% · Linehaul 0%</td></tr>
-<tr><th scope="row">Density</th><td class="tabular">8.5 lbs/cu ft</td></tr>
-</tbody></table>
-<table class="data-table"><tbody>
-<tr><th scope="row">Tariff ID</th><td class="tabular">TAR-NEW-001</td></tr>
-<tr><th scope="row">Service</th><td>White Glove Inspection · B2B</td></tr>
-<tr><th scope="row">Unit of measure</th><td data-wizard-base-summary>—</td></tr>
-<tr><th scope="row">Commodity</th><td>FAK</td></tr>
-<tr><th scope="row">Stations enabled</th><td>LAX, DFW, SFO (3 of 7)</td></tr>
-<tr><th scope="row">Effective</th><td class="tabular">Jan 1 – Dec 31, 2026</td></tr>
-</tbody></table>
-<a href="tariff-detail.html" class="btn btn-primary" style="margin-top:var(--space-md)" data-create-tariff>Create tariff &amp; continue editing</a>
-<p style="font-size:13px;color:var(--neutral-600);margin-top:var(--space-sm)">Opens Tariff Detail as a draft — you can keep editing rate settings, baseline rules, and the matrix after create.</p>
+<section class="card tariff-config-section">
+<h3 class="panel-title">Baseline rules <span class="text-muted-sm" style="font-weight:400">(optional)</span></h3>
+<p class="text-muted-sm" style="margin-bottom:var(--space-md)">Optional structural overlays — promotions or commodity surcharges beyond the default commodity above.</p>
+<div class="field"><label for="tw-promo">Scheduled promotion</label><select id="tw-promo"><option>None</option><option>Q1 volume −2% linehaul (all commodities)</option></select></div>
+</section>
+
+<div class="configurator-actions">
+<a href="tariffs.html" class="btn btn-secondary">Cancel</a>
+<button type="button" class="btn btn-primary" data-create-tariff>Create tariff &amp; continue editing</button>
 </div>
-<div class="wizard-nav"><button type="button" class="btn btn-secondary" data-wizard-back>Back</button><span></span></div>
-</div>
+<p class="text-muted-sm" style="margin-top:var(--space-sm)">Creates a draft on <strong>Tariff Detail</strong> — then open <strong>Rate Table Matrix</strong> to enter zone × weight-break rates for each origin and service level.</p>
 
 </div>
 

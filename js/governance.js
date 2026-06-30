@@ -74,7 +74,8 @@
     expired: 'Expired',
     converted: 'Converted to Shipment',
     lost: 'Lost Opportunity',
-    accepted: 'Converted to Shipment'
+    accepted: 'Converted to Shipment',
+    portal_request: 'Portal request'
   };
 
   function normalizeQuoteStatus(status) {

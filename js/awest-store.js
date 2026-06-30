@@ -1,10 +1,17 @@
 /**
- * Session store — simulated database in sessionStorage
+ * Demo store — simulated database in localStorage (GitHub Pages / static hosting)
  */
 (function (global) {
   'use strict';
 
   var STORAGE_KEY = 'awest:store';
+
+  function demoStorage() {
+    try {
+      if (typeof localStorage !== 'undefined') return localStorage;
+    } catch (e) { /* private browsing */ }
+    return sessionStorage;
+  }
   var state = null;
 
   function deepClone(o) {
@@ -124,7 +131,7 @@
 
   function persist() {
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      demoStorage().setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
       console.error('AwestStore: persist failed', e);
     }
@@ -132,7 +139,18 @@
   }
 
   function load() {
-    var raw = sessionStorage.getItem(STORAGE_KEY);
+    var storage = demoStorage();
+    var raw = storage.getItem(STORAGE_KEY);
+    if (!raw) {
+      var legacy = sessionStorage.getItem(STORAGE_KEY);
+      if (legacy) {
+        raw = legacy;
+        try {
+          storage.setItem(STORAGE_KEY, legacy);
+          sessionStorage.removeItem(STORAGE_KEY);
+        } catch (e) { /* ignore migration errors */ }
+      }
+    }
     if (raw) {
       try {
         state = JSON.parse(raw);
@@ -261,6 +279,10 @@
       ensureTariffConfigs(s);
       bootstrapTariffData(s);
       s.meta.version = 9;
+    }
+    if (!s.validationLists || !s.validationLists.origins || !s.validationLists.origins.length) {
+      var seedLists = global.AwestSeed.build();
+      s.validationLists = seedLists.validationLists;
     }
   }
 
@@ -436,7 +458,10 @@
         rejectionReason: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        approvedBy: null, approvedAt: null, sentAt: null, acceptedAt: null, convertedAt: null, expiredAt: null
+        approvedBy: null, approvedAt: null, sentAt: null, acceptedAt: null, convertedAt: null, expiredAt: null,
+        portalVisible: partial.portalVisible === true,
+        portalSubmittedAt: partial.portalSubmittedAt || null,
+        preferredService: partial.preferredService || null
       }, partial);
       if (q.pricingMode !== 'override') {
         if (partial.tariffId != null && getTariff(partial.tariffId)) {
@@ -573,7 +598,10 @@
       }
       q.status = status;
       q.updatedAt = now;
-      if (status === 'sent') q.sentAt = now;
+      if (status === 'sent') {
+        q.sentAt = now;
+        if (q.channel === 'portal') q.portalVisible = true;
+      }
       if (status === 'expired') q.expiredAt = now;
       if (status === 'accepted') {
         q.status = 'converted';
@@ -965,7 +993,29 @@
   }
 
   function createPortalQuote(partial) {
-    return createQuote(Object.assign({}, partial, { channel: 'portal', status: partial.status || 'sent' }));
+    var s = getState();
+    var cust = getCustomer(partial.customerId || s.portal.activeCustomerId);
+    return createQuote(Object.assign({}, partial, {
+      channel: 'portal',
+      status: 'portal_request',
+      portalVisible: false,
+      portalSubmittedAt: new Date().toISOString(),
+      repId: (cust && cust.repId) || partial.repId || s.meta.currentUserId,
+      pricingMode: 'engine',
+      pricingOverride: null,
+      preferredService: partial.preferredService || partial.primaryService || 'wgi'
+    }));
+  }
+
+  function isRepPipelineQuote(q) {
+    return !!q && (q.channel !== 'portal' || q.status === 'portal_request');
+  }
+
+  function isPortalCustomerVisibleQuote(q, customerId) {
+    if (!q || q.customerId !== customerId) return false;
+    if (q.status === 'portal_request') return true;
+    if (q.channel !== 'portal') return false;
+    return !!q.portalVisible && ['sent', 'approved', 'converted', 'accepted'].indexOf(q.status) >= 0;
   }
 
   /* ── Settings ── */
@@ -1084,6 +1134,8 @@
     savePortalAddress: savePortalAddress,
     savePortalCommodity: savePortalCommodity,
     createPortalQuote: createPortalQuote,
+    isRepPipelineQuote: isRepPipelineQuote,
+    isPortalCustomerVisibleQuote: isPortalCustomerVisibleQuote,
     saveSettings: saveSettings,
     saveValidationLists: saveValidationLists,
     getMetrics: getMetrics,

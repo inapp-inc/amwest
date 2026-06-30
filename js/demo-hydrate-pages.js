@@ -391,12 +391,36 @@
     if (src) {
       var nameEl = document.getElementById('tw-name');
       var idEl = document.getElementById('tw-id');
+      var cfg = src.config || {};
       if (nameEl) nameEl.value = src.name + ' (copy)';
       if (idEl) idEl.value = '';
+      var serviceEl = document.getElementById('tw-service');
+      var uomEl = document.getElementById('tw-uom');
+      var densityEl = document.getElementById('tw-density');
+      var rateTableEl = document.getElementById('tw-rate-table');
+      var minChargeEl = document.getElementById('tw-min-charge');
+      var floorEl = document.getElementById('tw-floor');
+      var commodityEl = document.getElementById('tw-commodity');
+      if (serviceEl && src.service) {
+        var svcMap = { B2B: 'b2b', Threshold: 'threshold', 'White Glove No Inspection': 'wg-no-insp', 'White Glove Inspection': 'wg-insp' };
+        var svcKey = svcMap[src.service] || 'b2b';
+        serviceEl.value = svcKey;
+      }
+      if (uomEl && src.uom) uomEl.value = src.uom.toLowerCase();
+      if (densityEl && cfg.density != null) densityEl.value = String(cfg.density);
+      if (rateTableEl && cfg.rateTableLabel) rateTableEl.value = cfg.rateTableLabel;
+      if (minChargeEl && cfg.minimumCharge != null) minChargeEl.value = String(cfg.minimumCharge);
+      if (floorEl && cfg.marginFloorPct != null) floorEl.value = String(cfg.marginFloorPct);
+      if (commodityEl && cfg.commodity) commodityEl.value = cfg.commodity;
+      if (baseInput) baseInput.dataset.userEdited = '1';
+      if (uomEl) uomEl.dispatchEvent(new Event('change', { bubbles: true }));
     }
-    document.querySelectorAll('[data-wizard-base-summary]').forEach(function (el) {
-      el.textContent = 'CWT · ' + fmtMoney((src && src.config && src.config.baseRateCwt) || td.baseRateCwt || 58) + ' base · min density 6.0';
-    });
+    if (window.AwestMockup && window.AwestMockup.seedTariffConfiguratorOrigins) {
+      var grid = src && src.config && src.config.originGrid ? src.config.originGrid : null;
+      window.AwestMockup.seedTariffConfiguratorOrigins(grid);
+    } else if (window.AwestMockup && window.AwestMockup.refreshTariffConfiguratorPick) {
+      window.AwestMockup.refreshTariffConfiguratorPick();
+    }
   }
 
   function hydrateTariffConfirm() {
@@ -628,137 +652,78 @@
     if (pageName() !== 'portal-quote-request') return;
     var state = S().getState();
     var cfg = state.settings.portalQuote || {};
-    var fuelRow = state.reference.fuel.slice(-1)[0];
-    var fuelPct = fuelRow ? fuelRow.pct : 28.4;
-    var residential = P() ? P().getPricingConfig().residential : 120;
     var weightEl = document.querySelector('[data-shipment-weight]');
     var cubeEl = document.querySelector('[data-shipment-cube]');
     var dvEl = document.querySelector('[data-declared-value]');
     var originEl = document.querySelector('[data-portal-origin]');
     var destEl = document.querySelector('[data-portal-destination]');
     var routeNote = document.querySelector('[data-portal-route-note]');
-    var tierCards = document.querySelectorAll('.service-tier-card');
-    var totalEl = document.querySelector('.portal-quote-total');
-    var breakdown = document.querySelector('.portal-breakdown');
-    var cubeHint = document.querySelector('[data-portal-cube-hint]');
-    var computeNote = document.querySelector('.portal-compute-note');
-    var acceptBtn = document.querySelector('[data-portal-book]');
-    var selectedTier = cfg.selectedTier || 'wgi';
+    var tierSummary = document.querySelector('[data-portal-tier-summary]');
+    var tierCards = document.querySelectorAll('.service-tier-card[data-tier-id]');
+    var submitBtn = document.querySelector('[data-portal-submit]');
+    var selectedTier = 'wgi';
+    var tierLabels = {
+      threshold: 'Threshold',
+      wgni: 'White Glove No Inspection',
+      wgi: 'White Glove Inspection'
+    };
 
     function parseVal(el, fallback) {
       return P() ? P().parseNumericInput(el, fallback) : fallback;
     }
 
-    function renderSelected(t) {
-      if (totalEl) totalEl.textContent = fmtMoney(t.total);
-      if (!breakdown || !P()) return;
-      var dv = parseVal(dvEl, cfg.declaredValue || 18000);
-      breakdown.innerHTML =
-        '<div class="portal-breakdown-line"><span>Linehaul charge<span class="portal-breakdown-formula">$' + t.ratePerLb + '/lb × ' + Number(t.weight).toLocaleString() + ' lbs = ' + fmtMoney(t.linehaul) + '</span></span><span class="tabular">' + fmtMoney(t.linehaul) + '</span></div>' +
-        '<div class="portal-breakdown-line"><span>Fuel surcharge (' + t.fuelPct + '% × linehaul)<a href="portal-pricing-help.html#terms-fuel" class="portal-help-link">What does this mean?</a><span class="portal-breakdown-formula">' + fmtMoney(t.linehaul) + ' × ' + t.fuelPct + '% = ' + fmtMoney(t.fuel) + '</span></span><span class="tabular">' + fmtMoney(t.fuel) + '</span></div>' +
-        '<div class="portal-breakdown-line"><span>Declared value insurance<span class="portal-breakdown-formula">max(1% × ' + fmtMoney(dv) + ', $25) = ' + fmtMoney(t.insurance) + '</span></span><span class="tabular">' + fmtMoney(t.insurance) + '</span></div>' +
-        '<div class="portal-breakdown-line"><span>Residential delivery<a href="portal-pricing-help.html#terms-accessorial" class="portal-help-link">?</a></span><span class="tabular">' + fmtMoney(t.residential) + '</span></div>' +
-        '<div class="portal-breakdown-line total"><span>Total</span><span class="tabular">' + fmtMoney(t.total) + '</span></div>' +
-        '<p style="font-size:11px;opacity:.7;margin-top:var(--space-sm)">Fuel surcharge updated weekly from current diesel prices. Insurance is one charge per shipment, not per service tier.</p>';
-    }
-
-    function refresh() {
-      if (!P()) return;
-      var weight = parseVal(weightEl, cfg.weight || 2400);
-      var cube = parseVal(cubeEl, cfg.cube || 520);
-      var dv = parseVal(dvEl, cfg.declaredValue || 18000);
+    function syncSummary() {
       var origin = parsePortalLocation(originEl ? originEl.value : 'High Point, NC 27260');
       var dest = parsePortalLocation(destEl ? destEl.value : 'Anderson, SC 29621');
       if (routeNote) {
         var oCode = origin.zip ? origin.zip.slice(0, 3) : '272';
         var dCode = dest.zip ? dest.zip.slice(0, 3) : '296';
-        routeNote.textContent = oCode + ' → ' + dCode + ' · Estimated transit 3–5 days';
+        routeNote.textContent = oCode + ' → ' + dCode;
       }
-      if (cubeHint) cubeHint.textContent = cube + ' cu ft → rate group 2 (251–500 cf bracket). Group 6 requires a custom quote.';
-      if (computeNote) {
-        computeNote.textContent = 'How this price was calculated: we look up your delivery ZIP to a home-delivery tier, find the per-pound rate for your cube bracket (' + cube + ' cf = group 2), multiply by weight, apply the lane minimum if needed, then add fuel (' + fuelPct + '% of linehaul) and insurance (1% of declared value, $25 minimum).';
+      if (tierSummary) {
+        tierSummary.textContent = 'Preferred service: ' + (tierLabels[selectedTier] || selectedTier);
       }
-      var tiers = (cfg.tiers || []).map(function (t) {
-        return Object.assign({}, t, P().computePortalTier({
-          weight: weight,
-          declaredValue: dv,
-          ratePerLb: t.ratePerLb,
-          fuelPct: fuelPct,
-          residential: residential
-        }));
-      });
-      tierCards.forEach(function (card, i) {
-        var t = tiers[i];
-        if (!t) return;
-        var priceEl = card.querySelector('.service-tier-price');
-        if (priceEl) priceEl.textContent = fmtMoney(t.total);
-        card.onclick = function () {
-          selectedTier = cfg.tiers[i].id;
-          tierCards.forEach(function (c) { c.classList.remove('is-recommended'); });
-          card.classList.add('is-recommended');
-          renderSelected(t);
-        };
-      });
-      var selIdx = cfg.tiers.findIndex(function (t) { return t.id === selectedTier; });
-      if (selIdx < 0) selIdx = tiers.length - 1;
-      if (tiers[selIdx]) renderSelected(tiers[selIdx]);
     }
 
-    [weightEl, cubeEl, dvEl, originEl, destEl].forEach(function (el) {
-      if (!el || el._portalPricingWired) return;
-      el._portalPricingWired = true;
-      el.addEventListener('input', refresh);
-      el.addEventListener('change', refresh);
+    tierCards.forEach(function (card) {
+      card.addEventListener('click', function () {
+        selectedTier = card.getAttribute('data-tier-id') || 'wgi';
+        tierCards.forEach(function (c) { c.classList.remove('is-recommended'); });
+        card.classList.add('is-recommended');
+        syncSummary();
+      });
     });
 
-    function bookPortalQuote(status) {
-      var weight = parseVal(weightEl, cfg.weight);
-      var cube = parseVal(cubeEl, cfg.cube);
-      var dv = parseVal(dvEl, cfg.declaredValue);
-      var origin = parsePortalLocation(originEl ? originEl.value : '');
-      var dest = parsePortalLocation(destEl ? destEl.value : '');
-      var tierDef = (cfg.tiers || []).find(function (t) { return t.id === selectedTier; }) || (cfg.tiers || [])[2];
-      var pricing = P().computePortalTier({
-        weight: weight,
-        declaredValue: dv,
-        ratePerLb: tierDef.ratePerLb,
-        fuelPct: fuelPct,
-        residential: residential
-      });
-      var q = S().createPortalQuote({
-        customerId: state.portal.activeCustomerId,
-        origin: origin.label || origin.cityState,
-        destination: dest.label || dest.cityState,
-        pickupZip: origin.zip || '27260',
-        deliveryZip: dest.zip || '29621',
-        weight: weight,
-        cube: cube,
-        declaredValue: dv,
-        primaryService: selectedTier,
-        status: status,
-        sentAt: status === 'sent' ? new Date().toISOString() : null,
-        pricingMode: 'override',
-        pricingOverride: { total: pricing.total, margin: 18 }
-      });
-      return q;
-    }
+    [weightEl, cubeEl, dvEl, originEl, destEl].forEach(function (el) {
+      if (!el || el._portalSummaryWired) return;
+      el._portalSummaryWired = true;
+      el.addEventListener('input', syncSummary);
+      el.addEventListener('change', syncSummary);
+    });
 
-    if (acceptBtn && !acceptBtn._wired) {
-      acceptBtn._wired = true;
-      acceptBtn.addEventListener('click', function (e) {
+    if (submitBtn && !submitBtn._wired) {
+      submitBtn._wired = true;
+      submitBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        var q = bookPortalQuote('sent');
+        var weight = parseVal(weightEl, cfg.weight || 2400);
+        var cube = parseVal(cubeEl, cfg.cube || 520);
+        var dv = parseVal(dvEl, cfg.declaredValue || 18000);
+        var origin = parsePortalLocation(originEl ? originEl.value : '');
+        var dest = parsePortalLocation(destEl ? destEl.value : '');
+        var q = S().createPortalQuote({
+          customerId: state.portal.activeCustomerId,
+          origin: origin.label || origin.cityState,
+          destination: dest.label || dest.cityState,
+          pickupZip: origin.zip || '27260',
+          deliveryZip: dest.zip || '29621',
+          weight: weight,
+          cube: cube,
+          declaredValue: dv,
+          preferredService: selectedTier,
+          primaryService: selectedTier === 'threshold' ? 'threshold' : (selectedTier === 'wgni' ? 'wg-no-insp' : 'wg-insp'),
+          serviceFamily: selectedTier === 'threshold' ? 'hd' : 'hd'
+        });
         location.href = 'portal-quote-confirmation.html?id=' + encodeURIComponent(q.id);
-      });
-    }
-
-    var saveLaterBtn = document.querySelector('[data-portal-save-later]');
-    if (saveLaterBtn && !saveLaterBtn._wired) {
-      saveLaterBtn._wired = true;
-      saveLaterBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        bookPortalQuote('draft');
-        location.href = 'portal-dashboard.html';
       });
     }
 
@@ -766,7 +731,7 @@
     if (weightEl && !weightEl.value) weightEl.value = String(cfg.weight || 2400);
     if (cubeEl && !cubeEl.value) cubeEl.value = String(cfg.cube || 520);
     if (dvEl && !dvEl.value) dvEl.value = String(cfg.declaredValue || 18000);
-    refresh();
+    syncSummary();
   }
 
   function hydrateTariffCompetitorFull() {
@@ -939,6 +904,67 @@
     });
   }
 
+  function hydratePortalDashboardFull() {
+    if (pageName() !== 'portal-dashboard' && pageName() !== 'portal-self-service') return;
+    var state = S().getState();
+    var cid = state.portal.activeCustomerId;
+    var cust = S().getCustomer(cid);
+    var welcome = document.querySelector('[data-portal-welcome]');
+    if (welcome && cust) welcome.textContent = 'Welcome back, ' + cust.name;
+
+    var portalQuotes = state.quotes.filter(function (q) {
+      return S().isPortalCustomerVisibleQuote(q, cid);
+    });
+    var pending = portalQuotes.filter(function (q) { return q.status === 'portal_request'; });
+    var ready = portalQuotes.filter(function (q) {
+      return q.portalVisible && q.status === 'sent';
+    });
+
+    var notice = document.querySelector('[data-portal-notice]');
+    if (notice) {
+      if (ready.length) {
+        notice.hidden = false;
+        notice.innerHTML = '<strong>Quote ready:</strong> American West sent ' + ready.length + ' finalized quote' + (ready.length === 1 ? '' : 's') + ' — see Recent Activity below.';
+      } else if (pending.length) {
+        notice.hidden = false;
+        notice.className = 'portal-notice portal-notice--pending';
+        notice.innerHTML = '<strong>Request received:</strong> ' + pending.length + ' quote request' + (pending.length === 1 ? ' is' : 's are') + ' with your sales rep for pricing.';
+      } else {
+        notice.hidden = true;
+      }
+    }
+
+    var activity = document.querySelector('[data-portal-activity]');
+    if (activity) {
+      var items = [];
+      portalQuotes.slice().sort(function (a, b) {
+        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+      }).forEach(function (q) {
+        var when = fmtDate(q.portalSubmittedAt || q.updatedAt || q.createdAt);
+        if (q.status === 'portal_request') {
+          items.push('<li><span>Quote request ' + q.id + ' sent to American West · ' + laneLabel(q) + '</span><span class="tabular" style="color:var(--neutral-600)">' + when + '</span></li>');
+        } else if (q.portalVisible && q.status === 'sent') {
+          var p = quotePricing(q);
+          items.push('<li><span><a href="portal-quote-confirmation.html?id=' + encodeURIComponent(q.id) + '">Quote ' + q.id + ' ready</a> · ' + fmtMoney(p.total || 0) + '</span><span class="tabular" style="color:var(--neutral-600)">' + when + '</span></li>');
+        }
+      });
+      state.shipments.filter(function (sh) { return sh.customerId === cid; }).slice(0, 3).forEach(function (sh) {
+        items.push('<li><span>Shipment ' + sh.id + ' · ' + sh.status + '</span><span class="tabular" style="color:var(--neutral-600)">' + fmtDate(sh.updatedAt || sh.createdAt) + '</span></li>');
+      });
+      activity.innerHTML = items.length
+        ? items.join('')
+        : '<li><span>No recent activity</span></li>';
+    }
+  }
+
+  function laneLabel(q) {
+    return (q.origin || 'Origin') + ' → ' + (q.destination || 'Destination');
+  }
+
+  function quotePricing(q) {
+    return S().computeQuotePricing(q);
+  }
+
   function wirePortalAccountLabel() {
     var c = S().getCustomer(S().getState().portal.activeCustomerId);
     if (!c) return;
@@ -1108,6 +1134,7 @@
     hydratePortalPod,
     hydratePortalPricingHelp,
     hydratePortalQuoteRequestFull,
+    hydratePortalDashboardFull,
     hydrateTariffCompetitorFull,
     hydrateTariffDetailFull,
     hydrateTariffComparisonFull,
